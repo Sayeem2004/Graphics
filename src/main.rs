@@ -1,7 +1,8 @@
 // Imports
 use std::fs::File;
 use std::io::{BufWriter, Write};
-mod image; mod pattern;
+mod structs; use structs::image;
+mod patterns; use patterns::cses;
 
 // Constants
 const SIZE : u32 = 750;
@@ -9,17 +10,8 @@ const SIZE : u32 = 750;
 // Main function
 fn main() {
     // Making image struct
-    let mut curr1 : image::Img = image::Img::new_dimension(SIZE, SIZE);
-
-    // Making color gradient / style
-    for i in 0..SIZE {
-        for q in 0..SIZE {
-            let r : u32 = 0;
-            let g : u32 = pattern::number_spiral(i/5, q/5) % 256;
-            let b : u32 = pattern::number_spiral(q/5, i/5) % 256;
-            curr1.update_pixel(i, q, r, g, b);
-        }
-    }
+    let mut curr1 : image::Image = image::Image::new_dimension(SIZE, SIZE);
+    cses::number_spiral(&mut curr1);
 
     // Making image file
     let file1 = File::create("image1.ppm").expect("Unable to create file");
@@ -28,17 +20,8 @@ fn main() {
     println!("Image file is named image1.ppm");
 
     // Making image struct
-    let mut curr2 : image::Img = image::Img::new_dimension(SIZE, SIZE);
-
-    // Making color gradient / style
-    for i in 0..SIZE {
-        for q in 0..SIZE {
-            let r : u32 = 0;
-            let g : u32 = pattern::number_grid(i, q) % 256;
-            let b : u32 = pattern::number_grid(q/2, i/2) % 256;
-            curr2.update_pixel(i, q, r, g, b);
-        }
-    }
+    let mut curr2 : image::Image = image::Image::new_dimension(SIZE, SIZE);
+    cses::number_grid(&mut curr2);
 
     // Making image file
     let file2 = File::create("image2.ppm").expect("Unable to create file");
