@@ -1,3 +1,6 @@
+## Requirements
+Rust and Cargo both of which can be downloaded from here https://www.rust-lang.org/tools/install
+
 ## Compilation Instructions
 Cloning the repo: `git clone git@github.com:Sayeem2004/Graphics.git`       
 
