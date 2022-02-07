@@ -18,14 +18,14 @@ pub fn number_spiral(img : &mut image::Image) {
 // Gradient function based on CSES number spiral problem
 pub fn number_spiral_helper(row : u32, col : u32) -> u32 {
     let num : u32;
-    if row > col {
-        if row % 2 == 0 {num = row * row - col + 1;}
+    if (row > col) {
+        if (row % 2 == 0) {num = row * row - col + 1;}
         else {num = (row - 1) * (row - 1) + col;}
-    } else if col > row {
-        if col % 2 == 1 {num = col * col - row + 1;}
+    } else if (col > row) {
+        if (col % 2 == 1) {num = col * col - row + 1;}
         else {num = (col - 1) * (col - 1) + row;}
     } else {
-        if row % 2 == 0 {num = row * row - col + 1;}
+        if (row % 2 == 0) {num = row * row - col + 1;}
         else {num = col * col - row + 1;}
     }
     return num;

@@ -75,8 +75,8 @@ impl Image {
 
     // Updating a certain pixel
     pub fn update_pixel(&mut self, row : u32, col : u32, r : u32, g : u32, b : u32) {
-        if row < self.height && col < self.width {
-            if r <= self.max_color && g <= self.max_color && b <= self.max_color {
+        if (row < self.height && col < self.width) {
+            if (r <= self.max_color && g <= self.max_color && b <= self.max_color) {
                 self.pixels[row as usize][col as usize].update(r, g, b);
                 return;
             }
@@ -111,7 +111,7 @@ impl Image {
 
     // Getting a certain pixel
     pub fn get_pixel(&self, row : u32, col : u32) -> pixel::Pixel {
-        if row < self.height && col < self.width {
+        if (row < self.height && col < self.width) {
             return self.pixels[row as usize][col as usize];
         }
         println!("Unable to get pixel at row {} and col {}", row, col);

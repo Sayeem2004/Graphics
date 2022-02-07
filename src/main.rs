@@ -1,8 +1,9 @@
 // Imports
+#![allow(unused_parens)]
 use std::fs::File;
 use std::io::{BufWriter, Write};
 mod structs; use structs::image;
-mod patterns; use patterns::cses;
+mod templates; use templates::cses;
 
 // Constants
 const SIZE : u32 = 750;
