@@ -1,6 +1,6 @@
 // Imports
 use std::fmt;
-use crate::structs::pixel;
+use crate::format::pixel;
 
 #[allow(dead_code)]
 // Image struct
