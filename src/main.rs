@@ -2,10 +2,10 @@
 #![allow(unused_parens)]
 mod format;
 mod template;
-use template::cses;
+mod test;
 
 // Main function
 fn main() {
-    // Creating CSES template images
-    cses::create_cses_images();
+    // CSES Images
+    template::cses::create_cses_images();
 }

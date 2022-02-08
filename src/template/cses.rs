@@ -1,5 +1,6 @@
 // Imports
 use crate::format::{image, file};
+use std::fs;
 
 #[allow(dead_code)]
 // Converts an image into the number spiral gradient
@@ -92,21 +93,24 @@ fn counting_bits_modpow(x : u64, n : u64) -> u64 {
 
 #[allow(dead_code)]
 pub fn create_cses_images() {
-    // Setting size of image
+    // Variable declarations
     let size : u32 = 750;
+
+    // Attempting to create image directory
+    fs::create_dir_all("image/cses").expect("Unable to create image/cses directory");
 
     // Number spiral image
     let mut curr1 : image::Image = image::Image::new_dimension(size, size);
     number_spiral(&mut curr1, 0.2 as f32, 0.2 as f32);
-    file::create_file("image1.ppm", curr1);
+    file::create_file("image/cses/corridor.ppm", curr1);
 
     // Number grid image
     let mut curr2 : image::Image = image::Image::new_dimension(size, size);
     number_grid(&mut curr2, 1.0 as f32, 0.5 as f32);
-    file::create_file("image2.ppm", curr2);
+    file::create_file("image/cses/checkerboard.ppm", curr2);
 
     // Counting bits image
     let mut curr3 : image::Image = image::Image::new_dimension(size, size);
     counting_bits(&mut curr3, 0.6 as f32, 0.6 as f32);
-    file::create_file("image3.ppm", curr3);
+    file::create_file("image/cses/chains.ppm", curr3);
 }
