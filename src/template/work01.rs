@@ -79,6 +79,58 @@ pub fn heighway(img : &mut Image, pix : Pixel, x0 : u32, y0 : u32, x1 : u32, y1 
     heighway(img, pix, l5, l6, l7, l8, n-1, angle, scale);
 }
 
+// Function that draws a binary tree fractal on an image
+pub fn bintree(img : &mut Image, pix : Pixel, x0 : u32, y0 : u32, x1 : u32, y1 : u32, n : u32, angle : f64, scale : f64) {
+    // Base case
+    if (n == 0) {return;}
+
+    // Drawing line
+    line::draw_line(x0, y0, x1, y1, img, pix);
+
+    // Left recursion
+    let (l1, l2, l3, l4) : (u32, u32, u32, u32) = (x1, y1, x1+x1-x0, y1+y1-y0);
+    let (l1, l2, l3, l4) : (u32, u32, u32, u32) = transform::rotate_degree(l1, l2, l3, l4, angle);
+    let (l1, l2, l3, l4) : (u32, u32, u32, u32) = transform::dilate(l1, l2, l3, l4, scale);
+    bintree(img, pix, l1, l2, l3, l4, n-1, angle, scale);
+
+    // Right recursion
+    let (l5, l6, l7, l8) : (u32, u32, u32, u32) = (x1, y1, x1+x1-x0, y1+y1-y0);
+    let (l5, l6, l7, l8) : (u32, u32, u32, u32) = transform::rotate_degree(l5, l6, l7, l8, -angle);
+    let (l5, l6, l7, l8) : (u32, u32, u32, u32) = transform::dilate(l5, l6, l7, l8, scale);
+    bintree(img, pix, l5, l6, l7, l8, n-1, angle, scale);
+}
+
+// Function that draws a reflected koch snowflake on an image
+pub fn koch(img : &mut Image, pix : Pixel, x0 : u32, y0 : u32, x1 : u32, y1 : u32, n : u32, angle : f64) {
+    // Base case
+    if (n == 0) {
+        line::draw_line(x0, y0, x1, y1, img, pix);
+        return;
+    }
+
+    // First straight line recursion
+    let (l1, l2, l3, l4) : (u32, u32, u32, u32) = (x0, y0, x0+x1/3-x0/3, y0+y1/3-y0/3);
+    koch(img, pix, l1, l2, l3, l4, n-1, angle);
+
+    // Outward triangle
+    let (l1, l2, l3, l4) : (u32, u32, u32, u32) = (x0+x1/3-x0/3, y0+y1/3-y0/3, x1-x1/3+x0/3, y1-y1/3+y0/3);
+    let (l1, l2, l3, l4) : (u32, u32, u32, u32) = transform::rotate_degree(l1, l2, l3, l4, angle);
+    koch(img, pix, l1, l2, l3, l4, n-1, angle);
+    let (l1, l2, l3, l4) : (u32, u32, u32, u32) = transform::rotate_degree(l3, l4, l1, l2, angle);
+    koch(img, pix, l1, l2, l3, l4, n-1, angle);
+
+    // Inward triangle
+    let (l1, l2, l3, l4) : (u32, u32, u32, u32) = (x0+x1/3-x0/3, y0+y1/3-y0/3, x1-x1/3+x0/3, y1-y1/3+y0/3);
+    let (l1, l2, l3, l4) : (u32, u32, u32, u32) = transform::rotate_degree(l1, l2, l3, l4, -angle);
+    koch(img, pix, l1, l2, l3, l4, n-1, angle);
+    let (l1, l2, l3, l4) : (u32, u32, u32, u32) = transform::rotate_degree(l3, l4, l1, l2, -angle);
+    koch(img, pix, l1, l2, l3, l4, n-1, angle);
+
+    // Second straight line recursion
+    let (l1, l2, l3, l4) : (u32, u32, u32, u32) = (x1-x1/3+x0/3, y1-y1/3+y0/3, x1, y1);
+    koch(img, pix, l1, l2, l3, l4, n-1, angle);
+}
+
 // Function that runs all the above pattern functions
 pub fn create_work01_images() {
     // Variable declarations
@@ -102,4 +154,16 @@ pub fn create_work01_images() {
     heighway(&mut curr3, constant::RED_PIXEL, size/20+size/5, size/2, size-size/5+size/20, size/2, 16, 45.0, 1.0 / f64::sqrt(1.9));
     heighway(&mut curr3, constant::BLUE_PIXEL, size/20+size/5, size/2, size-size/5+size/20, size/2, 16, -45.0, 1.0 / f64::sqrt(1.9));
     file::create_ppm_ascii("image/ppm/w01_heighway.ppm", curr3);
+
+    // Binary tree fractal
+    let mut curr4 : Image = Image::new_dimension(size, size);
+    bintree(&mut curr4, constant::AQUA_PIXEL, 0, 0, size/8, size/8, 14, 10.0, 0.87);
+    file::create_ppm_ascii("image/ppm/w01_bintree.ppm", curr4);
+
+    // Koch snowflake fractal
+    let mut curr5 : Image = Image::new_dimension(size, size);
+    koch(&mut curr5, constant::PURPLE_PIXEL, size/8, size/3, size-size/8, size/3, 8, 60.0);
+    koch(&mut curr5, constant::PURPLE_PIXEL, size/8, size/3, size/2, size/3+(((3*size/8) as f64) * f64::sqrt(3.0)) as u32, 8, 60.0);
+    koch(&mut curr5, constant::PURPLE_PIXEL, size-size/8, size/3, size/2, size/3+(((3*size/8) as f64) * f64::sqrt(3.0)) as u32, 8, 60.0);
+    file::create_ppm_ascii("image/ppm/w01_koch.ppm", curr5);
 }

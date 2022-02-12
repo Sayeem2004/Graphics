@@ -7,3 +7,9 @@ Cloning the repo: `git clone git@github.com:Sayeem2004/Graphics.git`
 Changing directory: `cd Graphics`      
 
 Compiling and running: `make`
+
+Converting all ppm images to png: `make convert`
+
+Running some basic tests: `make test`
+
+Cleaning up repo: `make clean`

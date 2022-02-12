@@ -8,7 +8,7 @@ mod test;
 
 // Main function
 fn main() {
-    // // Work 00 stuff
+    // Work 00 stuff
     // template::work00::create_work00_images();
 
     // Work 01 stuff

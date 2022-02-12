@@ -1,7 +1,8 @@
 // Imports
 use crate::format::pixel::Pixel;
 
-// Common color pub constantspub constpub const AQUA_PIXEL : Pixel = Pixel::new_value(0, 255, 255);
+// Common color constants
+pub const AQUA_PIXEL : Pixel = Pixel::new_value(0, 255, 255);
 pub const BLACK_PIXEL : Pixel = Pixel::new_value(0, 0, 0);
 pub const BLUE_PIXEL : Pixel = Pixel::new_value(0, 0, 255);
 pub const FUCHSIA_PIXEL : Pixel = Pixel::new_value(255, 0, 255);

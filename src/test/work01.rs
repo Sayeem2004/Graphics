@@ -12,4 +12,6 @@ fn test_work01() {
     assert!(file::file_exists("image/ppm/w01_lines.ppm"));
     assert!(file::file_exists("image/ppm/w01_sierpinski.ppm"));
     assert!(file::file_exists("image/ppm/w01_heighway.ppm"));
+    assert!(file::file_exists("image/ppm/w01_bintree.ppm"));
+    assert!(file::file_exists("image/ppm/w01_koch.ppm"));
 }

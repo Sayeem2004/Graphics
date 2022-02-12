@@ -210,6 +210,7 @@ impl fmt::Display for Image {
     }
 }
 
+// Some basic utility functions for images
 impl Image {
     // Function to fill the entire image with a certain color
     pub fn fill(&mut self, pix : Pixel) {
