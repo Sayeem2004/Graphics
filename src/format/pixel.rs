@@ -1,26 +1,23 @@
 // Imports
 use std::fmt;
 
-#[allow(dead_code)]
-#[derive(Clone, Copy)]
 // Pixel struct
+#[derive(Clone, Copy)]
 pub struct Pixel(u32, u32, u32);
 
-#[allow(dead_code)]
 // Implementing constructors
 impl Pixel {
     // New pixel with defualt values
-    pub fn new() -> Pixel {
+    pub const fn new() -> Pixel {
         return Pixel {0 : 0, 1 : 0, 2 : 0};
     }
 
     // New pixel with values
-    pub fn new_value(r : u32, g : u32, b : u32) -> Pixel {
+    pub const fn new_value(r : u32, g : u32, b : u32) -> Pixel {
         return Pixel {0 : r, 1 : g, 2 : b};
     }
 }
 
-#[allow(dead_code)]
 // Implementing mutators
 impl Pixel {
     // Updating all pixel values
@@ -46,7 +43,6 @@ impl Pixel {
     }
 }
 
-#[allow(dead_code)]
 // Implementing accessors
 impl Pixel {
     // Getting red value
