@@ -93,7 +93,8 @@ pub fn draw_oct8(img : &mut Image, pix : Pixel, x0 : u32, y0 : u32, x1 : u32, y1
 
         // Updating y value if necessary
         if (d < 0) {
-            y -= 1;
+            if (y > 0) {y -= 1;}
+            else {break;}
             d += (b as i32);
         }
 
