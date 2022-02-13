@@ -1,14 +1,13 @@
 // Imports
-use crate::format::image::Image;
-use crate::format::pixel::Pixel;
+use crate::format::{image::Image, convert::utoi, pixel::Pixel};
 
 // Drawing a line in octant I
 pub fn draw_oct1(img : &mut Image, pix : Pixel, x0 : u32, y0 : u32, x1 : u32, y1 : u32) {
     // Variable declarations
     let (mut x, mut y) : (u32, u32) = (x0, y0);
-    let a : u32 = 2 * (y1 - y0);
-    let b : u32 = 2 * (x0 - x1);
-    let mut d : i32 = (a + b/2) as i32;
+    let a : i32 = 2 * (utoi(y1) - utoi(y0));
+    let b : i32 = 2 * (utoi(x0) - utoi(x1));
+    let mut d : i32 = a + b/2;
 
     // Looping through range
     while (x <= x1) {
@@ -16,14 +15,14 @@ pub fn draw_oct1(img : &mut Image, pix : Pixel, x0 : u32, y0 : u32, x1 : u32, y1
         img.update_pixel_xy2(x, y, pix);
 
         // Updating y value if necessary
-        if (d < 0) {
+        if (d > 0) {
             y += 1;
-            d += (b as i32);
+            d += b;
         }
 
         // Necessary updates
         x += 1;
-        d += (a as i32);
+        d += a;
     }
 }
 
@@ -31,9 +30,9 @@ pub fn draw_oct1(img : &mut Image, pix : Pixel, x0 : u32, y0 : u32, x1 : u32, y1
 pub fn draw_oct2(img : &mut Image, pix : Pixel, x0 : u32, y0 : u32, x1 : u32, y1 : u32) {
     // Variable declarations
     let (mut x, mut y) : (u32, u32) = (x0, y0);
-    let a : u32 = 2 * (y1 - y0);
-    let b : u32 = 2 * (x0 - x1);
-    let mut d : i32 = (a/2 + b) as i32;
+    let a : i32 = 2 * (utoi(y1) - utoi(y0));
+    let b : i32 = 2 * (utoi(x0) - utoi(x1));
+    let mut d : i32 = a/2 + b;
 
     // Looping through range
     while (y <= y1) {
@@ -43,12 +42,12 @@ pub fn draw_oct2(img : &mut Image, pix : Pixel, x0 : u32, y0 : u32, x1 : u32, y1
         // Updating y value if necessary
         if (d < 0) {
             x += 1;
-            d += (a as i32);
+            d += a;
         }
 
         // Necessary updates
         y += 1;
-        d += (b as i32);
+        d += b;
     }
 }
 
@@ -56,9 +55,9 @@ pub fn draw_oct2(img : &mut Image, pix : Pixel, x0 : u32, y0 : u32, x1 : u32, y1
 pub fn draw_oct7(img : &mut Image, pix : Pixel, x0 : u32, y0 : u32, x1 : u32, y1 : u32) {
     // Variable declarations
     let (mut x, mut y) : (u32, u32) = (x0, y0);
-    let a : u32 = 2 * (y0 - y1);
-    let b : u32 = 2 * (x0 - x1);
-    let mut d : i32 = (a/2 + b) as i32;
+    let a : i32 = 2 * (utoi(y0) - utoi(y1));
+    let b : i32 = 2 * (utoi(x0) - utoi(x1));
+    let mut d : i32 = a/2 + b;
 
     // Looping through range
     while (y >= y1) {
@@ -68,13 +67,13 @@ pub fn draw_oct7(img : &mut Image, pix : Pixel, x0 : u32, y0 : u32, x1 : u32, y1
         // Updating y value if necessary
         if (d < 0) {
             x += 1;
-            d += (a as i32);
+            d += a;
         }
 
         // Necessary updates
         if (y > 0) {y -= 1;}
         else {break;}
-        d += (b as i32);
+        d += b;
     }
 }
 
@@ -82,9 +81,9 @@ pub fn draw_oct7(img : &mut Image, pix : Pixel, x0 : u32, y0 : u32, x1 : u32, y1
 pub fn draw_oct8(img : &mut Image, pix : Pixel, x0 : u32, y0 : u32, x1 : u32, y1 : u32) {
     // Variable declarations
     let (mut x, mut y) : (u32, u32) = (x0, y0);
-    let a : u32 = 2 * (y0 - y1);
-    let b : u32 = 2 * (x0 - x1);
-    let mut d : i32 = (a + b/2) as i32;
+    let a : i32 = 2 * (utoi(y0) - utoi(y1));
+    let b : i32 = 2 * (utoi(x0) - utoi(x1));
+    let mut d : i32 = a + b/2;
 
     // Looping through range
     while (x <= x1) {
@@ -92,15 +91,15 @@ pub fn draw_oct8(img : &mut Image, pix : Pixel, x0 : u32, y0 : u32, x1 : u32, y1
         img.update_pixel_xy2(x, y, pix);
 
         // Updating y value if necessary
-        if (d < 0) {
+        if (d > 0) {
             if (y > 0) {y -= 1;}
             else {break;}
-            d += (b as i32);
+            d += b;
         }
 
         // Necessary updates
         x += 1;
-        d += (a as i32);
+        d += a;
     }
 }
 

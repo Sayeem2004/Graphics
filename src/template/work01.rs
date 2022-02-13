@@ -1,5 +1,5 @@
 // Imports
-use crate::format::{image::Image, pixel::Pixel, constant, file};
+use crate::format::{image::Image, pixel::Pixel, file, constant, convert::{utoi, itou}};
 use crate::algorithm::{line, transform};
 use std::fs;
 
@@ -88,13 +88,13 @@ pub fn bintree(img : &mut Image, pix : Pixel, x0 : u32, y0 : u32, x1 : u32, y1 :
     line::draw_line(x0, y0, x1, y1, img, pix);
 
     // Left recursion
-    let (l1, l2, l3, l4) : (u32, u32, u32, u32) = (x1, y1, x1+x1-x0, y1+y1-y0);
+    let (l1, l2, l3, l4) : (u32, u32, u32, u32) = (x1, y1, itou(utoi(x1)+utoi(x1)-utoi(x0)), itou(utoi(y1)+utoi(y1)-utoi(y0)));
     let (l1, l2, l3, l4) : (u32, u32, u32, u32) = transform::rotate_degree(l1, l2, l3, l4, angle);
     let (l1, l2, l3, l4) : (u32, u32, u32, u32) = transform::dilate(l1, l2, l3, l4, scale);
     bintree(img, pix, l1, l2, l3, l4, n-1, angle, scale);
 
     // Right recursion
-    let (l5, l6, l7, l8) : (u32, u32, u32, u32) = (x1, y1, x1+x1-x0, y1+y1-y0);
+    let (l5, l6, l7, l8) : (u32, u32, u32, u32) = (x1, y1, itou(utoi(x1)+utoi(x1)-utoi(x0)), itou(utoi(y1)+utoi(y1)-utoi(y0)));
     let (l5, l6, l7, l8) : (u32, u32, u32, u32) = transform::rotate_degree(l5, l6, l7, l8, -angle);
     let (l5, l6, l7, l8) : (u32, u32, u32, u32) = transform::dilate(l5, l6, l7, l8, scale);
     bintree(img, pix, l5, l6, l7, l8, n-1, angle, scale);
@@ -157,7 +157,7 @@ pub fn create_work01_images() {
 
     // Binary tree fractal
     let mut curr4 : Image = Image::new_dimension(size, size);
-    bintree(&mut curr4, constant::AQUA_PIXEL, 0, 0, size/8, size/8, 14, 10.0, 0.87);
+    bintree(&mut curr4, constant::AQUA_PIXEL, 0, 0, size/8, size/8, 14, 10.0, 0.85);
     file::create_ppm_ascii("image/ppm/w01_bintree.ppm", curr4);
 
     // Koch snowflake fractal

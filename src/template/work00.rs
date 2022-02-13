@@ -1,18 +1,17 @@
 // Imports
-use crate::format::{image::Image, file};
-use crate::format::{pixel::Pixel, constant};
+use crate::format::{image::Image, file, pixel::Pixel, constant, convert::{utoi, itou}};
 use rand::Rng;
-use std::fs;
+use std::{fs, cmp};
 
 // Converts an image into the number spiral gradient
-pub fn number_spiral(img : &mut Image, scale1: f32, scale2: f32) {
+pub fn number_spiral(img : &mut Image, scale1: f64, scale2: f64) {
     // Looping through pixels
     for i in 0..img.get_height() {
         for q in 0..img.get_width() {
             // Initializing rgb colors
             let r : u32 = 0;
-            let g : u32 = number_spiral_helper(((i as f32) * scale1) as u32, ((q as f32) * scale1) as u32) % 256;
-            let b : u32 = number_spiral_helper(((q as f32) * scale2) as u32, ((i as f32) * scale2) as u32) % 256;
+            let g : u32 = number_spiral_helper(((i as f64) * scale1) as u32, ((q as f64) * scale1) as u32) % 256;
+            let b : u32 = number_spiral_helper(((q as f64) * scale2) as u32, ((i as f64) * scale2) as u32) % 256;
 
             // Updating pixel
             img.update_pixel_rc(i, q, r, g, b);
@@ -45,14 +44,14 @@ fn number_spiral_helper(row : u32, col : u32) -> u32 {
 }
 
 // Converts an image into the number grid gradient
-pub fn number_grid(img : &mut Image, scale1 : f32, scale2 : f32) {
+pub fn number_grid(img : &mut Image, scale1 : f64, scale2 : f64) {
     // Looping through pixels
     for i in 0..img.get_height() {
         for q in 0..img.get_width() {
             // Initializing rgb colors
             let r : u32 = 0;
-            let g : u32 = number_grid_helper(((i as f32) * scale1) as u32, ((q as f32) * scale1) as u32) % 256;
-            let b : u32 = number_grid_helper(((q as f32) * scale2) as u32, ((i as f32) * scale2) as u32) % 256;
+            let g : u32 = number_grid_helper(((i as f64) * scale1) as u32, ((q as f64) * scale1) as u32) % 256;
+            let b : u32 = number_grid_helper(((q as f64) * scale2) as u32, ((i as f64) * scale2) as u32) % 256;
 
             // Updating pixel
             img.update_pixel_rc(i, q, r, g, b);
@@ -63,18 +62,18 @@ pub fn number_grid(img : &mut Image, scale1 : f32, scale2 : f32) {
 // Gradient function based on CSES number grid problem
 fn number_grid_helper(row : u32, col : u32) -> u32 {
     // Bitwise stuff
-    return (row-1)^(col-1);
+    return itou(cmp::max((utoi(row)-1)^(utoi(col)-1), 0));
 }
 
 // Converts an image into a counting bits gradient
-pub fn counting_bits(img : &mut Image, scale1 : f32, scale2 : f32) {
+pub fn counting_bits(img : &mut Image, scale1 : f64, scale2 : f64) {
     // Looping through pixels
     for i in 0..img.get_height() {
         for q in 0..img.get_width() {
             // Initializing rgb colors
             let r : u32 = 0;
-            let g : u32 = (counting_bits_helper((((i^q) as f32) * scale1) as u64) % 256) as u32;
-            let b : u32 = (counting_bits_helper((((i^q) as f32) * scale2) as u64) % 256) as u32;
+            let g : u32 = (counting_bits_helper((((i^q) as f64) * scale1) as u64) % 256) as u32;
+            let b : u32 = (counting_bits_helper((((i^q) as f64) * scale2) as u64) % 256) as u32;
 
             // Updating pixel
             img.update_pixel_rc(i, q, r, g, b);
@@ -172,17 +171,17 @@ pub fn create_work00_images() {
 
     // Number spiral image
     let mut curr1 : Image = Image::new_dimension(size, size);
-    number_spiral(&mut curr1, 0.2 as f32, 0.2 as f32);
+    number_spiral(&mut curr1, 0.2 as f64, 0.2 as f64);
     file::create_ppm_ascii("image/ppm/w00_corridor.ppm", curr1);
 
     // Number grid image
     let mut curr2 : Image = Image::new_dimension(size, size);
-    number_grid(&mut curr2, 1.0 as f32, 0.5 as f32);
+    number_grid(&mut curr2, 1.0 as f64, 0.5 as f64);
     file::create_ppm_ascii("image/ppm/w00_checkerboard.ppm", curr2);
 
     // Counting bits image
     let mut curr3 : Image = Image::new_dimension(size, size);
-    counting_bits(&mut curr3, 0.6 as f32, 0.6 as f32);
+    counting_bits(&mut curr3, 0.6 as f64, 0.6 as f64);
     file::create_ppm_ascii("image/ppm/w00_chains.ppm", curr3);
 
     // Barnsley fern drawing
