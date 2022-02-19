@@ -1,12 +1,12 @@
 // Imports
-use crate::format::{image::Image, convert::utoi, pixel::Pixel};
+use crate::format::{image::Image, pixel::Pixel};
 
 // Drawing a line in octant I
-pub fn draw_oct1(img : &mut Image, pix : Pixel, x0 : u32, y0 : u32, x1 : u32, y1 : u32) {
+pub fn draw_oct1(img : &mut Image, pix : Pixel, x0 : i32, y0 : i32, x1 : i32, y1 : i32) {
     // Variable declarations
-    let (mut x, mut y) : (u32, u32) = (x0, y0);
-    let a : i32 = 2 * (utoi(y1) - utoi(y0));
-    let b : i32 = 2 * (utoi(x0) - utoi(x1));
+    let (mut x, mut y) : (i32, i32) = (x0, y0);
+    let a : i32 = 2 * (y1 - y0);
+    let b : i32 = 2 * (x0 - x1);
     let mut d : i32 = a + b/2;
 
     // Looping through range
@@ -27,11 +27,11 @@ pub fn draw_oct1(img : &mut Image, pix : Pixel, x0 : u32, y0 : u32, x1 : u32, y1
 }
 
 // Drawing a line in octant II
-pub fn draw_oct2(img : &mut Image, pix : Pixel, x0 : u32, y0 : u32, x1 : u32, y1 : u32) {
+pub fn draw_oct2(img : &mut Image, pix : Pixel, x0 : i32, y0 : i32, x1 : i32, y1 : i32) {
     // Variable declarations
-    let (mut x, mut y) : (u32, u32) = (x0, y0);
-    let a : i32 = 2 * (utoi(y1) - utoi(y0));
-    let b : i32 = 2 * (utoi(x0) - utoi(x1));
+    let (mut x, mut y) : (i32, i32) = (x0, y0);
+    let a : i32 = 2 * (y1 - y0);
+    let b : i32 = 2 * (x0 - x1);
     let mut d : i32 = a/2 + b;
 
     // Looping through range
@@ -52,11 +52,11 @@ pub fn draw_oct2(img : &mut Image, pix : Pixel, x0 : u32, y0 : u32, x1 : u32, y1
 }
 
 // Drawing a line in octant VII
-pub fn draw_oct7(img : &mut Image, pix : Pixel, x0 : u32, y0 : u32, x1 : u32, y1 : u32) {
+pub fn draw_oct7(img : &mut Image, pix : Pixel, x0 : i32, y0 : i32, x1 : i32, y1 : i32) {
     // Variable declarations
-    let (mut x, mut y) : (u32, u32) = (x0, y0);
-    let a : i32 = 2 * (utoi(y0) - utoi(y1));
-    let b : i32 = 2 * (utoi(x0) - utoi(x1));
+    let (mut x, mut y) : (i32, i32) = (x0, y0);
+    let a : i32 = 2 * (y0 - y1);
+    let b : i32 = 2 * (x0 - x1);
     let mut d : i32 = a/2 + b;
 
     // Looping through range
@@ -78,11 +78,11 @@ pub fn draw_oct7(img : &mut Image, pix : Pixel, x0 : u32, y0 : u32, x1 : u32, y1
 }
 
 // Drawing a line in octant VIII
-pub fn draw_oct8(img : &mut Image, pix : Pixel, x0 : u32, y0 : u32, x1 : u32, y1 : u32) {
+pub fn draw_oct8(img : &mut Image, pix : Pixel, x0 : i32, y0 : i32, x1 : i32, y1 : i32) {
     // Variable declarations
-    let (mut x, mut y) : (u32, u32) = (x0, y0);
-    let a : i32 = 2 * (utoi(y0) - utoi(y1));
-    let b : i32 = 2 * (utoi(x0) - utoi(x1));
+    let (mut x, mut y) : (i32, i32) = (x0, y0);
+    let a : i32 = 2 * (y0 - y1);
+    let b : i32 = 2 * (x0 - x1);
     let mut d : i32 = a + b/2;
 
     // Looping through range
@@ -104,7 +104,7 @@ pub fn draw_oct8(img : &mut Image, pix : Pixel, x0 : u32, y0 : u32, x1 : u32, y1
 }
 
 // Function that draws an arbitrary line by using the 4 octants above
-pub fn draw_line(x0 : u32, y0 : u32, x1 : u32, y1 : u32, img : &mut Image, pix : Pixel) {
+pub fn draw_line(x0 : i32, y0 : i32, x1 : i32, y1 : i32, img : &mut Image, pix : Pixel) {
     // Quadrant 1, 2, 7, 8 cases
     if (x1 >= x0) {
         // Quadrant 1, 2

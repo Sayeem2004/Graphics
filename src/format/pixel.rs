@@ -3,7 +3,7 @@ use std::fmt;
 
 // Pixel struct
 #[derive(Clone, Copy)]
-pub struct Pixel(u32, u32, u32);
+pub struct Pixel(u8, u8, u8);
 
 // Implementing constructors
 impl Pixel {
@@ -13,7 +13,7 @@ impl Pixel {
     }
 
     // New pixel with values
-    pub const fn new_value(r : u32, g : u32, b : u32) -> Pixel {
+    pub const fn new_value(r : u8, g : u8, b : u8) -> Pixel {
         return Pixel {0 : r, 1 : g, 2 : b};
     }
 }
@@ -21,24 +21,24 @@ impl Pixel {
 // Implementing mutators
 impl Pixel {
     // Updating all pixel values
-    pub fn update(&mut self, r : u32, g : u32, b : u32) {
+    pub fn update(&mut self, r : u8, g : u8, b : u8) {
         self.0 = r;
         self.1 = g;
         self.2 = b;
     }
 
     // Updating red value
-    pub fn change_red(&mut self, val : u32) {
+    pub fn change_red(&mut self, val : u8) {
         self.0 = val;
     }
 
     // Updating green value
-    pub fn change_green(&mut self, val : u32) {
+    pub fn change_green(&mut self, val : u8) {
         self.1 = val;
     }
 
     // Updating blue value
-    pub fn change_blue(&mut self, val : u32) {
+    pub fn change_blue(&mut self, val : u8) {
         self.2 = val;
     }
 }
@@ -46,17 +46,17 @@ impl Pixel {
 // Implementing accessors
 impl Pixel {
     // Getting red value
-    pub fn get_red(&self) -> u32 {
+    pub fn get_red(&self) -> u8 {
         return self.0;
     }
 
     // Getting green value
-    pub fn get_green(&self) -> u32 {
+    pub fn get_green(&self) -> u8 {
         return self.1;
     }
 
     // Getting blue value
-    pub fn get_blue(&self) -> u32 {
+    pub fn get_blue(&self) -> u8 {
         return self.2;
     }
 }
