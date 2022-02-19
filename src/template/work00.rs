@@ -1,7 +1,7 @@
 // Imports
 use crate::format::{image::Image, file, pixel::Pixel, constant};
-use rand::Rng;
 use std::{fs, cmp};
+use rand::Rng;
 
 // Converts an image into the number spiral gradient
 pub fn number_spiral(img : &mut Image, scale1: f64, scale2: f64) {

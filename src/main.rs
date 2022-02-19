@@ -2,8 +2,8 @@
 #![allow(unused_parens)]
 #![allow(dead_code)]
 mod algorithm;
-mod format;
 mod template;
+mod format;
 mod test;
 
 // Main function
