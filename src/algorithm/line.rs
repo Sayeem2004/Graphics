@@ -1,7 +1,7 @@
 // Imports
 use crate::format::{image::Image, pixel::Pixel};
 
-// Drawing a line in octant I
+/// Drawing a line in octant I
 pub fn draw_oct1(img : &mut Image, pix : Pixel, x0 : i32, y0 : i32, x1 : i32, y1 : i32) {
     // Variable declarations
     let (mut x, mut y) : (i32, i32) = (x0, y0);
@@ -12,7 +12,7 @@ pub fn draw_oct1(img : &mut Image, pix : Pixel, x0 : i32, y0 : i32, x1 : i32, y1
     // Looping through range
     while (x <= x1) {
         // Changing pixel
-        img.update_pixel_xy2(x, y, pix);
+        img.update_pixel_xy(x, y, pix);
 
         // Updating y value if necessary
         if (d > 0) {
@@ -26,7 +26,7 @@ pub fn draw_oct1(img : &mut Image, pix : Pixel, x0 : i32, y0 : i32, x1 : i32, y1
     }
 }
 
-// Drawing a line in octant II
+/// Drawing a line in octant II
 pub fn draw_oct2(img : &mut Image, pix : Pixel, x0 : i32, y0 : i32, x1 : i32, y1 : i32) {
     // Variable declarations
     let (mut x, mut y) : (i32, i32) = (x0, y0);
@@ -37,7 +37,7 @@ pub fn draw_oct2(img : &mut Image, pix : Pixel, x0 : i32, y0 : i32, x1 : i32, y1
     // Looping through range
     while (y <= y1) {
         // Changing pixel
-        img.update_pixel_xy2(x, y, pix);
+        img.update_pixel_xy(x, y, pix);
 
         // Updating y value if necessary
         if (d < 0) {
@@ -51,7 +51,7 @@ pub fn draw_oct2(img : &mut Image, pix : Pixel, x0 : i32, y0 : i32, x1 : i32, y1
     }
 }
 
-// Drawing a line in octant VII
+/// Drawing a line in octant VII
 pub fn draw_oct7(img : &mut Image, pix : Pixel, x0 : i32, y0 : i32, x1 : i32, y1 : i32) {
     // Variable declarations
     let (mut x, mut y) : (i32, i32) = (x0, y0);
@@ -62,7 +62,7 @@ pub fn draw_oct7(img : &mut Image, pix : Pixel, x0 : i32, y0 : i32, x1 : i32, y1
     // Looping through range
     while (y >= y1) {
         // Changing pixel
-        img.update_pixel_xy2(x, y, pix);
+        img.update_pixel_xy(x, y, pix);
 
         // Updating y value if necessary
         if (d < 0) {
@@ -77,7 +77,7 @@ pub fn draw_oct7(img : &mut Image, pix : Pixel, x0 : i32, y0 : i32, x1 : i32, y1
     }
 }
 
-// Drawing a line in octant VIII
+/// Drawing a line in octant VIII
 pub fn draw_oct8(img : &mut Image, pix : Pixel, x0 : i32, y0 : i32, x1 : i32, y1 : i32) {
     // Variable declarations
     let (mut x, mut y) : (i32, i32) = (x0, y0);
@@ -88,7 +88,7 @@ pub fn draw_oct8(img : &mut Image, pix : Pixel, x0 : i32, y0 : i32, x1 : i32, y1
     // Looping through range
     while (x <= x1) {
         // Changing pixel
-        img.update_pixel_xy2(x, y, pix);
+        img.update_pixel_xy(x, y, pix);
 
         // Updating y value if necessary
         if (d > 0) {
@@ -103,7 +103,7 @@ pub fn draw_oct8(img : &mut Image, pix : Pixel, x0 : i32, y0 : i32, x1 : i32, y1
     }
 }
 
-// Function that draws an arbitrary line by using the 4 octants above
+/// Function that draws an arbitrary line by using the 4 octants above
 pub fn draw_line(x0 : i32, y0 : i32, x1 : i32, y1 : i32, img : &mut Image, pix : Pixel) {
     // Quadrant 1, 2, 7, 8 cases
     if (x1 >= x0) {

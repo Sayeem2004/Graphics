@@ -3,7 +3,7 @@ use crate::format::{image::Image, pixel::Pixel, file, constant};
 use crate::algorithm::{line, transform};
 use std::fs;
 
-// Function that tests lines in all octants
+/// Function that tests lines in all octants
 pub fn work01_lines(img : &mut Image) {
     // Initializing pixel color
     let mut pix : Pixel = Pixel::new_value(0, 255, 0);
@@ -38,7 +38,7 @@ pub fn work01_lines(img : &mut Image) {
     line::draw_line(img.get_width()/2, 0, img.get_width()/2, img.get_height()-1, img, pix);
 }
 
-// Function that draws sierpinski's triangle on an image
+/// Function that draws sierpinski's triangle on an image
 pub fn sierpinski(img : &mut Image, pix : Pixel, x0 : i32, y0 : i32, x1 : i32, y1 : i32, n : i32) {
     // Base case
     if (n == 0) {return;}
@@ -54,7 +54,7 @@ pub fn sierpinski(img : &mut Image, pix : Pixel, x0 : i32, y0 : i32, x1 : i32, y
     sierpinski(img, pix, x0+(x1-x0)/4, y0+(((((x1-x0)/2) as f64)*f64::sqrt(3.0)) as i32)/2, x1-(x1-x0)/4, y0+(((((x1-x0)/2) as f64)*f64::sqrt(3.0)) as i32)/2, n-1);
 }
 
-// Function that draws the heighway dragon on an image
+/// Function that draws the heighway dragon on an image
 pub fn heighway(img : &mut Image, pix : Pixel, x0 : i32, y0 : i32, x1 : i32, y1 : i32, n : i32, angle : f64, scale : f64) {
     // Base case
     if (n == 0) {
@@ -79,7 +79,7 @@ pub fn heighway(img : &mut Image, pix : Pixel, x0 : i32, y0 : i32, x1 : i32, y1 
     heighway(img, pix, l2.0, l2.1, l2.2, l2.3, n-1, angle, scale);
 }
 
-// Function that draws a binary tree fractal on an image
+/// Function that draws a binary tree fractal on an image
 pub fn bintree(img : &mut Image, pix : Pixel, x0 : i32, y0 : i32, x1 : i32, y1 : i32, n : i32, angle : f64, scale : f64) {
     // Base case
     if (n == 0) {return;}
@@ -100,7 +100,7 @@ pub fn bintree(img : &mut Image, pix : Pixel, x0 : i32, y0 : i32, x1 : i32, y1 :
     bintree(img, pix, l2.0, l2.1, l2.2, l2.3, n-1, angle, scale);
 }
 
-// Function that draws a reflected koch snowflake on an image
+/// Function that draws a reflected koch snowflake on an image
 pub fn koch(img : &mut Image, pix : Pixel, x0 : i32, y0 : i32, x1 : i32, y1 : i32, n : i32, angle : f64) {
     // Base case
     if (n == 0) {
@@ -131,7 +131,7 @@ pub fn koch(img : &mut Image, pix : Pixel, x0 : i32, y0 : i32, x1 : i32, y1 : i3
     koch(img, pix, l4.0, l4.1, l4.2, l4.3, n-1, angle);
 }
 
-// Function that runs all the above pattern functions
+/// Function that runs all the above pattern functions
 pub fn create_work01_images() {
     // Variable declarations
     let size : i32 = 750;

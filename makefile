@@ -22,3 +22,7 @@ clean:
 # Removing all images
 remove:
 	rm -rf image
+
+# Opening documentation
+doc:
+	cargo doc --open

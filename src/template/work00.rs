@@ -3,7 +3,7 @@ use crate::format::{image::Image, file, pixel::Pixel, constant};
 use std::{fs, cmp};
 use rand::Rng;
 
-// Converts an image into the number spiral gradient
+/// Converts an image into the number spiral gradient
 pub fn number_spiral(img : &mut Image, scale1: f64, scale2: f64) {
     // Looping through pixels
     for i in 0..img.get_height() {
@@ -14,12 +14,12 @@ pub fn number_spiral(img : &mut Image, scale1: f64, scale2: f64) {
             let b : u8 = (number_spiral_helper(((q as f64) * scale2) as i32, ((i as f64) * scale2) as i32) % 256) as u8;
 
             // Updating pixel
-            img.update_pixel_rc(i, q, r, g, b);
+            img.update_pixel_rc(i, q, Pixel::new_value(r, g, b));
         }
     }
 }
 
-// Gradient function based on CSES number spiral problem
+/// Gradient function based on CSES number spiral problem
 fn number_spiral_helper(row : i32, col : i32) -> i32 {
     // Variable declarations
     let num : i32;
@@ -43,7 +43,7 @@ fn number_spiral_helper(row : i32, col : i32) -> i32 {
     return num;
 }
 
-// Converts an image into the number grid gradient
+/// Converts an image into the number grid gradient
 pub fn number_grid(img : &mut Image, scale1 : f64, scale2 : f64) {
     // Looping through pixels
     for i in 0..img.get_height() {
@@ -54,18 +54,18 @@ pub fn number_grid(img : &mut Image, scale1 : f64, scale2 : f64) {
             let b : u8 = (number_grid_helper(((q as f64) * scale2) as i32, ((i as f64) * scale2) as i32) % 256) as u8;
 
             // Updating pixel
-            img.update_pixel_rc(i, q, r, g, b);
+            img.update_pixel_rc(i, q, Pixel::new_value(r, g, b));
         }
     }
 }
 
-// Gradient function based on CSES number grid problem
+/// Gradient function based on CSES number grid problem
 fn number_grid_helper(row : i32, col : i32) -> i32 {
     // Bitwise stuff
     return cmp::max((row-1)^(col-1), 0);
 }
 
-// Converts an image into a counting bits gradient
+/// Converts an image into a counting bits gradient
 pub fn counting_bits(img : &mut Image, scale1 : f64, scale2 : f64) {
     // Looping through pixels
     for i in 0..img.get_height() {
@@ -76,12 +76,12 @@ pub fn counting_bits(img : &mut Image, scale1 : f64, scale2 : f64) {
             let b : u8 = (counting_bits_helper((((i^q) as f64) * scale2) as i64) % 256) as u8;
 
             // Updating pixel
-            img.update_pixel_rc(i, q, r, g, b);
+            img.update_pixel_rc(i, q, Pixel::new_value(r, g, b));
         }
     }
 }
 
-// Gradient function based on CSES counting bits problem
+/// Gradient function based on CSES counting bits problem
 fn counting_bits_helper(n : i64) -> i64 {
     // Variable declarations
     let mut ans : i64 = 0;
@@ -105,7 +105,7 @@ fn counting_bits_helper(n : i64) -> i64 {
     return ans;
 }
 
-// Binary exponentiation function for counting bits
+/// Binary exponentiation function for counting bits
 fn counting_bits_modpow(x : i64, n : i64) -> i64 {
     // Base case
     if (n == 0) {return 1;}
@@ -121,7 +121,7 @@ fn counting_bits_modpow(x : i64, n : i64) -> i64 {
     return u;
 }
 
-// Function that creates the barnsley fern on an image
+/// Function that creates the barnsley fern on an image
 pub fn barnsley(img : &mut Image, pix : Pixel, itr : i32, scale : f64) {
     // Setting up random generator and array
     let mut rng = rand::thread_rng();
@@ -157,11 +157,11 @@ pub fn barnsley(img : &mut Image, pix : Pixel, itr : i32, scale : f64) {
     for i in 0..itr {
         // Plotting points
         let width : i32 = img.get_width();
-        img.update_pixel_xy2((xval[i as usize] + ((width as f64/(scale/3.3)))) as i32, yval[i as usize] as i32, pix)
+        img.update_pixel_xy((xval[i as usize] + ((width as f64/(scale/3.3)))) as i32, yval[i as usize] as i32, pix)
     }
 }
 
-// Function that runs all the above pattern functions
+/// Function that runs all the above pattern functions
 pub fn create_work00_images() {
     // Variable declarations
     let size : i32 = 750;
