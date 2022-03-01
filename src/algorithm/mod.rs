@@ -1,3 +1,4 @@
 // Module structure
-pub mod transform;
+pub mod linear;
+pub mod matrix;
 pub mod line;

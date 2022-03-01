@@ -13,3 +13,7 @@ Converting all ppm images to png: `make convert`
 Running some basic tests: `make test`
 
 Cleaning up repo: `make clean`
+
+Removing all images: `make remove`
+
+Opening up documentation: `make doc`
