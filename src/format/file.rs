@@ -1,10 +1,10 @@
 // Imports
 use std::io::{BufWriter, Write};
-use crate::format::image::Image;
+use crate::format::{image::Image, matrix::Matrix};
 use std::fs;
 
 /// Function for creating a ppm ascii file
-pub fn create_ppm_ascii(path : &str, img : Image) {
+pub fn create_ppm_ascii(path : &str, img : &Image) {
     // Attempting to create file
     let file = fs::File::create(path).expect("Unable to create file");
 
@@ -21,4 +21,28 @@ pub fn create_ppm_ascii(path : &str, img : Image) {
 /// Checking if a certain file exists
 pub fn file_exists(path : &str) -> bool {
     return fs::metadata(path).is_ok();
+}
+
+/// Parsing lines form a csv into a matrix
+pub fn read_lines_csv(path : &str) -> Matrix {
+    // Getting data from csv file and splitting it
+    let data = fs::read_to_string(path).expect("Unable to read data");
+    let lines = data.split("\n");
+
+    // Creating edge matrix
+    let mut mat = Matrix::new_matrix();
+
+    // Iterating through data and adding to matrix
+    for line in lines {
+        // Splitting into numbers
+        if (line.len() == 0) {continue;}
+        let strip = &line[1..line.len()-1];
+        let nums : Vec<f32> = strip.split(", ").map(|x| x.parse::<f32>().unwrap()).collect();
+
+        // Adding numbers to matrix
+        mat.add_edge(nums[2], nums[3], 0.0, nums[0], nums[1], 0.0);
+    }
+
+    // Returning matrix
+    return mat;
 }

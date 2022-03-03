@@ -1,6 +1,6 @@
 // Imports
-use crate::format::pixel::Pixel;
-use std::fmt;
+use crate::format::{pixel::Pixel, constant};
+use std::{fmt, collections::VecDeque};
 
 /// Image struct
 pub struct Image {
@@ -164,7 +164,7 @@ impl Image {
         // Within size range
         if (y >= 0 && y < self.height && x >= 0 && x < self.width) {
             // Getting pixel
-            return self.pixels[y as usize][x as usize];
+            return self.pixels[(self.height-y-1) as usize][x as usize];
         }
 
         // Error message
@@ -208,5 +208,87 @@ impl Image {
                 self.pixels[i as usize][q as usize] = pix;
             }
         }
+    }
+
+    /// Function to fill a certain section of the image with a certain color
+    pub fn flood_xy(&mut self, x : i32, y : i32, bdr : Pixel, pix : Pixel) {
+        // Within size range
+        if (y >= 0 && y < self.height && x >= 0 && x < self.width) {
+            // Making visited vector
+            let mut vis = vec![vec![0; self.width as usize]; self.height as usize];
+
+            // Creating queue and adding first element
+            let mut queue = VecDeque::<(i32, i32)>::new();
+            vis[y as usize][x as usize] = 1;
+            queue.push_back((x, y));
+
+            // Doing bfs
+            while (queue.len() != 0) {
+                // Getting point
+                let point : (i32, i32) = queue.pop_front().unwrap();
+                self.update_pixel_xy(point.0, point.1, pix);
+
+                for i in 0..4 {
+                    // New points
+                    let nx = (point.0)+constant::DX[i as usize];
+                    let ny = (point.1)+constant::DY[i as usize];
+
+                    // Within bounds
+                    if (nx >= 0 && nx < self.width && ny >= 0 && ny < self.height) {
+                        if (vis[ny as usize][nx as usize] == 0 && self.get_pixel_xy(nx, ny) != bdr && self.get_pixel_xy(nx, ny) != pix) {
+                            // Adding to queue and visited
+                            vis[ny as usize][nx as usize] = 1;
+                            queue.push_back((nx, ny));
+                        }
+                    }
+                }
+            }
+
+            return;
+        }
+
+        // Error message
+        println!("Unable to flood pixel at x = {} and y = {}", x, y);
+    }
+
+    /// Function to fill a certain section of the image with a certain color
+    pub fn flood_rc(&mut self, row : i32, col : i32, bdr : Pixel, pix : Pixel) {
+        // Within size range
+        if (row >= 0 && row < self.height && col >= 0 && col < self.width) {
+            // Making visited vector
+            let mut vis = vec![vec![0; self.width as usize]; self.height as usize];
+
+            // Creating queue and adding first element
+            let mut queue = VecDeque::<(i32, i32)>::new();
+            vis[row as usize][col as usize] = 1;
+            queue.push_back((row, col));
+
+            // Doing bfs
+            while (queue.len() != 0) {
+                // Getting point
+                let point : (i32, i32) = queue.pop_front().unwrap();
+                self.update_pixel_rc(point.0, point.1, pix);
+
+                for i in 0..4 {
+                    // New points
+                    let nrow = (point.0)+constant::DX[i as usize];
+                    let ncol = (point.1)+constant::DY[i as usize];
+
+                    // Within bounds
+                    if (ncol >= 0 && ncol < self.width && nrow >= 0 && nrow < self.height) {
+                        if (vis[nrow as usize][ncol as usize] == 0 && self.get_pixel_rc(nrow, ncol) != bdr && self.get_pixel_rc(nrow, ncol) != pix) {
+                            // Adding to queue and visited
+                            vis[nrow as usize][ncol as usize] = 1;
+                            queue.push_back((nrow, ncol));
+                        }
+                    }
+                }
+            }
+
+            return;
+        }
+
+        // Error message
+        println!("Unable to flood pixel at row = {} and col = {}", row, col);
     }
 }

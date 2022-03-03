@@ -68,3 +68,10 @@ impl fmt::Display for Pixel {
         return write!(f, "{} {} {}  ", self.0, self.1, self.2);
     }
 }
+
+// Implementing comparison for the struct
+impl PartialEq<Pixel> for Pixel {
+    fn eq(&self, other : &Pixel) -> bool {
+        return (self.0 == other.0) && (self.1 == other.1) && (self.2 == other.2);
+    }
+}

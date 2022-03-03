@@ -172,20 +172,20 @@ pub fn create_work00_images() {
     // Number spiral image
     let mut curr1 : Image = Image::new_dimension(size, size);
     number_spiral(&mut curr1, 0.2 as f32, 0.2 as f32);
-    file::create_ppm_ascii("image/ppm/w00_corridor.ppm", curr1);
+    file::create_ppm_ascii("image/ppm/w00_corridor.ppm", &curr1);
 
     // Number grid image
     let mut curr2 : Image = Image::new_dimension(size, size);
     number_grid(&mut curr2, 1.0 as f32, 0.5 as f32);
-    file::create_ppm_ascii("image/ppm/w00_checkerboard.ppm", curr2);
+    file::create_ppm_ascii("image/ppm/w00_checkerboard.ppm", &curr2);
 
     // Counting bits image
     let mut curr3 : Image = Image::new_dimension(size, size);
     counting_bits(&mut curr3, 0.6 as f32, 0.6 as f32);
-    file::create_ppm_ascii("image/ppm/w00_chains.ppm", curr3);
+    file::create_ppm_ascii("image/ppm/w00_chains.ppm", &curr3);
 
     // Barnsley fern drawing
     let mut curr4 : Image = Image::new_dimension(size, size);
     barnsley(&mut curr4, constant::WHITE_PIXEL, 200000, 7.0);
-    file::create_ppm_ascii("image/ppm/w00_barnsley.ppm", curr4);
+    file::create_ppm_ascii("image/ppm/w00_barnsley.ppm", &curr4);
 }

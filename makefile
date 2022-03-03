@@ -1,13 +1,12 @@
 # Making and running program
 all:
-	cargo build
-	cargo run
+	cargo build --release
+	cargo run --release
 	open image/ppm/*.ppm
 
-# Running rust tests
+# Running previous assignments
 test:
-	cargo test
-	rm -rf image/ppm
+	cargo test --release
 
 # Converting ppm images to png
 convert:

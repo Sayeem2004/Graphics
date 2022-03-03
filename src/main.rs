@@ -16,5 +16,4 @@ fn main() {
 
     // Work 02 stuff
     template::work02::create_work02_images();
-
 }

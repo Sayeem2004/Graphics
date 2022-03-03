@@ -10,9 +10,9 @@ Compiling and running: `make`
 
 Converting all ppm images to png: `make convert`
 
-Running some basic tests: `make test`
+Running previous assignments: `make test`
 
-Cleaning up repo: `make clean`
+Cleaning up repository: `make clean`
 
 Removing all images: `make remove`
 

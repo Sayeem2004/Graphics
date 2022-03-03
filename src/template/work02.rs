@@ -7,7 +7,7 @@ use std::fs;
 pub fn test_matrix() {
     // Testing add edge
     println!("Testing adding an edge");
-    let mut mat1 = Matrix::new_matrix();
+    let mut mat1 : Matrix = Matrix::new_matrix();
     println!("mat1 = Matrix::new_matrix()");
     print!("mat1 = \n{}", mat1);
     mat1.add_edge(1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
@@ -16,13 +16,13 @@ pub fn test_matrix() {
 
     // Testing identity matrix
     println!("Testing making an identity matrix");
-    let mat2 = Matrix::new_identity();
+    let mat2 : Matrix = Matrix::new_identity();
     println!("mat2 = Matrix::new_identity()");
     print!("mat2 =\n{}", mat2);
 
     // Testing matrix multiplication
     println!("Testing matrix multiplication");
-    let mat3 : Matrix = matrix::multiply_matrices(mat2, mat1);
+    let mat3 : Matrix = matrix::multiply_matrices(&mat2, &mat1);
     println!("mat3 = matrix::multiply_matrices(mat2, mat1)");
     print!("mat3 =\n{}", mat3);
 
@@ -33,7 +33,7 @@ pub fn test_matrix() {
     mat4.add_edge(7.0, 8.0, 9.0, 10.0, 11.0, 12.0);
     print!("mat4 =\n{}", mat4);
     print!("mat3 =\n{}", mat3);
-    let mat5 : Matrix = matrix::multiply_matrices(mat4, mat3);
+    let mat5 : Matrix = matrix::multiply_matrices(&mat4, &mat3);
     println!("mat5 : Matrix = matrix::multiply_matrices(mat4, mat3)");
     print!("mat5 =\n{}", mat5);
 
@@ -62,9 +62,9 @@ pub fn test_matrix() {
     mat6.add_edge(200.0, 340.0, 0.0, 200.0, 320.0, 0.0);
     print!("mat6 =\n{}", mat6);
     println!("mat6.draw_lines(img, constant::WHITE_PIXEL)");
-    mat6.draw_lines(&mut img, constant::WHITE_PIXEL);
+    mat6.draw_lines_xy(&mut img, constant::WHITE_PIXEL);
     fs::create_dir_all("image/ppm").expect("Unable to create image/ppm directory");
-    file::create_ppm_ascii("image/ppm/w02_matrix.ppm", img);
+    file::create_ppm_ascii("image/ppm/w02_matrix.ppm", &img);
 }
 
 /// Function that creates a spiral in an edge matrix based on some parameters
@@ -98,12 +98,58 @@ pub fn create_work02_images() {
     test_matrix();
 
     // Creating lotus picture
-    let mut curr : Image = Image::new_dimension(size, size);
+    let mut curr1 : Image = Image::new_dimension(size, size);
     let mut mat : Matrix = Matrix::new_matrix();
     spiral(&mut mat, 1.0, 1.0, 360, size);
-    mat.draw_lines(&mut curr, constant::BLUE_PIXEL);
+    mat.draw_lines_xy(&mut curr1, constant::BLUE_PIXEL);
     mat.clear();
     spiral(&mut mat, 1.0, -1.0, 360, size);
-    mat.draw_lines(&mut curr, constant::RED_PIXEL);
-    file::create_ppm_ascii("image/ppm/w02_lotus.ppm", curr);
+    mat.draw_lines_xy(&mut curr1, constant::RED_PIXEL);
+    file::create_ppm_ascii("image/ppm/w02_lotus.ppm", &curr1);
+
+    // Creating rainbow lotus image
+    let mut mat : Matrix = file::read_lines_csv("src/data/w02_rainbow_lotus.csv");
+    let mut trans : Matrix = Matrix::new_identity();
+    trans.dilate(0.8, 0.8, 1.0);
+    trans.translate(-7.0, 50.0, 0.0);
+    mat.matrix_transform(&trans);
+    mat.add_edge(410.0, 215.0, 0.0, 415.0, 215.0, 0.0);
+    mat.add_edge(521.0, 275.0, 0.0, 521.0, 270.0, 0.0);
+    mat.add_edge(101.0, 380.0, 0.0, 101.0, 372.0, 0.0);
+    mat.add_edge(733.0, 430.0, 0.0, 733.0, 434.0, 0.0);
+    let mut curr2 : Image = Image::new_dimension(size, size);
+    mat.draw_lines_rc(&mut curr2, constant::WHITE_PIXEL);
+    curr2.flood_xy(375, 425, constant::WHITE_PIXEL, constant::YELLOW_PIXEL);
+    curr2.flood_xy(375, 500, constant::WHITE_PIXEL, constant::AQUA_PIXEL);
+    curr2.flood_xy(375, 375, constant::WHITE_PIXEL, constant::AQUA_PIXEL);
+    curr2.flood_xy(375, 475, constant::WHITE_PIXEL, constant::BLUE_PIXEL);
+    curr2.flood_xy(200, 500, constant::WHITE_PIXEL, constant::FUCHSIA_PIXEL);
+    curr2.flood_xy(550, 500, constant::WHITE_PIXEL, constant::GREEN_PIXEL);
+    curr2.flood_xy(175, 400, constant::WHITE_PIXEL, constant::LIME_PIXEL);
+    curr2.flood_xy(150, 400, constant::WHITE_PIXEL, constant::LIME_PIXEL);
+    curr2.flood_xy(100, 450, constant::WHITE_PIXEL, constant::MAROON_PIXEL);
+    curr2.flood_xy(91, 400, constant::WHITE_PIXEL, constant::MAROON_PIXEL);
+    curr2.flood_xy(110, 350, constant::WHITE_PIXEL, constant::NAVY_PIXEL);
+    curr2.flood_xy(110, 300, constant::WHITE_PIXEL, constant::NAVY_PIXEL);
+    curr2.flood_xy(275, 225, constant::WHITE_PIXEL, constant::OLIVE_PIXEL);
+    curr2.flood_xy(475, 225, constant::WHITE_PIXEL, constant::OLIVE_PIXEL);
+    curr2.flood_xy(475, 275, constant::WHITE_PIXEL, constant::PURPLE_PIXEL);
+    curr2.flood_xy(275, 275, constant::WHITE_PIXEL, constant::PURPLE_PIXEL);
+    curr2.flood_xy(250, 300, constant::WHITE_PIXEL, constant::PURPLE_PIXEL);
+    curr2.flood_xy(600, 425, constant::WHITE_PIXEL, constant::RED_PIXEL);
+    curr2.flood_xy(575, 425, constant::WHITE_PIXEL, constant::RED_PIXEL);
+    curr2.flood_xy(650, 425, constant::WHITE_PIXEL, constant::SILVER_PIXEL);
+    curr2.flood_xy(675, 310, constant::WHITE_PIXEL, constant::TEAL_PIXEL);
+    curr2.flood_xy(675, 325, constant::WHITE_PIXEL, constant::TEAL_PIXEL);
+    file::create_ppm_ascii("image/ppm/w02_rainbow_lotus.ppm", &curr2);
+
+    // Creating eru image
+    let mut mat2 : Matrix = file::read_lines_csv("src/data/w02_eru.csv");
+    let mut trans2 : Matrix = Matrix::new_identity();
+    trans2.dilate(0.7, 0.85, 1.0);
+    trans2.translate(10.0, 10.0, 0.0);
+    mat2.matrix_transform(&trans2);
+    let mut curr3 : Image = Image::new_dimension(size, size);
+    mat2.draw_lines_rc(&mut curr3, constant::WHITE_PIXEL);
+    file::create_ppm_ascii("image/ppm/w02_eru.ppm", &curr3);
 }
