@@ -276,30 +276,30 @@ impl Matrix {
         if (axis.eq("x")) {
             // Making new transformation matrix
             let mut mat : Matrix = Matrix::new_transformation();
-            mat.data[1][1] *= f32::cos(angle);
-            mat.data[1][2] *= f32::sin(angle);
-            mat.data[2][1] *= f32::sin(angle) * -1.0;
-            mat.data[2][2] *= f32::cos(angle);
+            mat.data[1][1] = f32::cos(angle);
+            mat.data[1][2] = f32::sin(angle);
+            mat.data[2][1] = f32::sin(angle) * -1.0;
+            mat.data[2][2] = f32::cos(angle);
 
             // Updating transformation matrix
             *self = matrix::multiply_matrices(&mat, self);
         } else if (axis.eq("y")) {
             // Making new transformation matrix
             let mut mat : Matrix = Matrix::new_transformation();
-            mat.data[0][0] *= f32::cos(angle);
-            mat.data[0][2] *= f32::sin(angle) * -1.0;
-            mat.data[2][0] *= f32::sin(angle);
-            mat.data[2][2] *= f32::cos(angle);
+            mat.data[0][0] = f32::cos(angle);
+            mat.data[0][2] = f32::sin(angle) * -1.0;
+            mat.data[2][0] = f32::sin(angle);
+            mat.data[2][2] = f32::cos(angle);
 
             // Updating transformation matrix
             *self = matrix::multiply_matrices(&mat, self);
         } else if (axis.eq("z")) {
             // Making new transformation matrix
             let mut mat : Matrix = Matrix::new_transformation();
-            mat.data[0][0] *= f32::cos(angle);
-            mat.data[0][1] *= f32::sin(angle);
-            mat.data[1][0] *= f32::sin(angle) * -1.0;
-            mat.data[1][1] *= f32::cos(angle);
+            mat.data[0][0] = f32::cos(angle);
+            mat.data[0][1] = f32::sin(angle);
+            mat.data[1][0] = f32::sin(angle) * -1.0;
+            mat.data[1][1] = f32::cos(angle);
 
             // Updating transformation matrix
             *self = matrix::multiply_matrices(&mat, self);

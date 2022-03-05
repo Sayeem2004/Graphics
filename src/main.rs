@@ -10,7 +10,7 @@ mod test;
 // Main function
 fn main() {
     // Running the current assignment
-    template::work02::create_work02_images(0);
+    template::work03::create_work03_images(0);
 
     // // Variable Declarations
     // let mut path : String = String::new();

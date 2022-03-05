@@ -39,7 +39,7 @@ pub fn test_matrix(mode : i32) {
 
     // Testing draw_lines
     println!("Testing drawing all lines");
-    let size : i32 = 500;
+    let size : i32 = 750;
     let mut img : Image = Image::new_dimension(size, size);
     let mut mat6 : Matrix = Matrix::new_matrix();
     mat6.add_edge(50.0, 450.0, 0.0, 100.0, 450.0, 0.0);

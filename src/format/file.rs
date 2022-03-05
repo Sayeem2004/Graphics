@@ -7,13 +7,15 @@ use std::fs;
 /// Function for creating a ppm ascii file
 pub fn create_ppm_ascii(path : &str, img : &Image) {
     // Attempting to create file
-    let file = fs::File::create(path).expect("Unable to create file");
+    let file = fs::File::create(path)
+        .expect("Unable to create file");
 
     // Attempting to create writer
     let mut writer = BufWriter::new(file);
 
     // Writing information
-    writer.write_all(format!("{}", img).as_bytes()).expect("Unable to write data");
+    writer.write_all(format!("{}", img).as_bytes())
+        .expect("Unable to write data");
 
     // Ending message
     println!("Image file is named {}", path);
@@ -38,7 +40,9 @@ pub fn read_lines_csv(path : &str) -> Matrix {
         // Splitting into numbers
         if (line.len() == 0) {continue;}
         let strip = &line[1..line.len()-1];
-        let nums : Vec<f32> = strip.split(", ").map(|x| x.parse::<f32>().unwrap()).collect();
+        let nums : Vec<f32> = strip.split(", ")
+            .map(|x| x.parse::<f32>().unwrap())
+            .collect();
 
         // Adding numbers to matrix
         mat.add_edge(nums[2], nums[3], 0.0, nums[0], nums[1], 0.0);
@@ -52,13 +56,18 @@ pub fn read_lines_csv(path : &str) -> Matrix {
 pub fn read_lines(path : &str) -> Vec<String> {
     // Getting data from the file
     let data = fs::read_to_string(path).expect("Unable to read data");
-    let lines : Vec<String> = data.split("\n").map(|s| s.to_owned()).collect();
+    let mut lines : Vec<String> = data.split("\n")
+        .map(|s| s.to_owned())
+        .collect();
 
     // Exiting function
+    lines.pop();
     return lines;
 }
 
 /// Function that displays an image file using built in open command
 pub fn open_image(path : &str) {
-    Command::new("open").arg(path).status().expect("Open command failed to run");
+    Command::new("open").arg(path)
+        .status()
+        .expect("Open command failed to run");
 }
