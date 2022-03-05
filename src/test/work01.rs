@@ -6,7 +6,7 @@ use crate::format::file;
 #[test]
 fn test_work01() {
     // Running function
-    work01::create_work01_images();
+    work01::create_work01_images(1);
 
     // Making sure image files exist
     assert!(file::file_exists("image/ppm/w01_lines.ppm"));

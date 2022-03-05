@@ -27,7 +27,7 @@ impl Image {
     /// New dimensional image
     pub fn new_dimension(width : i32, height : i32) -> Image {
         if (width < 0 || height < 0) {
-            println!("Image dimensions are out of range, using default image");
+            eprintln!("Image dimensions are out of range, using default image");
             return Image::new();
         }
         return Image {
@@ -42,7 +42,7 @@ impl Image {
     /// New formatted image
     pub fn new_format(image_type : &str, width : i32, height : i32, max_color : u8) -> Image {
         if (width < 0 || height < 0) {
-            println!("Image dimensions are out of range, using default image");
+            eprintln!("Image dimensions are out of range, using default image");
             return Image::new();
         }
         return Image {
@@ -65,7 +65,7 @@ impl Image {
     /// Changing width
     pub fn update_width(&mut self, width : i32) {
         if (width < 0) {
-            println!("Image width is out of range, no changes made");
+            eprintln!("Image width is out of range, no changes made");
             return;
         }
         self.width = width;
@@ -77,7 +77,7 @@ impl Image {
     /// Changing height
     pub fn update_height(&mut self, height : i32) {
         if (height < 0) {
-            println!("Image height is out of range, no changes made");
+            eprintln!("Image height is out of range, no changes made");
             return;
         }
         self.height = height;
@@ -102,7 +102,7 @@ impl Image {
         }
 
         // Error message
-        println!("Unable to update pixel at row {} and col {}", row, col);
+        eprintln!("Unable to update pixel at row {} and col {}", row, col);
     }
 
     /// Updating a certain pixel with another pixel
@@ -118,7 +118,7 @@ impl Image {
         }
 
         // Error message
-        println!("Unable to update pixel at x = {} and y = {}", x, y);
+        eprintln!("Unable to update pixel at x = {} and y = {}", x, y);
     }
 }
 
@@ -153,7 +153,7 @@ impl Image {
         }
 
         // Error message
-        println!("Unable to get pixel at row {} and col {}", row, col);
+        eprintln!("Unable to get pixel at row {} and col {}", row, col);
 
         // Ending function
         return Pixel::new();
@@ -168,7 +168,7 @@ impl Image {
         }
 
         // Error message
-        println!("Unable to get pixel at x = {} and x = {}", x, y);
+        eprintln!("Unable to get pixel at x = {} and x = {}", x, y);
 
         // Ending function
         return Pixel::new();
@@ -248,7 +248,7 @@ impl Image {
         }
 
         // Error message
-        println!("Unable to flood pixel at x = {} and y = {}", x, y);
+        eprintln!("Unable to flood pixel at x = {} and y = {}", x, y);
     }
 
     /// Function to fill a certain section of the image with a certain color
@@ -289,6 +289,6 @@ impl Image {
         }
 
         // Error message
-        println!("Unable to flood pixel at row = {} and col = {}", row, col);
+        eprintln!("Unable to flood pixel at row = {} and col = {}", row, col);
     }
 }

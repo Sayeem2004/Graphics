@@ -2,7 +2,6 @@
 all:
 	cargo build --release
 	cargo run --release
-	open image/ppm/*.ppm
 
 # Running previous assignments
 test:

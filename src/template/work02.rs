@@ -4,7 +4,7 @@ use crate::algorithm::matrix;
 use std::fs;
 
 /// Function thats out the matrix struct and related functions
-pub fn test_matrix() {
+pub fn test_matrix(mode : i32) {
     // Testing add edge
     println!("Testing adding an edge");
     let mut mat1 : Matrix = Matrix::new_matrix();
@@ -16,8 +16,8 @@ pub fn test_matrix() {
 
     // Testing identity matrix
     println!("Testing making an identity matrix");
-    let mat2 : Matrix = Matrix::new_identity();
-    println!("mat2 = Matrix::new_identity()");
+    let mat2 : Matrix = Matrix::new_transformation();
+    println!("mat2 = Matrix::new_transformation()");
     print!("mat2 =\n{}", mat2);
 
     // Testing matrix multiplication
@@ -65,6 +65,7 @@ pub fn test_matrix() {
     mat6.draw_lines_xy(&mut img, constant::WHITE_PIXEL);
     fs::create_dir_all("image/ppm").expect("Unable to create image/ppm directory");
     file::create_ppm_ascii("image/ppm/w02_matrix.ppm", &img);
+    if (mode == 0) {file::open_image("image/ppm/w02_matrix.ppm");}
 }
 
 /// Function that creates a spiral in an edge matrix based on some parameters
@@ -87,7 +88,7 @@ pub fn spiral(mat : &mut Matrix, ds : f32, da : f32, itr : i32, size : i32) {
 }
 
 /// Function that creates all images from work 02
-pub fn create_work02_images() {
+pub fn create_work02_images(mode : i32) {
     // Variable declarations
     let size : i32 = 750;
 
@@ -95,7 +96,7 @@ pub fn create_work02_images() {
     fs::create_dir_all("image/ppm").expect("Unable to create image/ppm directory");
 
     // Testing matrix functions
-    test_matrix();
+    test_matrix(mode);
 
     // Creating lotus picture
     let mut curr1 : Image = Image::new_dimension(size, size);
@@ -106,10 +107,11 @@ pub fn create_work02_images() {
     spiral(&mut mat, 1.0, -1.0, 360, size);
     mat.draw_lines_xy(&mut curr1, constant::RED_PIXEL);
     file::create_ppm_ascii("image/ppm/w02_lotus.ppm", &curr1);
+    if (mode == 0) {file::open_image("image/ppm/w02_lotus.ppm");}
 
     // Creating rainbow lotus image
-    let mut mat : Matrix = file::read_lines_csv("src/data/w02_rainbow_lotus.csv");
-    let mut trans : Matrix = Matrix::new_identity();
+    let mut mat : Matrix = file::read_lines_csv("src/data/w02/w02_rainbow_lotus.csv");
+    let mut trans : Matrix = Matrix::new_transformation();
     trans.dilate(0.8, 0.8, 1.0);
     trans.translate(-7.0, 50.0, 0.0);
     mat.matrix_transform(&trans);
@@ -142,14 +144,16 @@ pub fn create_work02_images() {
     curr2.flood_xy(675, 310, constant::WHITE_PIXEL, constant::TEAL_PIXEL);
     curr2.flood_xy(675, 325, constant::WHITE_PIXEL, constant::TEAL_PIXEL);
     file::create_ppm_ascii("image/ppm/w02_rainbow_lotus.ppm", &curr2);
+    if (mode == 0) {file::open_image("image/ppm/w02_rainbow_lotus.ppm");}
 
     // Creating eru image
-    let mut mat2 : Matrix = file::read_lines_csv("src/data/w02_eru.csv");
-    let mut trans2 : Matrix = Matrix::new_identity();
+    let mut mat2 : Matrix = file::read_lines_csv("src/data/w02/w02_eru.csv");
+    let mut trans2 : Matrix = Matrix::new_transformation();
     trans2.dilate(0.7, 0.85, 1.0);
     trans2.translate(10.0, 10.0, 0.0);
     mat2.matrix_transform(&trans2);
     let mut curr3 : Image = Image::new_dimension(size, size);
     mat2.draw_lines_rc(&mut curr3, constant::WHITE_PIXEL);
     file::create_ppm_ascii("image/ppm/w02_eru.ppm", &curr3);
+    if (mode == 0) {file::open_image("image/ppm/w02_eru.ppm");}
 }

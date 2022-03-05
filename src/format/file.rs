@@ -1,6 +1,7 @@
 // Imports
-use std::io::{BufWriter, Write};
 use crate::format::{image::Image, matrix::Matrix};
+use std::io::{BufWriter, Write};
+use std::process::Command;
 use std::fs;
 
 /// Function for creating a ppm ascii file
@@ -45,4 +46,19 @@ pub fn read_lines_csv(path : &str) -> Matrix {
 
     // Returning matrix
     return mat;
+}
+
+/// Function that read lines from a file and returns a vector with the lines
+pub fn read_lines(path : &str) -> Vec<String> {
+    // Getting data from the file
+    let data = fs::read_to_string(path).expect("Unable to read data");
+    let lines : Vec<String> = data.split("\n").map(|s| s.to_owned()).collect();
+
+    // Exiting function
+    return lines;
+}
+
+/// Function that displays an image file using built in open command
+pub fn open_image(path : &str) {
+    Command::new("open").arg(path).status().expect("Open command failed to run");
 }

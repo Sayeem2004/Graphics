@@ -5,7 +5,7 @@ use crate::format::matrix::Matrix;
 pub fn multiply_matrices(mat1 : &Matrix, mat2 : &Matrix) -> Matrix {
     // Making sure matrices are of the same size
     if (mat1.col_num != mat2.row_num) {
-        println!("Matrix 1 column number does not match matrix 2 row number, using default matrix");
+        eprintln!("Matrix 1 column number does not match matrix 2 row number, using default matrix");
         return Matrix::new_matrix();
     }
 

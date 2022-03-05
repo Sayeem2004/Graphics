@@ -6,8 +6,7 @@ use crate::format::file;
 #[test]
 fn test_work02() {
     // Running function
-    work02::test_matrix();
-    work02::create_work02_images();
+    work02::create_work02_images(1);
 
     // Making sure image files exist
     assert!(file::file_exists("image/ppm/w02_matrix.ppm"));

@@ -161,8 +161,8 @@ pub fn barnsley(img : &mut Image, pix : Pixel, itr : i32, scale : f32) {
     }
 }
 
-/// Function that runs all the above pattern functions
-pub fn create_work00_images() {
+/// Function that runs all the above pattern functions, 0 to open images, 1 to not open images
+pub fn create_work00_images(mode : i32) {
     // Variable declarations
     let size : i32 = 750;
 
@@ -173,19 +173,23 @@ pub fn create_work00_images() {
     let mut curr1 : Image = Image::new_dimension(size, size);
     number_spiral(&mut curr1, 0.2 as f32, 0.2 as f32);
     file::create_ppm_ascii("image/ppm/w00_corridor.ppm", &curr1);
+    if (mode == 0) {file::open_image("image/ppm/w00_corridor.ppm");}
 
     // Number grid image
     let mut curr2 : Image = Image::new_dimension(size, size);
     number_grid(&mut curr2, 1.0 as f32, 0.5 as f32);
     file::create_ppm_ascii("image/ppm/w00_checkerboard.ppm", &curr2);
+    if (mode == 0) {file::open_image("image/ppm/w00_checkerboard.ppm");}
 
     // Counting bits image
     let mut curr3 : Image = Image::new_dimension(size, size);
     counting_bits(&mut curr3, 0.6 as f32, 0.6 as f32);
     file::create_ppm_ascii("image/ppm/w00_chains.ppm", &curr3);
+    if (mode == 0) {file::open_image("image/ppm/w00_chains.ppm");}
 
     // Barnsley fern drawing
     let mut curr4 : Image = Image::new_dimension(size, size);
     barnsley(&mut curr4, constant::WHITE_PIXEL, 200000, 7.0);
     file::create_ppm_ascii("image/ppm/w00_barnsley.ppm", &curr4);
+    if (mode == 0) {file::open_image("image/ppm/w00_barnsley.ppm");}
 }

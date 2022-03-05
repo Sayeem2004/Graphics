@@ -26,7 +26,7 @@ impl Matrix {
     /// New matrix of size row_num x col_num
     pub fn new_dimension(row_num : i32, col_num : i32) -> Matrix {
         if (row_num < 0 || col_num < 0) {
-            println!("Matrix dimensions are out of range, using default matrix");
+            eprintln!("Matrix dimensions are out of range, using default matrix");
             return Matrix::new_matrix();
         }
         return Matrix {
@@ -36,8 +36,8 @@ impl Matrix {
         };
     }
 
-    /// New identity matrix of size 4 x 4
-    pub fn new_identity() -> Matrix {
+    /// New transformation matrix of size 4 x 4
+    pub fn new_transformation() -> Matrix {
         return Matrix {
             row_num : 4,
             col_num : 4,
@@ -56,7 +56,7 @@ impl Matrix {
     /// Changing number of rows
     pub fn update_row_num(&mut self, row_num : i32) {
         if (row_num < 0) {
-            println!("Matrix row number is out of range, no changes made");
+            eprintln!("Matrix row number is out of range, no changes made");
             return;
         }
         self.row_num = row_num;
@@ -68,7 +68,7 @@ impl Matrix {
     /// Changing number of columns
     pub fn update_col_num(&mut self, col_num : i32) {
         if (col_num < 0) {
-            println!("Matrix column number is out of range, no changes made");
+            eprintln!("Matrix column number is out of range, no changes made");
             return;
         }
         self.col_num = col_num;
@@ -78,11 +78,11 @@ impl Matrix {
     /// Changing a specific row in the matrix
     pub fn update_row(&mut self, ind : i32, row : &Vec<f32>) {
         if (ind < 0 || ind >= self.row_num) {
-            println!("Matrix row index is out of range, no changes made");
+            eprintln!("Matrix row index is out of range, no changes made");
             return;
         }
         if (row.len() != self.col_num as usize) {
-            println!("Inputted row does not match matrix row size, no changes made");
+            eprintln!("Inputted row does not match matrix row size, no changes made");
             return;
         }
         for i in 0..row.len() {
@@ -93,11 +93,11 @@ impl Matrix {
     /// Changing a specific column in the matrix
     pub fn update_col(&mut self, ind : i32, col : &Vec<f32>) {
         if (ind < 0 || ind >= self.col_num) {
-            println!("Matrix column index is out of range, no changes made");
+            eprintln!("Matrix column index is out of range, no changes made");
             return;
         }
         if (col.len() != self.row_num as usize) {
-            println!("Inputted column does not match matrix column size, no changes made");
+            eprintln!("Inputted column does not match matrix column size, no changes made");
             return;
         }
         self.data[ind as usize] = col.clone();
@@ -106,7 +106,7 @@ impl Matrix {
     /// Adding a row to the matrix
     pub fn add_row(&mut self, row : &Vec<f32>) {
         if (row.len() != self.col_num as usize) {
-            println!("Inputted row does not match matrix row size, no changes made");
+            eprintln!("Inputted row does not match matrix row size, no changes made");
             return;
         }
         self.row_num = self.row_num + 1;
@@ -118,7 +118,7 @@ impl Matrix {
     /// Adding a column to the matrix
     pub fn add_col(&mut self, col : &Vec<f32>) {
         if (col.len() != self.row_num as usize) {
-            println!("Inputted column does not match matrix column size, no changes made");
+            eprintln!("Inputted column does not match matrix column size, no changes made");
             return;
         }
         self.col_num = self.col_num + 1;
@@ -155,7 +155,7 @@ impl Matrix {
     /// Function for adding a point (x, y, z) to a matrix
     pub fn add_point(&mut self, x : f32, y : f32, z : f32) {
         if (self.row_num != 4) {
-            println!("Matrix row number does not equal four, no changes made");
+            eprintln!("Matrix row number does not equal four, no changes made");
             return;
         }
         self.add_col(&vec![x, y, z, 1.0]);
@@ -164,7 +164,7 @@ impl Matrix {
     /// Function for adding an edge (x0, y0, z0) (x1, y1, z1) to a matrix
     pub fn add_edge(&mut self, x0 : f32, y0 : f32, z0 : f32, x1 : f32, y1 : f32, z1 : f32) {
         if (self.row_num != 4) {
-            println!("Matrix row number does not equal four, no changes made");
+            eprintln!("Matrix row number does not equal four, no changes made");
             return;
         }
         self.add_point(x0, y0, z0);
@@ -174,7 +174,7 @@ impl Matrix {
     /// Function for drawing the edges found in a matrix on an image using xy orientation
     pub fn draw_lines_xy(&mut self, img : &mut Image, pix : Pixel) {
         if (self.row_num != 4) {
-            println!("Matrix row number does not equal four, no changes made");
+            eprintln!("Matrix row number does not equal four, no changes made");
             return;
         }
         for i in 0..self.col_num {
@@ -194,7 +194,7 @@ impl Matrix {
     /// Function for drawing the edges found in a matrix on an image using rc orientation
     pub fn draw_lines_rc(&mut self, img : &mut Image, pix : Pixel) {
         if (self.row_num != 4) {
-            println!("Matrix row number does not equal four, no changes made");
+            eprintln!("Matrix row number does not equal four, no changes made");
             return;
         }
         for i in 0..self.col_num {
@@ -232,59 +232,79 @@ impl Matrix {
     pub fn dilate(&mut self, dx : f32, dy : f32, dz : f32) {
         // Making sure current matrix is a tranformation matrix
         if (self.row_num != 4 || self.col_num != 4) {
-            println!("Matrix undergoing dilation is not a transformation matrix, no changes made");
+            eprintln!("Matrix undergoing dilation is not a transformation matrix, no changes made");
             return;
         }
 
+        // Making new transformation matrix
+        let mut mat : Matrix = Matrix::new_transformation();
+        mat.data[0][0] *= dx;
+        mat.data[1][1] *= dy;
+        mat.data[2][2] *= dz;
+
         // Updating transformation matrix
-        self.data[0][0] *= dx;
-        self.data[1][1] *= dy;
-        self.data[2][2] *= dz;
+        *self = matrix::multiply_matrices(&mat, self);
     }
 
     /// Function for translating a transformation matrix
     pub fn translate(&mut self, dx : f32, dy : f32, dz : f32) {
         // Making sure current matrix is a tranformation matrix
         if (self.row_num != 4 || self.col_num != 4) {
-            println!("Matrix undergoing translation is not a transformation matrix, no changes made");
+            eprintln!("Matrix undergoing translation is not a transformation matrix, no changes made");
             return;
         }
 
+        // Making new transformation matrix
+        let mut mat : Matrix = Matrix::new_transformation();
+        mat.data[3][0] += dx;
+        mat.data[3][1] += dy;
+        mat.data[3][2] += dz;
+
         // Updating transformation matrix
-        self.data[3][0] += dx;
-        self.data[3][1] += dy;
-        self.data[3][2] += dz;
+        *self = matrix::multiply_matrices(&mat, self);
     }
 
     /// Function for rotating a transformation matrix in radians
     pub fn rotate_radian(&mut self, angle : f32, axis : &str) {
         // Making sure current matrix is a tranformation matrix
         if (self.row_num != 4 || self.col_num != 4) {
-            println!("Matrix undergoing rotation is not a transformation matrix, no changes made");
+            eprintln!("Matrix undergoing rotation is not a transformation matrix, no changes made");
             return;
         }
 
         // Casework on axes
         if (axis.eq("x")) {
+            // Making new transformation matrix
+            let mut mat : Matrix = Matrix::new_transformation();
+            mat.data[1][1] *= f32::cos(angle);
+            mat.data[1][2] *= f32::sin(angle);
+            mat.data[2][1] *= f32::sin(angle) * -1.0;
+            mat.data[2][2] *= f32::cos(angle);
+
             // Updating transformation matrix
-            self.data[1][1] *= f32::cos(angle);
-            self.data[1][2] *= f32::sin(angle);
-            self.data[2][1] *= f32::sin(angle) * -1.0;
-            self.data[2][2] *= f32::cos(angle);
+            *self = matrix::multiply_matrices(&mat, self);
         } else if (axis.eq("y")) {
+            // Making new transformation matrix
+            let mut mat : Matrix = Matrix::new_transformation();
+            mat.data[0][0] *= f32::cos(angle);
+            mat.data[0][2] *= f32::sin(angle) * -1.0;
+            mat.data[2][0] *= f32::sin(angle);
+            mat.data[2][2] *= f32::cos(angle);
+
             // Updating transformation matrix
-            self.data[0][0] *= f32::cos(angle);
-            self.data[0][2] *= f32::sin(angle) * -1.0;
-            self.data[2][0] *= f32::sin(angle);
-            self.data[2][2] *= f32::cos(angle);
+            *self = matrix::multiply_matrices(&mat, self);
         } else if (axis.eq("z")) {
+            // Making new transformation matrix
+            let mut mat : Matrix = Matrix::new_transformation();
+            mat.data[0][0] *= f32::cos(angle);
+            mat.data[0][1] *= f32::sin(angle);
+            mat.data[1][0] *= f32::sin(angle) * -1.0;
+            mat.data[1][1] *= f32::cos(angle);
+
             // Updating transformation matrix
-            self.data[0][0] *= f32::cos(angle);
-            self.data[0][1] *= f32::sin(angle);
-            self.data[1][0] *= f32::sin(angle) * -1.0;
-            self.data[1][1] *= f32::cos(angle);
+            *self = matrix::multiply_matrices(&mat, self);
         } else {
-            println!("Axis of rotation is not valid, no changes made");
+            eprintln!("Axis of rotation is not valid, no changes made");
             return;
         }
     }
@@ -298,12 +318,11 @@ impl Matrix {
     pub fn matrix_transform(&mut self, trans : &Matrix) {
         // Making sure current matrix is a tranformation matrix
         if (trans.row_num != 4 || trans.col_num != 4) {
-            println!("Transformation matrix given is not the right size, no changes made");
+            eprintln!("Transformation matrix given is not the right size, no changes made");
             return;
         }
 
         // Multiplying and copying things over
-        let ret : Matrix = matrix::multiply_matrices(trans, self);
-        self.copy(&ret);
+        *self = matrix::multiply_matrices(trans, self);
     }
 }
