@@ -33,44 +33,49 @@ pub fn parse(path : &str, size : i32) {
             "display" => {
                 display(&mut edges, &mut img);
                 curr += 1;
-            }
+            },
             // Ident command
             "ident" => {
                 ident(&mut trans);
                 curr += 1;
-            }
+            },
             // Scale command
             "scale" => {
                 if (curr == mx-1) {eprintln!("No arguments provided for command \'scale\' at line {}", curr+1);}
                 else {scale(&lines[curr+1], curr+1, &mut trans);}
                 curr += 2;
-            }
+            },
             // Apply command
             "apply" => {
                 apply(&mut trans, &mut edges);
                 curr += 1;
-            }
+            },
             // Move command
             "move" => {
                 if (curr == mx-1) {eprintln!("No arguments provided for command \'move\' at line {}", curr+1);}
                 else {_move(&lines[curr+1], curr+1, &mut trans);}
                 curr += 2;
-            }
+            },
             // Rotate command
             "rotate" => {
                 if (curr == mx-1) {eprintln!("No arguments provided for command \'rotate\' at line {}", curr+1);}
                 else {rotate(&lines[curr+1], curr+1, &mut trans);}
                 curr += 2;
-            }
+            },
             // Save command
             "save" => {
                 if (curr == mx-1) {eprintln!("No arguments provided for command \'save\' at line {}", curr+1);}
                 else {save(&lines[curr+1], &mut edges, &mut img);}
                 curr += 2;
-            }
+            },
+            // Empty line case
+            "" => {
+                curr += 1
+            },
             // Default case
             _ => {
-                eprintln!("The command \'{}\' found at line {} is invalid", lines[curr], curr+1);
+                if (lines[curr][0..1].eq("#")) {();}
+                else {eprintln!("The command \'{}\' found at line {} is invalid", lines[curr], curr+1);}
                 curr += 1;
             }
         }
