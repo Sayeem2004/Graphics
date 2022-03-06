@@ -2,7 +2,7 @@
 use crate::format::{image::Image, matrix::Matrix};
 use std::io::{BufWriter, Write};
 use std::process::Command;
-use std::fs;
+use std::{fs, cmp};
 
 /// Function for creating a ppm ascii file
 pub fn create_ppm_ascii(path : &str, img : &Image) {
@@ -45,7 +45,7 @@ pub fn read_lines_csv(path : &str) -> Matrix {
             .collect();
 
         // Adding numbers to matrix
-        mat.add_edge(nums[2], nums[3], 0.0, nums[0], nums[1], 0.0);
+        mat.add_edge(nums[0], nums[1], 0.0, nums[2], nums[3], 0.0);
     }
 
     // Returning matrix
@@ -70,4 +70,62 @@ pub fn open_image(path : &str) {
     Command::new("open").arg(path)
         .status()
         .expect("Open command failed to run");
+}
+
+/// File that trims the number of lines from a csv file
+pub fn trim_csv(path : &str, scale : i32) {
+    // Getting original lines
+    let mut mat : Matrix = read_lines_csv(path);
+    let mut curr : usize = 0;
+    let mut ret : Matrix = Matrix::new_matrix();
+
+    // Transferring only certain lines
+    while (curr < mat.col_num as usize) {
+        let mut i : usize = 1;
+        while (i < scale.abs() as usize) {
+            if (curr+i+2 < mat.col_num as usize &&
+                mat.data[curr+i][0] == mat.data[curr+i+1][0] &&
+                mat.data[curr+i][1] == mat.data[curr+i+1][1]) {i += 2;}
+            else {break;}
+        }
+        ret.add_edge(
+            mat.data[curr][0],
+            mat.data[curr][1],
+            0.0,
+            mat.data[cmp::min(curr+i, (mat.col_num-1) as usize)][0],
+            mat.data[cmp::min(curr+i, (mat.col_num-1) as usize)][1],
+            0.0
+        );
+        curr += i+1;
+    }
+
+    println!("Before: {}", mat.col_num);
+    println!("After: {}", ret.col_num);
+
+    // Attempting to create file and writer
+    let file = fs::File::create("src/data/compressed.csv")
+        .expect("Unable to create file");
+    let mut writer = BufWriter::new(file);
+    let mut curr : usize = 0;
+
+    // Iterating through values and writing data
+    while (curr < ret.col_num as usize) {
+        // Joining numbers
+        let nums = vec![
+            ret.data[curr][0].to_string(),
+            ret.data[curr][1].to_string(),
+            ret.data[cmp::min(curr+1, (ret.col_num-1) as usize)][0].to_string(),
+            ret.data[cmp::min(curr+1, (ret.col_num-1) as usize)][1].to_string()
+        ].join(", ");
+
+        // Writing data
+        writer.write_all(["[".to_string(), nums, "]".to_string(), "\n".to_string()].join("").as_bytes())
+            .expect("Unable to write data");
+
+        // Incrementing
+        curr += 2;
+    }
+
+    // Ending message
+    println!("CSV file is named src/data/compressed.csv");
 }

@@ -119,6 +119,8 @@ pub fn create_work02_images(mode : i32) {
     mat.add_edge(521.0, 275.0, 0.0, 521.0, 270.0, 0.0);
     mat.add_edge(101.0, 380.0, 0.0, 101.0, 372.0, 0.0);
     mat.add_edge(733.0, 430.0, 0.0, 733.0, 434.0, 0.0);
+    mat.add_edge(650.0, 380.0, 0.0, 645.0, 380.0, 0.0);
+    mat.add_edge(576.0, 240.0, 0.0, 578.0, 240.0, 0.0);
     let mut curr2 : Image = Image::new_dimension(size, size);
     mat.draw_lines_rc(&mut curr2, constant::WHITE_PIXEL);
     curr2.flood_xy(375, 425, constant::WHITE_PIXEL, constant::YELLOW_PIXEL);

@@ -1,5 +1,6 @@
 // Imports
 use crate::format::{parse, file, matrix::Matrix, image::Image, constant};
+use std::fs;
 
 /// Function that creates a tesseract given a side length
 pub fn tesseract(side : i32) {
@@ -46,11 +47,13 @@ pub fn tesseract(side : i32) {
     edge2.draw_lines_xy(&mut img, constant::WHITE_PIXEL);
     edge3.draw_lines_xy(&mut img, constant::WHITE_PIXEL);
     file::create_ppm_ascii("image/ppm/w03_tesseract.ppm", &img);
-
 }
 
 /// Function that creates all images from work 03
 pub fn create_work03_images(mode : i32) {
+    // Attempting to create image directory
+    fs::create_dir_all("image/ppm").expect("Unable to create image/ppm directory");
+
     // Creating test image
     parse::parse("src/data/w03/w03_script", 500);
     if (mode == 0) {file::open_image("image/usr/w03_pic.png");}

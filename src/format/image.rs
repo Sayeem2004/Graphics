@@ -125,8 +125,8 @@ impl Image {
 // Implementing accessors
 impl Image {
     /// Getting image type
-    pub fn get_image_type(&mut self) -> String {
-        return self.image_type.clone();
+    pub fn get_image_type(&mut self) -> &String {
+        return &self.image_type;
     }
 
     /// Getting width
