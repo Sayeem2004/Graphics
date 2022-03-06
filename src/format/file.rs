@@ -28,6 +28,12 @@ pub fn file_exists(path : &str) -> bool {
 
 /// Parsing lines form a csv into a matrix
 pub fn read_lines_csv(path : &str) -> Matrix {
+    // Checking if file exists
+    if (!file_exists(path)) {
+        eprintln!("File {} not found, returning default value", path);
+        return Matrix::new_matrix();
+    }
+
     // Getting data from csv file and splitting it
     let data = fs::read_to_string(path).expect("Unable to read data");
     let lines = data.split("\n");
@@ -54,6 +60,12 @@ pub fn read_lines_csv(path : &str) -> Matrix {
 
 /// Function that read lines from a file and returns a vector with the lines
 pub fn read_lines(path : &str) -> Vec<String> {
+    // Checking if file exists
+    if (!file_exists(path)) {
+        eprintln!("File {} not found, returning default value", path);
+        return Vec::new();
+    }
+
     // Getting data from the file
     let data = fs::read_to_string(path).expect("Unable to read data");
     let mut lines : Vec<String> = data.split("\n")
@@ -67,7 +79,7 @@ pub fn read_lines(path : &str) -> Vec<String> {
 
 /// Function that displays an image file using built in open command
 pub fn open_image(path : &str) {
-    Command::new("open").arg(path)
+    Command::new("display").arg(path)
         .status()
         .expect("Open command failed to run");
 }
@@ -75,7 +87,7 @@ pub fn open_image(path : &str) {
 /// File that trims the number of lines from a csv file
 pub fn trim_csv(path : &str, scale : i32) {
     // Getting original lines
-    let mut mat : Matrix = read_lines_csv(path);
+    let mat : Matrix = read_lines_csv(path);
     let mut curr : usize = 0;
     let mut ret : Matrix = Matrix::new_matrix();
 

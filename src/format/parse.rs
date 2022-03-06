@@ -126,13 +126,24 @@ pub fn display(edges : &mut Matrix, img : &mut Image) {
     edges.draw_lines_xy(img, constant::WHITE_PIXEL);
 
     // Attempting to create image directory
-    fs::create_dir_all("image/ppm").expect("Unable to create image/ppm directory");
+    fs::create_dir_all("image/tmp").expect("Unable to create image/tmp directory");
 
     // Saving image
-    file::create_ppm_ascii("image/ppm/display.ppm", img);
+    file::create_ppm_ascii("image/tmp/display.ppm", img);
 
     // Displaying image
-    file::open_image("image/ppm/display.ppm");
+    file::open_image("image/tmp/display.ppm");
+
+    // Removing ppm file
+    let res = fs::remove_dir_all("image/tmp");
+    match res {
+        Ok(_) => {
+            ()
+        },
+        Err(_) => {
+            eprintln!("Unable to remove temporary image/tmp directory");
+        }
+    }
 }
 
 /// Function that performs the 'ident' command
@@ -261,10 +272,10 @@ pub fn save(arg : &String, edges : &mut Matrix, img : &mut Image) {
     edges.draw_lines_xy(img, constant::WHITE_PIXEL);
 
     // Attempting to create image directory
-    fs::create_dir_all("image/ppm").expect("Unable to create image/ppm directory");
+    fs::create_dir_all("image/tmp").expect("Unable to create image/tmp directory");
 
     // Saving image
-    file::create_ppm_ascii("image/ppm/save.ppm", img);
+    file::create_ppm_ascii("image/tmp/save.ppm", img);
 
     // Attempting to create image directory
     fs::create_dir_all("image/usr").expect("Unable to create image/usr directory");
@@ -274,20 +285,20 @@ pub fn save(arg : &String, edges : &mut Matrix, img : &mut Image) {
     path.push_str(arg);
 
     // Performing image magick convert command
-    Command::new("convert").arg("image/ppm/save.ppm")
+    Command::new("convert").arg("image/tmp/save.ppm")
         .arg(&path)
         .status()
         .expect("Open command failed to run");
     println!("Image file is named {}", path);
 
     // Removing ppm file
-    let res = fs::remove_file("image/ppm/save.ppm");
+    let res = fs::remove_dir_all("image/tmp");
     match res {
         Ok(_) => {
             ()
         },
         Err(_) => {
-            eprintln!("Unable to remove temporary save ppm file");
+            eprintln!("Unable to remove temporary image/tmp directory");
         }
     }
 }
