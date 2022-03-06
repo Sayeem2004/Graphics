@@ -110,7 +110,7 @@ pub fn create_work02_images(mode : i32) {
     if (mode == 0) {file::open_image("image/ppm/w02_lotus.ppm");}
 
     // Creating rainbow lotus image
-    let mut mat : Matrix = file::read_lines_csv("src/data/w02/w02_rainbow_lotus.csv");
+    let mut mat : Matrix = file::read_lines_csv("data/w02/w02_rainbow_lotus.csv");
     let mut trans : Matrix = Matrix::new_transformation();
     trans.dilate(0.8, 0.8, 1.0);
     trans.translate(-7.0, 50.0, 0.0);
@@ -149,7 +149,7 @@ pub fn create_work02_images(mode : i32) {
     if (mode == 0) {file::open_image("image/ppm/w02_rainbow_lotus.ppm");}
 
     // Creating eru image
-    let mut mat2 : Matrix = file::read_lines_csv("src/data/w02/w02_eru.csv");
+    let mut mat2 : Matrix = file::read_lines_csv("data/w02/w02_eru.csv");
     let mut trans2 : Matrix = Matrix::new_transformation();
     trans2.dilate(0.7, 0.85, 1.0);
     trans2.translate(10.0, 10.0, 0.0);

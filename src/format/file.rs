@@ -103,7 +103,7 @@ pub fn trim_csv(path : &str, scale : i32) {
     println!("After: {}", ret.col_num);
 
     // Attempting to create file and writer
-    let file = fs::File::create("src/data/compressed.csv")
+    let file = fs::File::create("data/compressed.csv")
         .expect("Unable to create file");
     let mut writer = BufWriter::new(file);
     let mut curr : usize = 0;
@@ -127,5 +127,5 @@ pub fn trim_csv(path : &str, scale : i32) {
     }
 
     // Ending message
-    println!("CSV file is named src/data/compressed.csv");
+    println!("CSV file is named data/compressed.csv");
 }

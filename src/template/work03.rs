@@ -55,7 +55,7 @@ pub fn create_work03_images(mode : i32) {
     fs::create_dir_all("image/ppm").expect("Unable to create image/ppm directory");
 
     // Creating test image
-    parse::parse("src/data/w03/w03_script", 500);
+    parse::parse("data/w03/w03_script", 500);
     if (mode == 0) {file::open_image("image/usr/w03_pic.png");}
 
     // Creating tesseract image
