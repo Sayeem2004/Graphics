@@ -3,36 +3,42 @@ use crate::format::{parse, file, matrix::Matrix, image::Image, constant};
 use std::fs;
 
 /// Function that creates a tesseract given a side length
-pub fn tesseract(side : i32) {
+pub fn tesseract(side : f32) {
+    // Checking to make sure side length is positive
+    if (side <= 0.0) {
+        eprintln!("Side length can not be 0 or negative, no image made");
+        return;
+    }
+
     // Variable declarations
     let mut edge1 : Matrix = Matrix::new_matrix();
     let mut trans1 : Matrix = Matrix::new_transformation();
     let mut edge2 : Matrix = Matrix::new_matrix();
     let mut trans2 : Matrix = Matrix::new_transformation();
     let mut edge3 : Matrix = Matrix::new_matrix();
-    let mut img : Image = Image::new_dimension(side, side);
+    let mut img : Image = Image::new_dimension((side*3.0) as i32, (side*3.0) as i32);
 
     // First cube
-    edge1.add_edge(0.0, 0.0, 0.0, 250.0, 0.0, 0.0);
-    edge1.add_edge(250.0, 0.0, 0.0, 250.0, 250.0, 0.0);
-    edge1.add_edge(250.0, 250.0, 0.0, 0.0, 250.0, 0.0);
-    edge1.add_edge(0.0, 250.0, 0.0, 0.0, 0.0, 0.0);
-    edge1.add_edge(0.0, 0.0, 250.0, 250.0, 0.0, 250.0);
-    edge1.add_edge(250.0, 0.0, 250.0, 250.0, 250.0, 250.0);
-    edge1.add_edge(250.0, 250.0, 250.0, 0.0, 250.0, 250.0);
-    edge1.add_edge(0.0, 250.0, 250.0, 0.0, 0.0, 250.0);
-    edge1.add_edge(0.0, 0.0, 0.0, 0.0, 0.0, 250.0);
-    edge1.add_edge(0.0, 250.0, 0.0, 0.0, 250.0, 250.0);
-    edge1.add_edge(250.0, 250.0, 0.0, 250.0, 250.0, 250.0);
-    edge1.add_edge(250.0, 0.0, 0.0, 250.0, 0.0, 250.0);
+    edge1.add_edge(0.0, 0.0, 0.0, side, 0.0, 0.0);
+    edge1.add_edge(side, 0.0, 0.0, side, side, 0.0);
+    edge1.add_edge(side, side, 0.0, 0.0, side, 0.0);
+    edge1.add_edge(0.0, side, 0.0, 0.0, 0.0, 0.0);
+    edge1.add_edge(0.0, 0.0, side, side, 0.0, side);
+    edge1.add_edge(side, 0.0, side, side, side, side);
+    edge1.add_edge(side, side, side, 0.0, side, side);
+    edge1.add_edge(0.0, side, side, 0.0, 0.0, side);
+    edge1.add_edge(0.0, 0.0, 0.0, 0.0, 0.0, side);
+    edge1.add_edge(0.0, side, 0.0, 0.0, side, side);
+    edge1.add_edge(side, side, 0.0, side, side, side);
+    edge1.add_edge(side, 0.0, 0.0, side, 0.0, side);
     trans1.rotate_degree(45.0, "y");
     trans1.rotate_degree(45.0, "x");
-    trans1.translate(90.0, 300.0, 0.0);
+    trans1.translate(side / 2.5, side * 1.1, 0.0);
     edge1.matrix_transform(&trans1);
 
     // Second cube
     edge2.copy(&edge1);
-    trans2.translate(200.0, 0.0, 0.0);
+    trans2.translate(side * 4.0/5.0, 0.0, 0.0);
     edge2.matrix_transform(&trans2);
 
     // Connecting lines
@@ -56,9 +62,11 @@ pub fn create_work03_images(mode : i32) {
 
     // Creating test image
     parse::parse("data/w03/w03_script", 500);
-    if (mode == 0) {file::open_image("image/usr/w03_pic.png");}
 
     // Creating tesseract image
-    tesseract(750);
+    tesseract(250.0);
     if (mode == 0) {file::open_image("image/ppm/w03_tesseract.ppm");}
+
+    // Creating impossible triangle
+    parse::parse("data/w03/w03_triangle", 750);
 }
