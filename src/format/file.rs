@@ -141,3 +141,43 @@ pub fn trim_csv(path : &str, scale : i32) {
     // Ending message
     println!("CSV file is named data/compressed.csv");
 }
+
+/// Parsing lines form a csv into a matrix
+pub fn convert_script(path : &str, size : i32) {
+    // Checking if file exists
+    if (!file_exists(path)) {
+        eprintln!("File {} not found", path);
+        return;
+    }
+
+    // Checking if image size is positive
+    if (size <= 0) {
+        eprintln!("Image size of {} is not possible", size);
+        return;
+    }
+
+    // Getting data from csv file and splitting it
+    let data = fs::read_to_string(path).expect("Unable to read data");
+    let lines = data.split("\n");
+
+    // Attempting to create script file and writer
+    let file = fs::File::create("data/script")
+        .expect("Unable to create file");
+    let mut writer = BufWriter::new(file);
+
+    // Iterating through data and adding to file
+    for line in lines {
+        // Splitting into numbers
+        if (line.len() == 0) {continue;}
+        let strip = &line[1..line.len()-1];
+        let nums : Vec<f32> = strip.split(", ")
+            .map(|x| x.parse::<f32>().unwrap())
+            .collect();
+
+        // Adding numbers to new file
+        writer.write_all(format!("line\n{} {} 0 {} {} 0\n", nums[0], size as f32-nums[1], nums[2], size as f32-nums[3]).as_bytes())
+            .expect("Unable to write data");
+    }
+    // Ending message
+    println!("Script file is named data/script");
+}

@@ -69,4 +69,7 @@ pub fn create_work03_images(mode : i32) {
 
     // Creating impossible triangle
     parse::parse("data/w03/w03_triangle", 750);
+
+    // Creating dragon image
+    parse::parse("data/w03/w03_dragon", 750);
 }

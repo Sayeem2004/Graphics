@@ -11,4 +11,6 @@ fn test_work03() {
     // Making sure image files exist
     assert!(file::file_exists("image/usr/w03_pic.png"));
     assert!(file::file_exists("image/ppm/w03_tesseract.ppm"));
+    assert!(file::file_exists("image/usr/w03_triangle.png"));
+    assert!(file::file_exists("image/usr/w03_dragon.png"));
 }
