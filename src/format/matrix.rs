@@ -238,9 +238,9 @@ impl Matrix {
 
         // Making new transformation matrix
         let mut mat : Matrix = Matrix::new_transformation();
-        mat.data[0][0] *= dx;
-        mat.data[1][1] *= dy;
-        mat.data[2][2] *= dz;
+        mat.data[0][0] = dx;
+        mat.data[1][1] = dy;
+        mat.data[2][2] = dz;
 
         // Updating transformation matrix
         *self = matrix::multiply_matrices(&mat, self);
@@ -256,9 +256,9 @@ impl Matrix {
 
         // Making new transformation matrix
         let mut mat : Matrix = Matrix::new_transformation();
-        mat.data[3][0] += dx;
-        mat.data[3][1] += dy;
-        mat.data[3][2] += dz;
+        mat.data[3][0] = dx;
+        mat.data[3][1] = dy;
+        mat.data[3][2] = dz;
 
         // Updating transformation matrix
         *self = matrix::multiply_matrices(&mat, self);
