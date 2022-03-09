@@ -26,7 +26,7 @@ pub fn file_exists(path : &str) -> bool {
     return fs::metadata(path).is_ok();
 }
 
-/// Parsing lines form a csv into a matrix
+/// Parsing lines from a csv into a matrix
 pub fn read_lines_csv(path : &str) -> Matrix {
     // Checking if file exists
     if (!file_exists(path)) {
@@ -142,7 +142,7 @@ pub fn trim_csv(path : &str, scale : i32) {
     println!("CSV file is named data/compressed.csv");
 }
 
-/// Parsing lines form a csv into a matrix
+/// Parsing lines from a csv into a script
 pub fn convert_script(path : &str, size : i32) {
     // Checking if file exists
     if (!file_exists(path)) {
