@@ -278,10 +278,10 @@ pub fn save(arg : &String, edges : &mut Matrix, img : &mut Image) {
     file::create_ppm_ascii("image/tmp/save.ppm", img);
 
     // Attempting to create image directory
-    fs::create_dir_all("image/usr").expect("Unable to create image/usr directory");
+    fs::create_dir_all("image/spt").expect("Unable to create image/spt directory");
 
     // Getting image path
-    let mut path = String::from("image/usr/");
+    let mut path = String::from("image/spt/");
     path.push_str(arg);
 
     // Performing image magick convert command
