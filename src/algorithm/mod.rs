@@ -1,3 +1,4 @@
 // Module structure
-pub mod matrix;
+pub mod curve;
 pub mod line;
+pub mod matrix;

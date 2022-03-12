@@ -1,9 +1,9 @@
 // Imports
-use crate::format::{parse, file, matrix::Matrix, image::Image, constant};
+use crate::format::{constant, file, image::Image, matrix::Matrix, parse};
 use std::fs;
 
 /// Function that creates a tesseract given a side length
-pub fn tesseract(side : f32) {
+pub fn tesseract(side: f32) {
     // Checking to make sure side length is positive
     if (side <= 0.0) {
         eprintln!("Side length can not be 0 or negative, no image made");
@@ -11,12 +11,12 @@ pub fn tesseract(side : f32) {
     }
 
     // Variable declarations
-    let mut edge1 : Matrix = Matrix::new_matrix();
-    let mut trans1 : Matrix = Matrix::new_transformation();
-    let mut edge2 : Matrix = Matrix::new_matrix();
-    let mut trans2 : Matrix = Matrix::new_transformation();
-    let mut edge3 : Matrix = Matrix::new_matrix();
-    let mut img : Image = Image::new_dimension((side*3.0) as i32, (side*3.0) as i32);
+    let mut edge1: Matrix = Matrix::new_matrix();
+    let mut trans1: Matrix = Matrix::new_transformation();
+    let mut edge2: Matrix = Matrix::new_matrix();
+    let mut trans2: Matrix = Matrix::new_transformation();
+    let mut edge3: Matrix = Matrix::new_matrix();
+    let mut img: Image = Image::new_dimension((side * 3.0) as i32, (side * 3.0) as i32);
 
     // First cube
     edge1.add_edge(0.0, 0.0, 0.0, side, 0.0, 0.0);
@@ -38,7 +38,7 @@ pub fn tesseract(side : f32) {
 
     // Second cube
     edge2.copy(&edge1);
-    trans2.translate(side * 4.0/5.0, 0.0, 0.0);
+    trans2.translate(side * 4.0 / 5.0, 0.0, 0.0);
     edge2.matrix_transform(&trans2);
 
     // Connecting lines
@@ -56,16 +56,18 @@ pub fn tesseract(side : f32) {
 }
 
 /// Function that creates all images from work 03
-pub fn create_work03_images(mode : i32) {
+pub fn create_work03_images(mode: i32) {
     // Attempting to create image directory
     fs::create_dir_all("image/ppm").expect("Unable to create image/ppm directory");
 
     // Creating test image
-    parse::parse("data/w03/w03_script", 500);
+    parse::parse("data/w03/w03_script", 750);
 
     // Creating tesseract image
     tesseract(250.0);
-    if (mode == 0) {file::open_image("image/ppm/w03_tesseract.ppm");}
+    if (mode == 0) {
+        file::open_image("image/ppm/w03_tesseract.ppm");
+    }
 
     // Creating impossible triangle
     parse::parse("data/w03/w03_triangle", 750);

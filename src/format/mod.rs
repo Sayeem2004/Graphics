@@ -1,7 +1,7 @@
 // Module structure
 pub mod constant;
-pub mod matrix;
+pub mod file;
 pub mod image;
+pub mod matrix;
 pub mod parse;
 pub mod pixel;
-pub mod file;

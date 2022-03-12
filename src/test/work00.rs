@@ -1,6 +1,6 @@
 // Imports
-use crate::template::work00;
 use crate::format::file;
+use crate::template::work00;
 
 /// Testing out work00 stuff
 #[test]
