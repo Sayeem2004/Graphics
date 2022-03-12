@@ -4,7 +4,7 @@ use rand::Rng;
 use std::{cmp, fs};
 
 /// Converts an image into the number spiral gradient
-pub fn number_spiral(img: &mut Image, scale1: f32, scale2: f32) {
+fn number_spiral(img: &mut Image, scale1: f32, scale2: f32) {
     // Looping through pixels
     for i in 0..img.get_height() {
         for q in 0..img.get_width() {
@@ -57,7 +57,7 @@ fn number_spiral_helper(row: i32, col: i32) -> i32 {
 }
 
 /// Converts an image into the number grid gradient
-pub fn number_grid(img: &mut Image, scale1: f32, scale2: f32) {
+fn number_grid(img: &mut Image, scale1: f32, scale2: f32) {
     // Looping through pixels
     for i in 0..img.get_height() {
         for q in 0..img.get_width() {
@@ -83,7 +83,7 @@ fn number_grid_helper(row: i32, col: i32) -> i32 {
 }
 
 /// Converts an image into a counting bits gradient
-pub fn counting_bits(img: &mut Image, scale1: f32, scale2: f32) {
+fn counting_bits(img: &mut Image, scale1: f32, scale2: f32) {
     // Looping through pixels
     for i in 0..img.get_height() {
         for q in 0..img.get_width() {
@@ -144,7 +144,7 @@ fn counting_bits_modpow(x: i64, n: i64) -> i64 {
 }
 
 /// Function that creates the barnsley fern on an image
-pub fn barnsley(img: &mut Image, pix: Pixel, itr: i32, scale: f32) {
+fn barnsley(img: &mut Image, pix: Pixel, itr: i32, scale: f32) {
     // Setting up random generator and array
     let mut rng = rand::thread_rng();
     let mut xval: Vec<f32> = vec![0.0; itr as usize];

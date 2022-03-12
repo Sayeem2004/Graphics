@@ -3,7 +3,7 @@ use crate::format::{constant, file, image::Image, matrix::Matrix, parse};
 use std::fs;
 
 /// Function that creates a tesseract given a side length
-pub fn tesseract(side: f32) {
+fn tesseract(side: f32) {
     // Checking to make sure side length is positive
     if (side <= 0.0) {
         eprintln!("Side length can not be 0 or negative, no image made");

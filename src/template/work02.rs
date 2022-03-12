@@ -4,7 +4,7 @@ use crate::format::{constant, file, image::Image, matrix::Matrix};
 use std::fs;
 
 /// Function thats out the matrix struct and related functions
-pub fn test_matrix(mode: i32) {
+fn test_matrix(mode: i32) {
     // Testing add edge
     println!("Testing adding an edge");
     let mut mat1: Matrix = Matrix::new_matrix();
@@ -71,7 +71,7 @@ pub fn test_matrix(mode: i32) {
 }
 
 /// Function that creates a spiral in an edge matrix based on some parameters
-pub fn spiral(mat: &mut Matrix, ds: f32, da: f32, itr: i32, size: i32) {
+fn spiral(mat: &mut Matrix, ds: f32, da: f32, itr: i32, size: i32) {
     let mut prev_size: f32 = 0.0;
     let mut prev_angle: f32 = 0.0;
 

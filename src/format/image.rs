@@ -311,4 +311,17 @@ impl Image {
         // Error message
         eprintln!("Unable to flood pixel at row = {} and col = {}", row, col);
     }
+
+    /// Function that replaces all pixels of a certain type with another
+    pub fn replace(&mut self, old : Pixel, new : Pixel) {
+        // Iterating through image
+        for i in 0..self.pixels.len() {
+            for q in 0..self.pixels[0].len() {
+                // Replacing pixels
+                if (self.pixels[i][q] == old) {
+                    self.pixels[i][q] = new;
+                }
+            }
+        }
+    }
 }

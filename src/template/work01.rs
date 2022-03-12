@@ -4,7 +4,7 @@ use crate::format::{constant, file, image::Image, pixel::Pixel};
 use std::fs;
 
 /// Function that tests lines in all octants
-pub fn test_lines(img: &mut Image) {
+fn test_lines(img: &mut Image) {
     // Initializing pixel color
     let mut pix: Pixel = Pixel::new_value(0, 255, 0);
 
@@ -81,7 +81,7 @@ pub fn test_lines(img: &mut Image) {
 }
 
 /// Function that draws sierpinski's triangle on an image
-pub fn sierpinski(img: &mut Image, pix: Pixel, x0: i32, y0: i32, x1: i32, y1: i32, n: i32) {
+fn sierpinski(img: &mut Image, pix: Pixel, x0: i32, y0: i32, x1: i32, y1: i32, n: i32) {
     // Base case
     if (n == 0) {
         return;
@@ -121,7 +121,7 @@ pub fn sierpinski(img: &mut Image, pix: Pixel, x0: i32, y0: i32, x1: i32, y1: i3
 }
 
 /// Function that draws the heighway dragon on an image
-pub fn heighway(
+fn heighway(
     img: &mut Image,
     pix: Pixel,
     x0: i32,
@@ -156,7 +156,7 @@ pub fn heighway(
 }
 
 /// Function that draws a binary tree fractal on an image
-pub fn bintree(
+fn bintree(
     img: &mut Image,
     pix: Pixel,
     x0: i32,
@@ -189,7 +189,7 @@ pub fn bintree(
 }
 
 /// Function that draws a reflected koch snowflake on an image
-pub fn koch(img: &mut Image, pix: Pixel, x0: i32, y0: i32, x1: i32, y1: i32, n: i32, angle: f32) {
+fn koch(img: &mut Image, pix: Pixel, x0: i32, y0: i32, x1: i32, y1: i32, n: i32, angle: f32) {
     // Base case
     if (n == 0) {
         line::draw_line(x0, y0, x1, y1, img, pix);

@@ -155,7 +155,7 @@ pub fn parse(path: &str, size: i32) {
 }
 
 /// Function that performs the 'line' command
-pub fn line(arg: &String, ind: usize, edges: &mut Matrix) {
+fn line(arg: &String, ind: usize, edges: &mut Matrix) {
     // Splitting the argument string
     let split = arg.split(" ");
 
@@ -196,7 +196,7 @@ pub fn line(arg: &String, ind: usize, edges: &mut Matrix) {
 }
 
 /// Function that performs the 'display' command
-pub fn display(edges: &mut Matrix, img: &mut Image) {
+fn display(edges: &mut Matrix, img: &mut Image) {
     // Clearing image
     img.fill(constant::BLACK_PIXEL);
 
@@ -223,13 +223,13 @@ pub fn display(edges: &mut Matrix, img: &mut Image) {
 }
 
 /// Function that performs the 'ident' command
-pub fn ident(trans: &mut Matrix) {
+fn ident(trans: &mut Matrix) {
     // Seting new value
     *trans = Matrix::new_transformation();
 }
 
 /// Function that performs the 'scale' command
-pub fn scale(arg: &String, ind: usize, trans: &mut Matrix) {
+fn scale(arg: &String, ind: usize, trans: &mut Matrix) {
     // Splitting the argument string
     let split = arg.split(" ");
 
@@ -270,13 +270,13 @@ pub fn scale(arg: &String, ind: usize, trans: &mut Matrix) {
 }
 
 /// Function that performs the 'apply' command
-pub fn apply(trans: &mut Matrix, edges: &mut Matrix) {
+fn apply(trans: &mut Matrix, edges: &mut Matrix) {
     // Applying transformation
     edges.matrix_transform(trans);
 }
 
 /// Function that performs the 'move' command
-pub fn _move(arg: &String, ind: usize, trans: &mut Matrix) {
+fn _move(arg: &String, ind: usize, trans: &mut Matrix) {
     // Splitting the argument string
     let split = arg.split(" ");
 
@@ -317,7 +317,7 @@ pub fn _move(arg: &String, ind: usize, trans: &mut Matrix) {
 }
 
 /// Function that performs the 'rotate' command
-pub fn rotate(arg: &String, ind: usize, trans: &mut Matrix) {
+fn rotate(arg: &String, ind: usize, trans: &mut Matrix) {
     // Splitting the argument string
     let split: Vec<&str> = arg.split(" ").collect();
 
@@ -352,7 +352,7 @@ pub fn rotate(arg: &String, ind: usize, trans: &mut Matrix) {
 }
 
 /// Function that performs the 'save' command
-pub fn save(arg: &String, edges: &mut Matrix, img: &mut Image) {
+fn save(arg: &String, edges: &mut Matrix, img: &mut Image) {
     // Clearing image
     img.fill(constant::BLACK_PIXEL);
 
@@ -391,7 +391,7 @@ pub fn save(arg: &String, edges: &mut Matrix, img: &mut Image) {
 }
 
 /// Function that performs the 'circle' command
-pub fn circle(arg: &String, ind: usize, edges: &mut Matrix) {
+fn circle(arg: &String, ind: usize, edges: &mut Matrix) {
     // Splitting the argument string
     let split = arg.split(" ");
 
@@ -432,7 +432,7 @@ pub fn circle(arg: &String, ind: usize, edges: &mut Matrix) {
 }
 
 /// Function that performs the 'hermite' command
-pub fn hermite(arg: &String, ind: usize, edges: &mut Matrix) {
+fn hermite(arg: &String, ind: usize, edges: &mut Matrix) {
     // Splitting the argument string
     let split = arg.split(" ");
 
@@ -475,7 +475,7 @@ pub fn hermite(arg: &String, ind: usize, edges: &mut Matrix) {
 }
 
 /// Function that performs the 'bezier' command
-pub fn bezier(arg: &String, ind: usize, edges: &mut Matrix) {
+fn bezier(arg: &String, ind: usize, edges: &mut Matrix) {
     // Splitting the argument string
     let split = arg.split(" ");
 
