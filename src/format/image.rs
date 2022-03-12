@@ -313,7 +313,7 @@ impl Image {
     }
 
     /// Function that replaces all pixels of a certain type with another
-    pub fn replace(&mut self, old : Pixel, new : Pixel) {
+    pub fn replace(&mut self, old: Pixel, new: Pixel) {
         // Iterating through image
         for i in 0..self.pixels.len() {
             for q in 0..self.pixels[0].len() {
