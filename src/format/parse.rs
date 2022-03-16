@@ -428,7 +428,7 @@ fn circle(arg: &String, ind: usize, edges: &mut Matrix) {
     }
 
     // Adding circle to matrix
-    curve::add_circle(edges, nums[0], nums[1], nums[2], nums[3], 0.02);
+    curve::add_circle(edges, nums[0], nums[1], nums[2], nums[3], 0.01);
 }
 
 /// Function that performs the 'hermite' command
@@ -470,7 +470,7 @@ fn hermite(arg: &String, ind: usize, edges: &mut Matrix) {
 
     // Adding hermite to matrix
     curve::add_hermite(
-        edges, nums[0], nums[1], nums[2], nums[3], nums[4], nums[5], nums[6], nums[7], 0.02,
+        edges, nums[0], nums[1], nums[2], nums[3], nums[4], nums[5], nums[6], nums[7], 0.01,
     );
 }
 
@@ -513,6 +513,6 @@ fn bezier(arg: &String, ind: usize, edges: &mut Matrix) {
 
     // Adding hermite to matrix
     curve::add_bezier(
-        edges, nums[0], nums[1], nums[2], nums[3], nums[4], nums[5], nums[6], nums[7], 0.02,
+        edges, nums[0], nums[1], nums[2], nums[3], nums[4], nums[5], nums[6], nums[7], 0.01,
     );
 }

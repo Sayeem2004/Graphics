@@ -32,7 +32,7 @@ fn optical() {
             crv.data[2][1],
             crv.data[3][0],
             crv.data[3][1],
-            0.02,
+            0.01,
         );
 
         // Updating points
@@ -68,4 +68,7 @@ pub fn create_work04_images(mode: i32) {
     if (mode == 0) {
         file::open_image("image/ppm/w04_optical.ppm");
     }
+
+    // Creating girl image
+    parse::parse("data/w04/w04_girl", 750);
 }

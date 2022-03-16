@@ -11,4 +11,5 @@ fn test_work04() {
     // Making sure image files exist
     assert!(file::file_exists("image/script/w04_face.png"));
     assert!(file::file_exists("image/ppm/w04_optical.ppm"));
+    assert!(file::file_exists("image/script/w04_girl.png"));
 }
