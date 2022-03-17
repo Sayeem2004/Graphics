@@ -71,4 +71,7 @@ pub fn create_work04_images(mode: i32) {
 
     // Creating girl image
     parse::parse("data/w04/w04_girl", 750);
+
+    // Creating cat image
+    parse::parse("data/w04/w04_cat", 750);
 }
