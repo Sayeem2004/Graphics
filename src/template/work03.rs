@@ -52,7 +52,7 @@ fn tesseract(side: f32) {
     edge1.draw_lines_xy(&mut img, constant::WHITE_PIXEL);
     edge2.draw_lines_xy(&mut img, constant::WHITE_PIXEL);
     edge3.draw_lines_xy(&mut img, constant::WHITE_PIXEL);
-    file::create_ppm_ascii("image/ppm/w03_tesseract.ppm", &img);
+    file::create_ppm_ascii("image/ppm/w03_tesseract.ppm", &img, 0);
 }
 
 /// Function that creates all images from work 03
@@ -61,7 +61,7 @@ pub fn create_work03_images(mode: i32) {
     fs::create_dir_all("image/ppm").expect("Unable to create image/ppm directory");
 
     // Creating test image
-    parse::parse("data/w03/w03_script", 750);
+    parse::parse("data/w03/w03_script", 750, mode);
 
     // Creating tesseract image
     tesseract(250.0);
@@ -70,8 +70,8 @@ pub fn create_work03_images(mode: i32) {
     }
 
     // Creating impossible triangle
-    parse::parse("data/w03/w03_triangle", 750);
+    parse::parse("data/w03/w03_triangle", 750, mode);
 
     // Creating dragon image
-    parse::parse("data/w03/w03_dragon", 750);
+    parse::parse("data/w03/w03_dragon", 750, mode);
 }

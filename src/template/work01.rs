@@ -240,7 +240,7 @@ pub fn create_work01_images(mode: i32) {
     // Testing draw line function using given instruction
     let mut curr1: Image = Image::new_dimension(size, size);
     test_lines(&mut curr1);
-    file::create_ppm_ascii("image/ppm/w01_lines.ppm", &curr1);
+    file::create_ppm_ascii("image/ppm/w01_lines.ppm", &curr1, 0);
     if (mode == 0) {
         file::open_image("image/ppm/w01_lines.ppm");
     }
@@ -248,7 +248,7 @@ pub fn create_work01_images(mode: i32) {
     // Sierpinski triangle fractal
     let mut curr2: Image = Image::new_dimension(size, size);
     sierpinski(&mut curr2, constant::WHITE_PIXEL, 0, 0, size - 1, 0, 8);
-    file::create_ppm_ascii("image/ppm/w01_sierpinski.ppm", &curr2);
+    file::create_ppm_ascii("image/ppm/w01_sierpinski.ppm", &curr2, 0);
     if (mode == 0) {
         file::open_image("image/ppm/w01_sierpinski.ppm");
     }
@@ -277,7 +277,7 @@ pub fn create_work01_images(mode: i32) {
         -45.0,
         1.0 / f32::sqrt(1.9),
     );
-    file::create_ppm_ascii("image/ppm/w01_heighway.ppm", &curr3);
+    file::create_ppm_ascii("image/ppm/w01_heighway.ppm", &curr3, 0);
     if (mode == 0) {
         file::open_image("image/ppm/w01_heighway.ppm");
     }
@@ -295,7 +295,7 @@ pub fn create_work01_images(mode: i32) {
         10.0,
         0.85,
     );
-    file::create_ppm_ascii("image/ppm/w01_bintree.ppm", &curr4);
+    file::create_ppm_ascii("image/ppm/w01_bintree.ppm", &curr4, 0);
     if (mode == 0) {
         file::open_image("image/ppm/w01_bintree.ppm");
     }
@@ -332,7 +332,7 @@ pub fn create_work01_images(mode: i32) {
         8,
         60.0,
     );
-    file::create_ppm_ascii("image/ppm/w01_koch.ppm", &curr5);
+    file::create_ppm_ascii("image/ppm/w01_koch.ppm", &curr5, 0);
     if (mode == 0) {
         file::open_image("image/ppm/w01_koch.ppm");
     }

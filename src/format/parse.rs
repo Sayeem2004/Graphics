@@ -1,10 +1,10 @@
 // Imports
-use crate::algorithm::curve;
+use crate::algorithm::{curve, shape};
 use crate::format::{constant, file, image::Image, matrix::Matrix};
 use std::{fs, process::Command};
 
 /// Function that parses a graphics script file and runs commands
-pub fn parse(path: &str, size: i32) {
+pub fn parse(path: &str, size: i32, mode: i32) {
     // Making sure the script file exists
     if (!file::file_exists(path)) {
         eprintln!("Script file does not exist, ending parsing attempt");
@@ -38,7 +38,9 @@ pub fn parse(path: &str, size: i32) {
             }
             // Display command
             "display" => {
-                display(&mut edges, &mut img);
+                if (mode == 0) {
+                    display(&mut edges, &mut img);
+                }
                 curr += 1;
             }
             // Ident command
@@ -135,6 +137,47 @@ pub fn parse(path: &str, size: i32) {
                 }
                 curr += 2;
             }
+            // Clear command
+            "clear" => {
+                clear(&mut edges);
+                curr += 1;
+            }
+            // Box command
+            "box" => {
+                if (curr == mx - 1) {
+                    eprintln!(
+                        "No arguments provided for command \'box\' at line {}",
+                        curr + 1
+                    );
+                } else {
+                    _box(&lines[curr + 1], curr + 1, &mut edges);
+                }
+                curr += 2;
+            }
+            // Sphere command
+            "sphere" => {
+                if (curr == mx - 1) {
+                    eprintln!(
+                        "No arguments provided for command \'sphere\' at line {}",
+                        curr + 1
+                    );
+                } else {
+                    sphere(&lines[curr + 1], curr + 1, &mut edges);
+                }
+                curr += 2;
+            }
+            // Torus command
+            "torus" => {
+                if (curr == mx - 1) {
+                    eprintln!(
+                        "No arguments provided for command \'torus\' at line {}",
+                        curr + 1
+                    );
+                } else {
+                    torus(&lines[curr + 1], curr + 1, &mut edges);
+                }
+                curr += 2;
+            }
             // Empty line case
             "" => curr += 1,
             // Default case
@@ -207,7 +250,7 @@ fn display(edges: &mut Matrix, img: &mut Image) {
     fs::create_dir_all("image/tmp").expect("Unable to create image/tmp directory");
 
     // Saving image
-    file::create_ppm_ascii("image/tmp/display.ppm", img);
+    file::create_ppm_ascii("image/tmp/display.ppm", img, 1);
 
     // Displaying image
     file::open_image("image/tmp/display.ppm");
@@ -363,7 +406,7 @@ fn save(arg: &String, edges: &mut Matrix, img: &mut Image) {
     fs::create_dir_all("image/tmp").expect("Unable to create image/tmp directory");
 
     // Saving image
-    file::create_ppm_ascii("image/tmp/save.ppm", img);
+    file::create_ppm_ascii("image/tmp/save.ppm", img, 1);
 
     // Attempting to create image directory
     fs::create_dir_all("image/script").expect("Unable to create image/script directory");
@@ -428,7 +471,7 @@ fn circle(arg: &String, ind: usize, edges: &mut Matrix) {
     }
 
     // Adding circle to matrix
-    curve::add_circle(edges, nums[0], nums[1], nums[2], nums[3], 0.01);
+    curve::add_circle(edges, nums[0], nums[1], nums[2], nums[3], 100);
 }
 
 /// Function that performs the 'hermite' command
@@ -470,7 +513,7 @@ fn hermite(arg: &String, ind: usize, edges: &mut Matrix) {
 
     // Adding hermite to matrix
     curve::add_hermite(
-        edges, nums[0], nums[1], nums[2], nums[3], nums[4], nums[5], nums[6], nums[7], 0.01,
+        edges, nums[0], nums[1], nums[2], nums[3], nums[4], nums[5], nums[6], nums[7], 100,
     );
 }
 
@@ -511,8 +554,137 @@ fn bezier(arg: &String, ind: usize, edges: &mut Matrix) {
         return;
     }
 
-    // Adding hermite to matrix
+    // Adding bezier to matrix
     curve::add_bezier(
-        edges, nums[0], nums[1], nums[2], nums[3], nums[4], nums[5], nums[6], nums[7], 0.01,
+        edges, nums[0], nums[1], nums[2], nums[3], nums[4], nums[5], nums[6], nums[7], 100,
     );
+}
+
+/// Function that performs the 'clear' command
+fn clear(edges: &mut Matrix) {
+    // Seting new value
+    *edges = Matrix::new_matrix();
+}
+
+/// Function that performs the 'box' command
+fn _box(arg: &String, ind: usize, edges: &mut Matrix) {
+    // Splitting the argument string
+    let split = arg.split(" ");
+
+    // Checking if each argument is a number
+    for str in split {
+        let num = str.parse::<f32>();
+        match num {
+            Ok(_) => {
+                continue;
+            }
+            Err(_) => {
+                eprintln!(
+                    "A \'box\' argument found at line {} is not a number",
+                    ind + 1
+                );
+                return;
+            }
+        }
+    }
+
+    // Converting to floats
+    let nums: Vec<f32> = arg
+        .split(" ")
+        .map(|x| x.parse::<f32>().unwrap())
+        .collect::<Vec<f32>>();
+
+    // Checking if right number of floats is found
+    if (nums.len() != 6) {
+        eprintln!(
+            "\'box\' expected 6 numerical arguments, but {} were found",
+            nums.len()
+        );
+        return;
+    }
+
+    // Adding box to matrix
+    shape::add_box(edges, nums[0], nums[1], nums[2], nums[3], nums[4], nums[5]);
+}
+
+/// Function that performs the 'sphere' command
+fn sphere(arg: &String, ind: usize, edges: &mut Matrix) {
+    // Splitting the argument string
+    let split = arg.split(" ");
+
+    // Checking if each argument is a number
+    for str in split {
+        let num = str.parse::<f32>();
+        match num {
+            Ok(_) => {
+                continue;
+            }
+            Err(_) => {
+                eprintln!(
+                    "A \'sphere\' argument found at line {} is not a number",
+                    ind + 1
+                );
+                return;
+            }
+        }
+    }
+
+    // Converting to floats
+    let nums: Vec<f32> = arg
+        .split(" ")
+        .map(|x| x.parse::<f32>().unwrap())
+        .collect::<Vec<f32>>();
+
+    // Checking if right number of floats is found
+    if (nums.len() != 4) {
+        eprintln!(
+            "\'sphere\' expected 4 numerical arguments, but {} were found",
+            nums.len()
+        );
+        return;
+    }
+
+    // Adding sphere to matrix
+    shape::add_sphere(edges, nums[0], nums[1], nums[2], nums[3], 50);
+}
+
+/// Function that performs the 'torus' command
+fn torus(arg: &String, ind: usize, edges: &mut Matrix) {
+    // Splitting the argument string
+    let split = arg.split(" ");
+
+    // Checking if each argument is a number
+    for str in split {
+        let num = str.parse::<f32>();
+        match num {
+            Ok(_) => {
+                continue;
+            }
+            Err(_) => {
+                eprintln!(
+                    "A \'torus\' argument found at line {} is not a number",
+                    ind + 1
+                );
+                return;
+            }
+        }
+    }
+
+    // Converting to floats
+    let nums: Vec<f32> = arg
+        .split(" ")
+        .map(|x| x.parse::<f32>().unwrap())
+        .collect::<Vec<f32>>();
+
+    // Checking if right number of floats is found
+    if (nums.len() != 5) {
+        eprintln!(
+            "\'torus\' expected 5 numerical arguments, but {} were found",
+            nums.len()
+        );
+        return;
+    }
+
+    // Adding torus to matrix
+    shape::add_torus(edges, nums[0], nums[1], nums[2], nums[3], nums[4], 50);
 }

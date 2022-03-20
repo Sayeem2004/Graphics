@@ -5,7 +5,7 @@ use std::process::Command;
 use std::{cmp, fs};
 
 /// Function for creating a ppm ascii file
-pub fn create_ppm_ascii(path: &str, img: &Image) {
+pub fn create_ppm_ascii(path: &str, img: &Image, mode: i32) {
     // Attempting to create file
     let file = fs::File::create(path).expect("Unable to create file");
 
@@ -18,7 +18,9 @@ pub fn create_ppm_ascii(path: &str, img: &Image) {
         .expect("Unable to write data");
 
     // Ending message
-    println!("Image file is named {}", path);
+    if (mode == 0) {
+        println!("Image file is named {}", path);
+    }
 }
 
 /// Checking if a certain file exists

@@ -64,7 +64,7 @@ fn test_matrix(mode: i32) {
     println!("mat6.draw_lines(img, constant::WHITE_PIXEL)");
     mat6.draw_lines_xy(&mut img, constant::WHITE_PIXEL);
     fs::create_dir_all("image/ppm").expect("Unable to create image/ppm directory");
-    file::create_ppm_ascii("image/ppm/w02_matrix.ppm", &img);
+    file::create_ppm_ascii("image/ppm/w02_matrix.ppm", &img, 0);
     if (mode == 0) {
         file::open_image("image/ppm/w02_matrix.ppm");
     }
@@ -108,7 +108,7 @@ pub fn create_work02_images(mode: i32) {
     mat.clear();
     spiral(&mut mat, 1.0, -1.0, 360, size);
     mat.draw_lines_xy(&mut curr1, constant::RED_PIXEL);
-    file::create_ppm_ascii("image/ppm/w02_lotus.ppm", &curr1);
+    file::create_ppm_ascii("image/ppm/w02_lotus.ppm", &curr1, 0);
     if (mode == 0) {
         file::open_image("image/ppm/w02_lotus.ppm");
     }
@@ -149,7 +149,7 @@ pub fn create_work02_images(mode: i32) {
     curr2.flood_xy(650, 425, constant::WHITE_PIXEL, constant::SILVER_PIXEL);
     curr2.flood_xy(675, 310, constant::WHITE_PIXEL, constant::TEAL_PIXEL);
     curr2.flood_xy(675, 325, constant::WHITE_PIXEL, constant::TEAL_PIXEL);
-    file::create_ppm_ascii("image/ppm/w02_rainbow_lotus.ppm", &curr2);
+    file::create_ppm_ascii("image/ppm/w02_rainbow_lotus.ppm", &curr2, 0);
     if (mode == 0) {
         file::open_image("image/ppm/w02_rainbow_lotus.ppm");
     }
@@ -162,7 +162,7 @@ pub fn create_work02_images(mode: i32) {
     mat2.matrix_transform(&trans2);
     let mut curr3: Image = Image::new_dimension(size, size);
     mat2.draw_lines_rc(&mut curr3, constant::WHITE_PIXEL);
-    file::create_ppm_ascii("image/ppm/w02_eru.ppm", &curr3);
+    file::create_ppm_ascii("image/ppm/w02_eru.ppm", &curr3, 0);
     if (mode == 0) {
         file::open_image("image/ppm/w02_eru.ppm");
     }

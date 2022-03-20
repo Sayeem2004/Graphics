@@ -32,7 +32,7 @@ fn optical() {
             crv.data[2][1],
             crv.data[3][0],
             crv.data[3][1],
-            0.01,
+            100,
         );
 
         // Updating points
@@ -52,7 +52,7 @@ fn optical() {
 
     // Final touches and saving image
     img.replace(constant::YELLOW_PIXEL, constant::BLACK_PIXEL);
-    file::create_ppm_ascii("image/ppm/w04_optical.ppm", &img);
+    file::create_ppm_ascii("image/ppm/w04_optical.ppm", &img, 0);
 }
 
 /// Function that creates all images from work 04
@@ -61,7 +61,7 @@ pub fn create_work04_images(mode: i32) {
     fs::create_dir_all("image/ppm").expect("Unable to create image/ppm directory");
 
     // Creating face image
-    parse::parse("data/w04/w04_script", 500);
+    parse::parse("data/w04/w04_script", 500, mode);
 
     // Creating optical illusion image
     optical();
@@ -70,8 +70,8 @@ pub fn create_work04_images(mode: i32) {
     }
 
     // Creating girl image
-    parse::parse("data/w04/w04_girl", 750);
+    parse::parse("data/w04/w04_girl", 750, mode);
 
     // Creating cat image
-    parse::parse("data/w04/w04_cat", 750);
+    parse::parse("data/w04/w04_cat", 750, mode);
 }

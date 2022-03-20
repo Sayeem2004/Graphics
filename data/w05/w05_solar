@@ -1,0 +1,76 @@
+# Saturn
+ident
+torus
+0 0 0 12 72
+rotate
+z 60
+rotate
+y 15
+apply
+sphere
+2 0 0 36
+ident
+move
+524 409 0
+apply
+bezier
+465 800 550 484 545 301 460 30
+
+# Sun
+sphere
+0 409 0 128
+
+# Mercury
+bezier
+0 645 230 645 230 173 0 173
+sphere
+172 409 0 10
+
+# Venus
+bezier
+0 725 320 689 306 129 0 94
+sphere
+234 409 0 17
+
+# Earth
+bezier
+143 800 355 589 320 176 143 30
+sphere
+289 409 0 24
+
+# Mars
+bezier
+249 800 360 570 414 331 250 30
+sphere
+354 409 0 19
+
+# Jupiter
+bezier
+352 800 460 530 463 297 352 30
+sphere
+434 409 0 48
+
+# Uranus
+bezier
+548 800 627 501 613 287 547 30
+sphere
+602 409 0 29
+
+# Neptune
+bezier
+639 800 706 507 699 282 638 30
+sphere
+689 409 0 30
+
+# Pluto
+sphere
+747 409 0 2
+
+# Saving
+ident
+move
+0 -49 0
+apply
+display
+save
+w05_solar.png
