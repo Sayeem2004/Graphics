@@ -29,14 +29,14 @@ pub fn add_box(edges: &mut Matrix, x: f32, y: f32, z: f32, w: f32, h: f32, d: f3
     edges.add_edge(x6, y6, z6, x7, y7, z7);
 }
 
-/// Function that adds edges representing a sphere to a matrix of edges
-pub fn add_sphere(edges: &mut Matrix, x: f32, y: f32, z: f32, r: f32, itr: u32) {
-    // Variable initialization
-    let mut points: Matrix = Matrix::new_matrix();
+/// Function that generates the points in a sphere
+pub fn gen_sphere(x: f32, y: f32, z: f32, r: f32, itr: u32) -> Matrix {
+    // Variable declaration
+    let mut ret : Matrix = Matrix::new_matrix();
 
     // Getting points on the surface
-    for i in 0..itr + 1 {
-        for q in 0..itr + 1 {
+    for i in 0..itr {
+        for q in 0..=itr {
             // Angle variables
             let phi: f32 = 2.0 * PI * (i as f32) / (itr as f32);
             let theta: f32 = PI * (q as f32) / (itr as f32);
@@ -47,9 +47,18 @@ pub fn add_sphere(edges: &mut Matrix, x: f32, y: f32, z: f32, r: f32, itr: u32) 
             let nz: f32 = r * f32::sin(theta) * f32::sin(phi) + z;
 
             // Saving points
-            points.add_col(&vec![nx, ny, nz, 1.0]);
+            ret.add_col(&vec![nx, ny, nz, 1.0]);
         }
     }
+
+    // Exiting function
+    return ret;
+}
+
+/// Function that adds edges representing a sphere to a matrix of edges
+pub fn add_sphere(edges: &mut Matrix, x: f32, y: f32, z: f32, r: f32, itr: u32) {
+    // Getting points on sphere
+    let points: Matrix = gen_sphere(x, y, z, r, itr);
 
     // Adding points to edge matrix
     for p in points.data.iter() {
@@ -57,14 +66,14 @@ pub fn add_sphere(edges: &mut Matrix, x: f32, y: f32, z: f32, r: f32, itr: u32) 
     }
 }
 
-/// Function that adds edges representing a torus to a matrix of edges
-pub fn add_torus(edges: &mut Matrix, x: f32, y: f32, z: f32, r1: f32, r2: f32, itr: u32) {
-    // Variable initialization
-    let mut points: Matrix = Matrix::new_matrix();
+/// Function that generates the points in a torus
+pub fn gen_torus(x: f32, y: f32, z: f32, r1: f32, r2: f32, itr: u32) -> Matrix {
+    // Variable declaration
+    let mut ret : Matrix = Matrix::new_matrix();
 
     // Getting points on the surface
-    for i in 0..itr + 1 {
-        for q in 0..itr + 1 {
+    for i in 0..itr {
+        for q in 0..=itr {
             // Angle variables
             let phi: f32 = 2.0 * PI * (i as f32) / (itr as f32);
             let theta: f32 = 2.0 * PI * (q as f32) / (itr as f32);
@@ -75,9 +84,18 @@ pub fn add_torus(edges: &mut Matrix, x: f32, y: f32, z: f32, r1: f32, r2: f32, i
             let nz: f32 = (-f32::sin(phi)) * (r1 * f32::cos(theta) + r2) + z;
 
             // Saving points
-            points.add_col(&vec![nx, ny, nz, 1.0]);
+            ret.add_col(&vec![nx, ny, nz, 1.0]);
         }
     }
+
+    // Exiting function
+    return ret;
+}
+
+/// Function that adds edges representing a torus to a matrix of edges
+pub fn add_torus(edges: &mut Matrix, x: f32, y: f32, z: f32, r1: f32, r2: f32, itr: u32) {
+    // Getting points on torus
+    let points: Matrix = gen_torus(x, y, z, r1, r2, itr);
 
     // Adding points to edge matrix
     for p in points.data.iter() {

@@ -77,7 +77,7 @@ fn number_grid(img: &mut Image, scale1: f32, scale2: f32) {
 }
 
 /// Gradient function based on CSES number grid problem
-fn number_grid_helper(row: i32, col: i32) -> i32 {
+pub fn number_grid_helper(row: i32, col: i32) -> i32 {
     // Bitwise stuff
     return cmp::max((row - 1) ^ (col - 1), 0);
 }
