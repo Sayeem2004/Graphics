@@ -104,6 +104,9 @@ pub fn create_work05_images(mode: i32) {
     // Creating shapes image test
     parse::parse("data/w05/w05_script", 500, mode);
 
+    // Creating 3d face image
+    parse::parse("data/w05/w05_face", 500, mode);
+
     // Creating solar system image
     parse::parse("data/w05/w05_solar", 750, mode);
 

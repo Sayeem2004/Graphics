@@ -5,14 +5,14 @@ use std::f32::consts::PI;
 /// Function that adds edges representing a rectangular prism to a matrix of edges
 pub fn add_box(edges: &mut Matrix, x: f32, y: f32, z: f32, w: f32, h: f32, d: f32) {
     // Defining vertices
-    let (x0, y0, z0) = (x + 0.0, y + 0.0, z + 0.0);
-    let (x1, y1, z1) = (x + w, y + 0.0, z + 0.0);
-    let (x2, y2, z2) = (x + 0.0, y + h, z + 0.0);
-    let (x3, y3, z3) = (x + 0.0, y + 0.0, z + d);
-    let (x4, y4, z4) = (x + w, y + h, z + 0.0);
-    let (x5, y5, z5) = (x + w, y + 0.0, z + d);
-    let (x6, y6, z6) = (x + 0.0, y + h, z + d);
-    let (x7, y7, z7) = (x + w, y + h, z + d);
+    let (x0, y0, z0) = (x + 0.0, y - 0.0, z - 0.0);
+    let (x1, y1, z1) = (x + w, y - 0.0, z - 0.0);
+    let (x2, y2, z2) = (x + 0.0, y - h, z - 0.0);
+    let (x3, y3, z3) = (x + 0.0, y - 0.0, z - d);
+    let (x4, y4, z4) = (x + w, y - h, z - 0.0);
+    let (x5, y5, z5) = (x + w, y - 0.0, z - d);
+    let (x6, y6, z6) = (x + 0.0, y - h, z - d);
+    let (x7, y7, z7) = (x + w, y - h, z - d);
 
     // Adding edges to matrix
     edges.add_edge(x0, y0, z0, x1, y1, z1);
