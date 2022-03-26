@@ -11,3 +11,5 @@ mod work03;
 mod work04;
 #[cfg(test)]
 mod work05;
+#[cfg(test)]
+mod work06;

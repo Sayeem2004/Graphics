@@ -5,6 +5,12 @@ use std::{cmp, fs};
 
 /// Converts an image into the number spiral gradient
 fn number_spiral(img: &mut Image, scale1: f32, scale2: f32) {
+    // Error checking
+    if (scale1 < 0.0 || scale2 < 0.0) {
+        eprintln!("Scale factors for number spiral can not be negative, no changes made");
+        return;
+    }
+
     // Looping through pixels
     for i in 0..img.get_height() {
         for q in 0..img.get_width() {
@@ -25,6 +31,12 @@ fn number_spiral(img: &mut Image, scale1: f32, scale2: f32) {
 
 /// Gradient function based on CSES number spiral problem
 fn number_spiral_helper(row: i32, col: i32) -> i32 {
+    // Error checking
+    if (row < 0 || col < 0) {
+        eprintln!("Indices for number spiral helper can not be negative, returning default value");
+        return 0;
+    }
+
     // Variable declarations
     let num: i32;
 
@@ -58,6 +70,12 @@ fn number_spiral_helper(row: i32, col: i32) -> i32 {
 
 /// Converts an image into the number grid gradient
 fn number_grid(img: &mut Image, scale1: f32, scale2: f32) {
+    // Error checking
+    if (scale1 < 0.0 || scale2 < 0.0) {
+        eprintln!("Scale factors for number grid can not be negative, no changes made");
+        return;
+    }
+
     // Looping through pixels
     for i in 0..img.get_height() {
         for q in 0..img.get_width() {
@@ -78,12 +96,24 @@ fn number_grid(img: &mut Image, scale1: f32, scale2: f32) {
 
 /// Gradient function based on CSES number grid problem
 pub fn number_grid_helper(row: i32, col: i32) -> i32 {
+    // Error checking
+    if (row < 0 || col < 0) {
+        eprintln!("Indices for number grid helper can not be negative, returning default value");
+        return 0;
+    }
+
     // Bitwise stuff
     return cmp::max((row - 1) ^ (col - 1), 0);
 }
 
 /// Converts an image into a counting bits gradient
 fn counting_bits(img: &mut Image, scale1: f32, scale2: f32) {
+    // Error checking
+    if (scale1 < 0.0 || scale2 < 0.0) {
+        eprintln!("Scale factors for counting bits can not be negative, no changes made");
+        return;
+    }
+
     // Looping through pixels
     for i in 0..img.get_height() {
         for q in 0..img.get_width() {
@@ -100,6 +130,12 @@ fn counting_bits(img: &mut Image, scale1: f32, scale2: f32) {
 
 /// Gradient function based on CSES counting bits problem
 fn counting_bits_helper(n: i64) -> i64 {
+    // Error checking
+    if (n < 0) {
+        eprintln!("Index for counting bits helper can not be negative, returning default value");
+        return 0;
+    }
+
     // Variable declarations
     let mut ans: i64 = 0;
 
@@ -125,6 +161,12 @@ fn counting_bits_helper(n: i64) -> i64 {
 
 /// Binary exponentiation function for counting bits
 fn counting_bits_modpow(x: i64, n: i64) -> i64 {
+    // Error checking
+    if (x < 0 || n < 0) {
+        eprintln!("Inputs for counting bits modpow can not be negative, returning default value");
+        return 1;
+    }
+
     // Base case
     if (n == 0) {
         return 1;
@@ -144,7 +186,13 @@ fn counting_bits_modpow(x: i64, n: i64) -> i64 {
 }
 
 /// Function that creates the barnsley fern on an image
-fn barnsley(img: &mut Image, pix: Pixel, itr: i32, scale: f32) {
+fn barnsley(img: &mut Image, pix: Pixel, itr: u32, scale: f32) {
+    // Error checking
+    if (scale < 0.0) {
+        eprintln!("Scale factor for barnsley can not be negative, no changes made");
+        return;
+    }
+
     // Setting up random generator and array
     let mut rng = rand::thread_rng();
     let mut xval: Vec<f32> = vec![0.0; itr as usize];

@@ -20,12 +20,13 @@ pub const TEAL_PIXEL: Pixel = Pixel::new_value(0, 128, 128);
 pub const WHITE_PIXEL: Pixel = Pixel::new_value(255, 255, 255);
 pub const YELLOW_PIXEL: Pixel = Pixel::new_value(255, 255, 0);
 
-// Difference vectors
+/// X difference vector
 pub const DX: [i32; 4] = [-1, 0, 1, 0];
+/// Y difference vector
 pub const DY: [i32; 4] = [0, 1, 0, -1];
 
-// Hermite and bezier matrices
 lazy_static! {
+    /// Hermite matrix
     pub static ref HERMITE: Matrix = Matrix {
         row_num: 4,
         col_num: 4,
@@ -36,6 +37,8 @@ lazy_static! {
             vec![1.00, -1.00, 0.00, 0.00]
         ]
     };
+
+    /// Bezier matrix
     pub static ref BEZIER: Matrix = Matrix {
         row_num: 4,
         col_num: 4,

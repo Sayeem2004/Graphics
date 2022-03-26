@@ -82,6 +82,12 @@ fn test_lines(img: &mut Image) {
 
 /// Function that draws sierpinski's triangle on an image
 fn sierpinski(img: &mut Image, pix: Pixel, x0: i32, y0: i32, x1: i32, y1: i32, n: i32) {
+    // Error checking
+    if (n < 0) {
+        eprintln!("Recursive iteration for sierpinski can not be negative, no changes made");
+        return;
+    }
+
     // Base case
     if (n == 0) {
         return;
@@ -132,6 +138,16 @@ fn heighway(
     angle: f32,
     scale: f32,
 ) {
+    // Error checking
+    if (n < 0) {
+        eprintln!("Recursive iteration for heighway can not be negative, no changes made");
+        return;
+    }
+    if (scale < 0.0) {
+        eprintln!("Scale factor for heighway can not be negative, no changes made");
+        return;
+    }
+
     // Base case
     if (n == 0) {
         line::draw_line(x0, y0, x1, y1, img, pix);
@@ -167,6 +183,16 @@ fn bintree(
     angle: f32,
     scale: f32,
 ) {
+    // Error checking
+    if (n < 0) {
+        eprintln!("Recursive iteration for bintree can not be negative, no changes made");
+        return;
+    }
+    if (scale < 0.0) {
+        eprintln!("Scale factor for bintree can not be negative, no changes made");
+        return;
+    }
+
     // Base case
     if (n == 0) {
         return;
@@ -190,6 +216,12 @@ fn bintree(
 
 /// Function that draws a reflected koch snowflake on an image
 fn koch(img: &mut Image, pix: Pixel, x0: i32, y0: i32, x1: i32, y1: i32, n: i32, angle: f32) {
+    // Error checking
+    if (n < 0) {
+        eprintln!("Recursive iteration for koch can not be negative, no changes made");
+        return;
+    }
+
     // Base case
     if (n == 0) {
         line::draw_line(x0, y0, x1, y1, img, pix);

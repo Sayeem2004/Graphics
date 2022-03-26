@@ -1,10 +1,15 @@
 // Imports
-use crate::algorithm::matrix;
 use crate::format::{constant, matrix::Matrix};
 use std::f32::consts::PI;
 
 /// Function that adds edges representing a circle to a matrix of edges
 pub fn add_circle(edges: &mut Matrix, cx: f32, cy: f32, cz: f32, r: f32, itr: u32) {
+    // Error checking
+    if (r < 0.0) {
+        eprintln!("Circle can not have negative radius, no changes made");
+        return;
+    }
+
     // Getting initial values
     let mut px: f32 = cx + r;
     let mut py: f32 = cy;
@@ -41,7 +46,7 @@ pub fn add_hermite(
     // Getting x coefficients
     let mut xmat: Matrix = Matrix::new_matrix();
     xmat.add_col(&vec![x0, x1, rx0, rx1]);
-    let xret: Matrix = matrix::multiply_matrices(&constant::HERMITE, &xmat);
+    let xret: Matrix = Matrix::multiply_matrices(&constant::HERMITE, &xmat);
     let (ax, bx, cx, dx) = (
         xret.data[0][0],
         xret.data[0][1],
@@ -52,7 +57,7 @@ pub fn add_hermite(
     // Getting y coefficients
     let mut ymat: Matrix = Matrix::new_matrix();
     ymat.add_col(&vec![y0, y1, ry0, ry1]);
-    let yret: Matrix = matrix::multiply_matrices(&constant::HERMITE, &ymat);
+    let yret: Matrix = Matrix::multiply_matrices(&constant::HERMITE, &ymat);
     let (ay, by, cy, dy) = (
         yret.data[0][0],
         yret.data[0][1],
@@ -96,7 +101,7 @@ pub fn add_bezier(
     // Getting x coefficients
     let mut xmat: Matrix = Matrix::new_matrix();
     xmat.add_col(&vec![x0, x1, x2, x3]);
-    let xret: Matrix = matrix::multiply_matrices(&constant::BEZIER, &xmat);
+    let xret: Matrix = Matrix::multiply_matrices(&constant::BEZIER, &xmat);
     let (ax, bx, cx, dx) = (
         xret.data[0][0],
         xret.data[0][1],
@@ -107,7 +112,7 @@ pub fn add_bezier(
     // Getting y coefficients
     let mut ymat: Matrix = Matrix::new_matrix();
     ymat.add_col(&vec![y0, y1, y2, y3]);
-    let yret: Matrix = matrix::multiply_matrices(&constant::BEZIER, &ymat);
+    let yret: Matrix = Matrix::multiply_matrices(&constant::BEZIER, &ymat);
     let (ay, by, cy, dy) = (
         yret.data[0][0],
         yret.data[0][1],

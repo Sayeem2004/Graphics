@@ -1,5 +1,4 @@
 // Imports
-use crate::algorithm::matrix;
 use crate::format::{constant, file, image::Image, matrix::Matrix};
 use std::fs;
 
@@ -22,8 +21,8 @@ fn test_matrix(mode: i32) {
 
     // Testing matrix multiplication
     println!("Testing matrix multiplication");
-    let mat3: Matrix = matrix::multiply_matrices(&mat2, &mat1);
-    println!("mat3 = matrix::multiply_matrices(mat2, mat1)");
+    let mat3: Matrix = Matrix::multiply_matrices(&mat2, &mat1);
+    println!("mat3 = Matrix::multiply_matrices(mat2, mat1)");
     print!("mat3 =\n{}", mat3);
 
     // Testing matrix multiplication again
@@ -33,8 +32,8 @@ fn test_matrix(mode: i32) {
     mat4.add_edge(7.0, 8.0, 9.0, 10.0, 11.0, 12.0);
     print!("mat4 =\n{}", mat4);
     print!("mat3 =\n{}", mat3);
-    let mat5: Matrix = matrix::multiply_matrices(&mat4, &mat3);
-    println!("mat5 : Matrix = matrix::multiply_matrices(mat4, mat3)");
+    let mat5: Matrix = Matrix::multiply_matrices(&mat4, &mat3);
+    println!("mat5 : Matrix = Matrix::multiply_matrices(mat4, mat3)");
     print!("mat5 =\n{}", mat5);
 
     // Testing draw_lines
@@ -71,11 +70,19 @@ fn test_matrix(mode: i32) {
 }
 
 /// Function that creates a spiral in an edge matrix based on some parameters
-fn spiral(mat: &mut Matrix, ds: f32, da: f32, itr: i32, size: i32) {
+fn spiral(mat: &mut Matrix, ds: f32, da: f32, itr: u32, size: i32) {
+    // Error checking
+    if (size < 0) {
+        eprintln!("Size of spiral can not be negative, no changes made");
+        return;
+    }
+
+    // Variable declarations
     let mut prev_size: f32 = 0.0;
     let mut prev_angle: f32 = 0.0;
 
-    for _i in 0..itr.abs() {
+    // Iterating and adding edges
+    for _i in 0..itr {
         mat.add_edge(
             (size / 2) as f32 + f32::cos(prev_angle) * prev_size,
             (size / 2) as f32 + f32::sin(prev_angle) * prev_size,

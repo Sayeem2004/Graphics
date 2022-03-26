@@ -1,5 +1,5 @@
 // Imports
-use crate::algorithm::{line, matrix};
+use crate::algorithm::line;
 use crate::format::{image::Image, pixel::Pixel};
 use std::f32::consts::PI;
 use std::fmt;
@@ -226,6 +226,31 @@ impl Matrix {
             self.add_col(col);
         }
     }
+
+    /// Implements matrix multiplication between two matrices and returns a third one
+    pub fn multiply_matrices(mat1: &Matrix, mat2: &Matrix) -> Matrix {
+        // Making sure matrices are of the same size
+        if (mat1.col_num != mat2.row_num) {
+            eprintln!(
+                "Matrix 1 column number does not match matrix 2 row number, using default matrix"
+            );
+            return Matrix::new_matrix();
+        }
+
+        // Actually multiplying
+        let mut mat3: Matrix = Matrix::new_dimension(mat1.row_num, mat2.col_num);
+        for i in 0..mat1.row_num {
+            for q in 0..mat2.col_num {
+                let mut sum: f32 = 0.0;
+                for r in 0..mat1.col_num {
+                    sum += mat1.data[r as usize][i as usize] * mat2.data[q as usize][r as usize];
+                }
+                mat3.data[q as usize][i as usize] = sum;
+            }
+        }
+
+        return mat3;
+    }
 }
 
 // Implementing transformation functions for struct
@@ -245,7 +270,7 @@ impl Matrix {
         mat.data[2][2] = dz;
 
         // Updating transformation matrix
-        *self = matrix::multiply_matrices(&mat, self);
+        *self = Matrix::multiply_matrices(&mat, self);
     }
 
     /// Function for translating a transformation matrix
@@ -265,7 +290,7 @@ impl Matrix {
         mat.data[3][2] = dz;
 
         // Updating transformation matrix
-        *self = matrix::multiply_matrices(&mat, self);
+        *self = Matrix::multiply_matrices(&mat, self);
     }
 
     /// Function for rotating a transformation matrix in radians
@@ -286,7 +311,7 @@ impl Matrix {
             mat.data[2][2] = f32::cos(angle);
 
             // Updating transformation matrix
-            *self = matrix::multiply_matrices(&mat, self);
+            *self = Matrix::multiply_matrices(&mat, self);
         } else if (axis.eq("y")) {
             // Making new transformation matrix
             let mut mat: Matrix = Matrix::new_transformation();
@@ -296,7 +321,7 @@ impl Matrix {
             mat.data[2][2] = f32::cos(angle);
 
             // Updating transformation matrix
-            *self = matrix::multiply_matrices(&mat, self);
+            *self = Matrix::multiply_matrices(&mat, self);
         } else if (axis.eq("z")) {
             // Making new transformation matrix
             let mut mat: Matrix = Matrix::new_transformation();
@@ -306,7 +331,7 @@ impl Matrix {
             mat.data[1][1] = f32::cos(angle);
 
             // Updating transformation matrix
-            *self = matrix::multiply_matrices(&mat, self);
+            *self = Matrix::multiply_matrices(&mat, self);
         } else {
             eprintln!("Axis of rotation is not valid, no changes made");
             return;
@@ -327,6 +352,6 @@ impl Matrix {
         }
 
         // Multiplying and copying things over
-        *self = matrix::multiply_matrices(trans, self);
+        *self = Matrix::multiply_matrices(trans, self);
     }
 }

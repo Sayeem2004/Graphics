@@ -4,6 +4,12 @@ use std::f32::consts::PI;
 
 /// Function that adds edges representing a rectangular prism to a matrix of edges
 pub fn add_box(edges: &mut Matrix, x: f32, y: f32, z: f32, w: f32, h: f32, d: f32) {
+    // Error checking
+    if (w < 0.0 || h < 0.0 || d < 0.0) {
+        eprintln!("Dimensions of box can not be negative, no changes made");
+        return;
+    }
+
     // Defining vertices
     let (x0, y0, z0) = (x + 0.0, y - 0.0, z - 0.0);
     let (x1, y1, z1) = (x + w, y - 0.0, z - 0.0);
@@ -31,6 +37,12 @@ pub fn add_box(edges: &mut Matrix, x: f32, y: f32, z: f32, w: f32, h: f32, d: f3
 
 /// Function that generates the points in a sphere
 pub fn gen_sphere(x: f32, y: f32, z: f32, r: f32, itr: u32) -> Matrix {
+    // Error checking
+    if (r < 0.0) {
+        eprintln!("Radius of sphere can not be negative, returning default value");
+        return Matrix::new_matrix();
+    }
+
     // Variable declaration
     let mut ret : Matrix = Matrix::new_matrix();
 
@@ -57,6 +69,12 @@ pub fn gen_sphere(x: f32, y: f32, z: f32, r: f32, itr: u32) -> Matrix {
 
 /// Function that adds edges representing a sphere to a matrix of edges
 pub fn add_sphere(edges: &mut Matrix, x: f32, y: f32, z: f32, r: f32, itr: u32) {
+    // Error checking
+    if (r < 0.0) {
+        eprintln!("Radius of sphere can not be negative, no changes made");
+        return;
+    }
+
     // Getting points on sphere
     let points: Matrix = gen_sphere(x, y, z, r, itr);
 
@@ -68,6 +86,12 @@ pub fn add_sphere(edges: &mut Matrix, x: f32, y: f32, z: f32, r: f32, itr: u32) 
 
 /// Function that generates the points in a torus
 pub fn gen_torus(x: f32, y: f32, z: f32, r1: f32, r2: f32, itr: u32) -> Matrix {
+    // Error checking
+    if (r1 < 0.0 || r2 < 0.0) {
+        eprintln!("Radii of the torus can not be negative, returning default value");
+        return Matrix::new_matrix();
+    }
+
     // Variable declaration
     let mut ret : Matrix = Matrix::new_matrix();
 
@@ -94,6 +118,12 @@ pub fn gen_torus(x: f32, y: f32, z: f32, r1: f32, r2: f32, itr: u32) -> Matrix {
 
 /// Function that adds edges representing a torus to a matrix of edges
 pub fn add_torus(edges: &mut Matrix, x: f32, y: f32, z: f32, r1: f32, r2: f32, itr: u32) {
+    // Error checking
+    if (r1 < 0.0 || r2 < 0.0) {
+        eprintln!("Radii of the torus can not be negative, no changes made");
+        return;
+    }
+
     // Getting points on torus
     let points: Matrix = gen_torus(x, y, z, r1, r2, itr);
 
