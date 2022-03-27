@@ -2,8 +2,8 @@
 use crate::format::matrix::Matrix;
 use std::f32::consts::PI;
 
-/// Function that adds edges representing a rectangular prism to a matrix of edges
-pub fn add_box(edges: &mut Matrix, x: f32, y: f32, z: f32, w: f32, h: f32, d: f32) {
+/// Function that adds triangles representing a rectangular prism to a matrix of triangles
+pub fn add_box(poly: &mut Matrix, x: f32, y: f32, z: f32, w: f32, h: f32, d: f32) {
     // Error checking
     if (w < 0.0 || h < 0.0 || d < 0.0) {
         eprintln!("Dimensions of box can not be negative, no changes made");
@@ -20,19 +20,19 @@ pub fn add_box(edges: &mut Matrix, x: f32, y: f32, z: f32, w: f32, h: f32, d: f3
     let (x6, y6, z6) = (x + 0.0, y - h, z - d);
     let (x7, y7, z7) = (x + w, y - h, z - d);
 
-    // Adding edges to matrix
-    edges.add_edge(x0, y0, z0, x1, y1, z1);
-    edges.add_edge(x0, y0, z0, x2, y2, z2);
-    edges.add_edge(x0, y0, z0, x3, y3, z3);
-    edges.add_edge(x1, y1, z1, x4, y4, z4);
-    edges.add_edge(x1, y1, z1, x5, y5, z5);
-    edges.add_edge(x2, y2, z2, x4, y4, z4);
-    edges.add_edge(x2, y2, z2, x6, y6, z6);
-    edges.add_edge(x3, y3, z3, x5, y5, z5);
-    edges.add_edge(x3, y3, z3, x6, y6, z6);
-    edges.add_edge(x4, y4, z4, x7, y7, z7);
-    edges.add_edge(x5, y5, z5, x7, y7, z7);
-    edges.add_edge(x6, y6, z6, x7, y7, z7);
+    // Adding triangles to matrix
+    poly.add_triangle(x0, y0, z0, x2, y2, z2, x4, y4, z4);
+    poly.add_triangle(x0, y0, z0, x4, y4, z4, x1, y1, z1);
+    poly.add_triangle(x3, y3, z3, x6, y6, z6, x2, y2, z2);
+    poly.add_triangle(x3, y3, z3, x2, y2, z2, x0, y0, z0);
+    poly.add_triangle(x5, y5, z5, x7, y7, z7, x6, y6, z6);
+    poly.add_triangle(x5, y5, z5, x6, y6, z6, x3, y3, z3);
+    poly.add_triangle(x1, y1, z1, x4, y4, z4, x7, y7, z7);
+    poly.add_triangle(x1, y1, z1, x7, y7, z7, x5, y5, z5);
+    poly.add_triangle(x3, y3, z3, x0, y0, z0, x1, y1, z1);
+    poly.add_triangle(x3, y3, z3, x1, y1, z1, x5, y5, z5);
+    poly.add_triangle(x2, y2, z2, x6, y6, z6, x7, y7, z7);
+    poly.add_triangle(x2, y2, z2, x7, y7, z7, x4, y4, z4);
 }
 
 /// Function that generates the points in a sphere
@@ -44,7 +44,7 @@ pub fn gen_sphere(x: f32, y: f32, z: f32, r: f32, itr: u32) -> Matrix {
     }
 
     // Variable declaration
-    let mut ret : Matrix = Matrix::new_matrix();
+    let mut ret: Matrix = Matrix::new_matrix();
 
     // Getting points on the surface
     for i in 0..itr {
@@ -67,8 +67,8 @@ pub fn gen_sphere(x: f32, y: f32, z: f32, r: f32, itr: u32) -> Matrix {
     return ret;
 }
 
-/// Function that adds edges representing a sphere to a matrix of edges
-pub fn add_sphere(edges: &mut Matrix, x: f32, y: f32, z: f32, r: f32, itr: u32) {
+/// Function that adds triangles representing a sphere to a matrix of triangles
+pub fn add_sphere(poly: &mut Matrix, x: f32, y: f32, z: f32, r: f32, itr: u32) {
     // Error checking
     if (r < 0.0) {
         eprintln!("Radius of sphere can not be negative, no changes made");
@@ -78,9 +78,38 @@ pub fn add_sphere(edges: &mut Matrix, x: f32, y: f32, z: f32, r: f32, itr: u32) 
     // Getting points on sphere
     let points: Matrix = gen_sphere(x, y, z, r, itr);
 
-    // Adding points to edge matrix
-    for p in points.data.iter() {
-        edges.add_edge(p[0], p[1], p[2], p[0] + 1.0, p[1] + 1.0, p[2] + 1.0);
+    // Adding triangles to poly matrix
+    for i in 0..itr as usize {
+        for q in 0..=itr as usize {
+            let mxi: usize = itr as usize;
+            let mxq: usize = (itr+1) as usize;
+            let p: usize = (i*mxq+q);
+            if (q % mxq == 0) {
+                poly.add_triangle(
+                    points.data[p][0], points.data[p][1], points.data[p][2],
+                    points.data[p+1][0], points.data[p+1][1], points.data[p+1][2],
+                    points.data[(p+mxq+1) % (mxi*mxq)][0], points.data[(p+mxq+1) % (mxi*mxq)][1], points.data[(p+mxq+1) % (mxi*mxq)][2]
+                );
+            } else if (q % mxq == mxq-2) {
+                poly.add_triangle(
+                    points.data[p][0], points.data[p][1], points.data[p][2],
+                    points.data[p+1][0], points.data[p+1][1], points.data[p+1][2],
+                    points.data[(p+mxq) % (mxi*mxq)][0], points.data[(p+mxq) % (mxi*mxq)][1], points.data[(p+mxq) % (mxi*mxq)][2]
+                );
+            } else if (q % mxq != mxq-1) {
+                poly.add_triangle(
+                    points.data[p][0], points.data[p][1], points.data[p][2],
+                    points.data[p+1][0], points.data[p+1][1], points.data[p+1][2],
+                    points.data[(p+mxq+1) % (mxi*mxq)][0], points.data[(p+mxq+1) % (mxi*mxq)][1], points.data[(p+mxq+1) % (mxi*mxq)][2]
+                );
+
+                poly.add_triangle(
+                    points.data[p][0], points.data[p][1], points.data[p][2],
+                    points.data[(p+mxq+1) % (mxi*mxq)][0], points.data[(p+mxq+1) % (mxi*mxq)][1], points.data[(p+mxq+1) % (mxi*mxq)][2],
+                    points.data[(p+mxq) % (mxi*mxq)][0], points.data[(p+mxq) % (mxi*mxq)][1], points.data[(p+mxq) % (mxi*mxq)][2],
+                );
+            }
+        }
     }
 }
 
@@ -93,7 +122,7 @@ pub fn gen_torus(x: f32, y: f32, z: f32, r1: f32, r2: f32, itr: u32) -> Matrix {
     }
 
     // Variable declaration
-    let mut ret : Matrix = Matrix::new_matrix();
+    let mut ret: Matrix = Matrix::new_matrix();
 
     // Getting points on the surface
     for i in 0..itr {
@@ -116,8 +145,8 @@ pub fn gen_torus(x: f32, y: f32, z: f32, r1: f32, r2: f32, itr: u32) -> Matrix {
     return ret;
 }
 
-/// Function that adds edges representing a torus to a matrix of edges
-pub fn add_torus(edges: &mut Matrix, x: f32, y: f32, z: f32, r1: f32, r2: f32, itr: u32) {
+/// Function that adds triangles representing a torus to a matrix of triangles
+pub fn add_torus(poly: &mut Matrix, x: f32, y: f32, z: f32, r1: f32, r2: f32, itr: u32) {
     // Error checking
     if (r1 < 0.0 || r2 < 0.0) {
         eprintln!("Radii of the torus can not be negative, no changes made");
@@ -127,8 +156,37 @@ pub fn add_torus(edges: &mut Matrix, x: f32, y: f32, z: f32, r1: f32, r2: f32, i
     // Getting points on torus
     let points: Matrix = gen_torus(x, y, z, r1, r2, itr);
 
-    // Adding points to edge matrix
-    for p in points.data.iter() {
-        edges.add_edge(p[0], p[1], p[2], p[0] + 1.0, p[1] + 1.0, p[2] + 1.0);
+    // Adding triangles to poly matrix
+    for i in 0..itr as usize {
+        for q in 0..=itr as usize {
+            let mxi: usize = itr as usize;
+            let mxq: usize = (itr+1) as usize;
+            let p: usize = (i*mxq+q) as usize;
+            if (q % mxq == 0) {
+                poly.add_triangle(
+                    points.data[p][0], points.data[p][1], points.data[p][2],
+                    points.data[p+1][0], points.data[p+1][1], points.data[p+1][2],
+                    points.data[(p+mxq+1) % (mxi*mxq)][0], points.data[(p+mxq+1) % (mxi*mxq)][1], points.data[(p+mxq+1) % (mxi*mxq)][2]
+                );
+            } else if (q % mxq == mxq-2) {
+                poly.add_triangle(
+                    points.data[p][0], points.data[p][1], points.data[p][2],
+                    points.data[p+1][0], points.data[p+1][1], points.data[p+1][2],
+                    points.data[(p+mxq) % (mxi*mxq)][0], points.data[(p+mxq) % (mxi*mxq)][1], points.data[(p+mxq) % (mxi*mxq)][2]
+                );
+            } else if (q % mxq != mxq-1) {
+                poly.add_triangle(
+                    points.data[p][0], points.data[p][1], points.data[p][2],
+                    points.data[p+1][0], points.data[p+1][1], points.data[p+1][2],
+                    points.data[(p+mxq+1) % (mxi*mxq)][0], points.data[(p+mxq+1) % (mxi*mxq)][1], points.data[(p+mxq+1) % (mxi*mxq)][2]
+                );
+
+                poly.add_triangle(
+                    points.data[p][0], points.data[p][1], points.data[p][2],
+                    points.data[(p+mxq+1) % (mxi*mxq)][0], points.data[(p+mxq+1) % (mxi*mxq)][1], points.data[(p+mxq+1) % (mxi*mxq)][2],
+                    points.data[(p+mxq) % (mxi*mxq)][0], points.data[(p+mxq) % (mxi*mxq)][1], points.data[(p+mxq) % (mxi*mxq)][2],
+                );
+            }
+        }
     }
 }

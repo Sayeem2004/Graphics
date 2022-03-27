@@ -3,7 +3,7 @@ use crate::format::{constant, matrix::Matrix};
 use std::f32::consts::PI;
 
 /// Function that adds edges representing a circle to a matrix of edges
-pub fn add_circle(edges: &mut Matrix, cx: f32, cy: f32, cz: f32, r: f32, itr: u32) {
+pub fn add_circle(edge: &mut Matrix, cx: f32, cy: f32, cz: f32, r: f32, itr: u32) {
     // Error checking
     if (r < 0.0) {
         eprintln!("Circle can not have negative radius, no changes made");
@@ -22,7 +22,7 @@ pub fn add_circle(edges: &mut Matrix, cx: f32, cy: f32, cz: f32, r: f32, itr: u3
         let ny: f32 = cy + r * f32::sin(2.0 * PI * t);
 
         // Adding to matrix
-        edges.add_edge(px, py, cz, nx, ny, cz);
+        edge.add_edge(px, py, cz, nx, ny, cz);
 
         // Preparing for next loop
         px = nx;
@@ -32,7 +32,7 @@ pub fn add_circle(edges: &mut Matrix, cx: f32, cy: f32, cz: f32, r: f32, itr: u3
 
 /// Function that adds edges representing a hermite curve to a matrix of edges
 pub fn add_hermite(
-    edges: &mut Matrix,
+    edge: &mut Matrix,
     x0: f32,
     y0: f32,
     x1: f32,
@@ -77,7 +77,7 @@ pub fn add_hermite(
         let ny: f32 = (ay * t * t * t) + (by * t * t) + (cy * t) + dy;
 
         // Adding to matrix
-        edges.add_edge(px, py, 0.0, nx, ny, 0.0);
+        edge.add_edge(px, py, 0.0, nx, ny, 0.0);
 
         // Preparing for next loop
         px = nx;
@@ -87,7 +87,7 @@ pub fn add_hermite(
 
 /// Function that adds edges representing a bezier curve to a matrix of edges
 pub fn add_bezier(
-    edges: &mut Matrix,
+    edge: &mut Matrix,
     x0: f32,
     y0: f32,
     x1: f32,
@@ -132,7 +132,7 @@ pub fn add_bezier(
         let ny: f32 = (ay * t * t * t) + (by * t * t) + (cy * t) + dy;
 
         // Adding to matrix
-        edges.add_edge(px, py, 0.0, nx, ny, 0.0);
+        edge.add_edge(px, py, 0.0, nx, ny, 0.0);
 
         // Preparing for next loop
         px = nx;

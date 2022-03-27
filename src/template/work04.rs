@@ -1,6 +1,7 @@
 // Imports
 use crate::algorithm::curve;
-use crate::format::{constant, file, image::Image, matrix::Matrix, parse};
+use crate::format::{constant, file, image::Image, matrix::Matrix};
+use crate::script::parse;
 use std::f32::consts::PI;
 use std::fs;
 
@@ -17,13 +18,13 @@ fn optical() {
     trans.translate(-375.0, -375.0, 0.0);
     trans.rotate_degree(6.0, "z");
     trans.translate(375.0, 375.0, 0.0);
-    let mut edges: Matrix = Matrix::new_matrix();
+    let mut edge: Matrix = Matrix::new_matrix();
 
     // Iterating over rotation
     for _ in 0..60 {
         // Drawing curve
         curve::add_bezier(
-            &mut edges,
+            &mut edge,
             crv.data[0][0],
             crv.data[0][1],
             crv.data[1][0],
@@ -40,7 +41,7 @@ fn optical() {
     }
 
     // Drawing lines and filling in certain sections
-    edges.draw_lines_xy(&mut img, constant::YELLOW_PIXEL);
+    edge.draw_lines_xy(&mut img, constant::YELLOW_PIXEL);
     for i in 0..31 {
         img.flood_xy(
             (375.0 + 374.0 * f32::cos(2.0 * PI * i as f32 / 30.0)) as i32,

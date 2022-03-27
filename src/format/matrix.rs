@@ -153,65 +153,6 @@ impl fmt::Display for Matrix {
 
 // Implementing utility functions for the struct
 impl Matrix {
-    /// Function for adding a point (x, y, z) to a matrix
-    pub fn add_point(&mut self, x: f32, y: f32, z: f32) {
-        if (self.row_num != 4) {
-            eprintln!("Matrix row number does not equal four, no changes made");
-            return;
-        }
-        self.add_col(&vec![x, y, z, 1.0]);
-    }
-
-    /// Function for adding an edge (x0, y0, z0) (x1, y1, z1) to a matrix
-    pub fn add_edge(&mut self, x0: f32, y0: f32, z0: f32, x1: f32, y1: f32, z1: f32) {
-        if (self.row_num != 4) {
-            eprintln!("Matrix row number does not equal four, no changes made");
-            return;
-        }
-        self.add_point(x0, y0, z0);
-        self.add_point(x1, y1, z1);
-    }
-
-    /// Function for drawing the edges found in a matrix on an image using xy orientation
-    pub fn draw_lines_xy(&mut self, img: &mut Image, pix: Pixel) {
-        if (self.row_num != 4) {
-            eprintln!("Matrix row number does not equal four, no changes made");
-            return;
-        }
-        for i in 0..self.col_num {
-            if (i % 2 == 1) {
-                line::draw_line(
-                    self.data[(i - 1) as usize][0] as i32,
-                    self.data[(i - 1) as usize][1] as i32,
-                    self.data[i as usize][0] as i32,
-                    self.data[i as usize][1] as i32,
-                    img,
-                    pix,
-                )
-            }
-        }
-    }
-
-    /// Function for drawing the edges found in a matrix on an image using rc orientation
-    pub fn draw_lines_rc(&mut self, img: &mut Image, pix: Pixel) {
-        if (self.row_num != 4) {
-            eprintln!("Matrix row number does not equal four, no changes made");
-            return;
-        }
-        for i in 0..self.col_num {
-            if (i % 2 == 1) {
-                line::draw_line(
-                    self.data[(i - 1) as usize][0] as i32,
-                    img.get_height() - self.data[(i - 1) as usize][1] as i32,
-                    self.data[i as usize][0] as i32,
-                    img.get_height() - self.data[i as usize][1] as i32,
-                    img,
-                    pix,
-                )
-            }
-        }
-    }
-
     /// Function clears all edges from a matrix
     pub fn clear(&mut self) {
         self.data
@@ -353,5 +294,154 @@ impl Matrix {
 
         // Multiplying and copying things over
         *self = Matrix::multiply_matrices(trans, self);
+    }
+}
+
+// Implementing drawing function for the struct
+impl Matrix {
+    /// Function for adding a point (x, y, z) to a matrix
+    pub fn add_point(&mut self, x: f32, y: f32, z: f32) {
+        if (self.row_num != 4) {
+            eprintln!("Matrix row number does not equal four, no changes made");
+            return;
+        }
+        self.add_col(&vec![x, y, z, 1.0]);
+    }
+
+    /// Function for adding an edge (x0, y0, z0) (x1, y1, z1) to a matrix
+    pub fn add_edge(&mut self, x0: f32, y0: f32, z0: f32, x1: f32, y1: f32, z1: f32) {
+        if (self.row_num != 4) {
+            eprintln!("Matrix row number does not equal four, no changes made");
+            return;
+        }
+        self.add_point(x0, y0, z0);
+        self.add_point(x1, y1, z1);
+    }
+
+    /// Function for drawing the edges found in a matrix on an image using xy orientation
+    pub fn draw_lines_xy(&mut self, img: &mut Image, pix: Pixel) {
+        if (self.row_num != 4) {
+            eprintln!("Matrix row number does not equal four, no changes made");
+            return;
+        }
+        for i in 0..self.col_num {
+            if (i % 2 == 1) {
+                line::draw_line(
+                    self.data[(i - 1) as usize][0] as i32,
+                    self.data[(i - 1) as usize][1] as i32,
+                    self.data[i as usize][0] as i32,
+                    self.data[i as usize][1] as i32,
+                    img,
+                    pix,
+                )
+            }
+        }
+    }
+
+    /// Function for drawing the edges found in a matrix on an image using rc orientation
+    pub fn draw_lines_rc(&mut self, img: &mut Image, pix: Pixel) {
+        if (self.row_num != 4) {
+            eprintln!("Matrix row number does not equal four, no changes made");
+            return;
+        }
+        for i in 0..self.col_num {
+            if (i % 2 == 1) {
+                line::draw_line(
+                    self.data[(i - 1) as usize][0] as i32,
+                    img.get_height() - self.data[(i - 1) as usize][1] as i32,
+                    self.data[i as usize][0] as i32,
+                    img.get_height() - self.data[i as usize][1] as i32,
+                    img,
+                    pix,
+                )
+            }
+        }
+    }
+
+    /// Function for adding a triangle to a matrix
+    pub fn add_triangle(&mut self, x0: f32, y0: f32, z0: f32, x1: f32, y1: f32, z1: f32, x2: f32, y2: f32, z2: f32) {
+        if (self.row_num != 4) {
+            eprintln!("Matrix row number does not equal four, no changes made");
+            return;
+        }
+        self.add_point(x0, y0, z0);
+        self.add_point(x1, y1, z1);
+        self.add_point(x2, y2, z2);
+    }
+
+    /// Function for drawing the triangles found in a matrix on an image using xy orientation
+    pub fn draw_triangles_xy(&mut self, img: &mut Image, pix: Pixel) {
+        if (self.row_num != 4) {
+            eprintln!("Matrix row number does not equal four, no changes made");
+            return;
+        }
+        for i in 0..self.col_num {
+            if (i % 3 == 2) {
+                line::draw_line(
+                    self.data[(i - 2) as usize][0] as i32,
+                    self.data[(i - 2) as usize][1] as i32,
+                    self.data[(i - 1) as usize][0] as i32,
+                    self.data[(i - 1) as usize][1] as i32,
+                    img,
+                    pix,
+                );
+
+                line::draw_line(
+                    self.data[(i - 1) as usize][0] as i32,
+                    self.data[(i - 1) as usize][1] as i32,
+                    self.data[(i - 0) as usize][0] as i32,
+                    self.data[(i - 0) as usize][1] as i32,
+                    img,
+                    pix,
+                );
+                
+                line::draw_line(
+                    self.data[(i - 0) as usize][0] as i32,
+                    self.data[(i - 0) as usize][1] as i32,
+                    self.data[(i - 2) as usize][0] as i32,
+                    self.data[(i - 2) as usize][1] as i32,
+                    img,
+                    pix,
+                );
+            }
+        }
+    }
+
+    /// Function for drawing the triangles found in a matrix on an image using rc orientation
+    pub fn draw_triangles_rc(&mut self, img: &mut Image, pix: Pixel) {
+        if (self.row_num != 4) {
+            eprintln!("Matrix row number does not equal four, no changes made");
+            return;
+        }
+        for i in 0..self.col_num {
+            if (i % 3 == 2) {
+                line::draw_line(
+                    self.data[(i - 2) as usize][0] as i32,
+                    img.get_height() - self.data[(i - 2) as usize][1] as i32,
+                    self.data[(i - 1) as usize][0] as i32,
+                    img.get_height() - self.data[(i - 1) as usize][1] as i32,
+                    img,
+                    pix,
+                );
+
+                line::draw_line(
+                    self.data[(i - 1) as usize][0] as i32,
+                    img.get_height() - self.data[(i - 1) as usize][1] as i32,
+                    self.data[(i - 0) as usize][0] as i32,
+                    img.get_height() - self.data[(i - 0) as usize][1] as i32,
+                    img,
+                    pix,
+                );
+
+                line::draw_line(
+                    self.data[(i - 0) as usize][0] as i32,
+                    img.get_height() - self.data[(i - 0) as usize][1] as i32,
+                    self.data[(i - 2) as usize][0] as i32,
+                    img.get_height() - self.data[(i - 2) as usize][1] as i32,
+                    img,
+                    pix,
+                );
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 // Imports
-use crate::format::{constant, file, image::Image, matrix::Matrix, parse};
+use crate::format::{constant, file, image::Image, matrix::Matrix};
+use crate::script::parse;
 use std::fs;
 
 /// Function that creates a tesseract given a side length
