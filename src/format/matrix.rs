@@ -359,7 +359,18 @@ impl Matrix {
     }
 
     /// Function for adding a triangle to a matrix
-    pub fn add_triangle(&mut self, x0: f32, y0: f32, z0: f32, x1: f32, y1: f32, z1: f32, x2: f32, y2: f32, z2: f32) {
+    pub fn add_triangle(
+        &mut self,
+        x0: f32,
+        y0: f32,
+        z0: f32,
+        x1: f32,
+        y1: f32,
+        z1: f32,
+        x2: f32,
+        y2: f32,
+        z2: f32,
+    ) {
         if (self.row_num != 4) {
             eprintln!("Matrix row number does not equal four, no changes made");
             return;
@@ -394,7 +405,7 @@ impl Matrix {
                     img,
                     pix,
                 );
-                
+
                 line::draw_line(
                     self.data[(i - 0) as usize][0] as i32,
                     self.data[(i - 0) as usize][1] as i32,

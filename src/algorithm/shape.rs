@@ -82,31 +82,55 @@ pub fn add_sphere(poly: &mut Matrix, x: f32, y: f32, z: f32, r: f32, itr: u32) {
     for i in 0..itr as usize {
         for q in 0..=itr as usize {
             let mxi: usize = itr as usize;
-            let mxq: usize = (itr+1) as usize;
-            let p: usize = (i*mxq+q);
+            let mxq: usize = (itr + 1) as usize;
+            let p: usize = (i * mxq + q);
             if (q % mxq == 0) {
                 poly.add_triangle(
-                    points.data[p][0], points.data[p][1], points.data[p][2],
-                    points.data[p+1][0], points.data[p+1][1], points.data[p+1][2],
-                    points.data[(p+mxq+1) % (mxi*mxq)][0], points.data[(p+mxq+1) % (mxi*mxq)][1], points.data[(p+mxq+1) % (mxi*mxq)][2]
+                    points.data[p][0],
+                    points.data[p][1],
+                    points.data[p][2],
+                    points.data[p + 1][0],
+                    points.data[p + 1][1],
+                    points.data[p + 1][2],
+                    points.data[(p + mxq + 1) % (mxi * mxq)][0],
+                    points.data[(p + mxq + 1) % (mxi * mxq)][1],
+                    points.data[(p + mxq + 1) % (mxi * mxq)][2],
                 );
-            } else if (q % mxq == mxq-2) {
+            } else if (q % mxq == mxq - 2) {
                 poly.add_triangle(
-                    points.data[p][0], points.data[p][1], points.data[p][2],
-                    points.data[p+1][0], points.data[p+1][1], points.data[p+1][2],
-                    points.data[(p+mxq) % (mxi*mxq)][0], points.data[(p+mxq) % (mxi*mxq)][1], points.data[(p+mxq) % (mxi*mxq)][2]
+                    points.data[p][0],
+                    points.data[p][1],
+                    points.data[p][2],
+                    points.data[p + 1][0],
+                    points.data[p + 1][1],
+                    points.data[p + 1][2],
+                    points.data[(p + mxq) % (mxi * mxq)][0],
+                    points.data[(p + mxq) % (mxi * mxq)][1],
+                    points.data[(p + mxq) % (mxi * mxq)][2],
                 );
-            } else if (q % mxq != mxq-1) {
+            } else if (q % mxq != mxq - 1) {
                 poly.add_triangle(
-                    points.data[p][0], points.data[p][1], points.data[p][2],
-                    points.data[p+1][0], points.data[p+1][1], points.data[p+1][2],
-                    points.data[(p+mxq+1) % (mxi*mxq)][0], points.data[(p+mxq+1) % (mxi*mxq)][1], points.data[(p+mxq+1) % (mxi*mxq)][2]
+                    points.data[p][0],
+                    points.data[p][1],
+                    points.data[p][2],
+                    points.data[p + 1][0],
+                    points.data[p + 1][1],
+                    points.data[p + 1][2],
+                    points.data[(p + mxq + 1) % (mxi * mxq)][0],
+                    points.data[(p + mxq + 1) % (mxi * mxq)][1],
+                    points.data[(p + mxq + 1) % (mxi * mxq)][2],
                 );
 
                 poly.add_triangle(
-                    points.data[p][0], points.data[p][1], points.data[p][2],
-                    points.data[(p+mxq+1) % (mxi*mxq)][0], points.data[(p+mxq+1) % (mxi*mxq)][1], points.data[(p+mxq+1) % (mxi*mxq)][2],
-                    points.data[(p+mxq) % (mxi*mxq)][0], points.data[(p+mxq) % (mxi*mxq)][1], points.data[(p+mxq) % (mxi*mxq)][2],
+                    points.data[p][0],
+                    points.data[p][1],
+                    points.data[p][2],
+                    points.data[(p + mxq + 1) % (mxi * mxq)][0],
+                    points.data[(p + mxq + 1) % (mxi * mxq)][1],
+                    points.data[(p + mxq + 1) % (mxi * mxq)][2],
+                    points.data[(p + mxq) % (mxi * mxq)][0],
+                    points.data[(p + mxq) % (mxi * mxq)][1],
+                    points.data[(p + mxq) % (mxi * mxq)][2],
                 );
             }
         }
@@ -160,31 +184,55 @@ pub fn add_torus(poly: &mut Matrix, x: f32, y: f32, z: f32, r1: f32, r2: f32, it
     for i in 0..itr as usize {
         for q in 0..=itr as usize {
             let mxi: usize = itr as usize;
-            let mxq: usize = (itr+1) as usize;
-            let p: usize = (i*mxq+q) as usize;
+            let mxq: usize = (itr + 1) as usize;
+            let p: usize = (i * mxq + q) as usize;
             if (q % mxq == 0) {
                 poly.add_triangle(
-                    points.data[p][0], points.data[p][1], points.data[p][2],
-                    points.data[p+1][0], points.data[p+1][1], points.data[p+1][2],
-                    points.data[(p+mxq+1) % (mxi*mxq)][0], points.data[(p+mxq+1) % (mxi*mxq)][1], points.data[(p+mxq+1) % (mxi*mxq)][2]
+                    points.data[p][0],
+                    points.data[p][1],
+                    points.data[p][2],
+                    points.data[p + 1][0],
+                    points.data[p + 1][1],
+                    points.data[p + 1][2],
+                    points.data[(p + mxq + 1) % (mxi * mxq)][0],
+                    points.data[(p + mxq + 1) % (mxi * mxq)][1],
+                    points.data[(p + mxq + 1) % (mxi * mxq)][2],
                 );
-            } else if (q % mxq == mxq-2) {
+            } else if (q % mxq == mxq - 2) {
                 poly.add_triangle(
-                    points.data[p][0], points.data[p][1], points.data[p][2],
-                    points.data[p+1][0], points.data[p+1][1], points.data[p+1][2],
-                    points.data[(p+mxq) % (mxi*mxq)][0], points.data[(p+mxq) % (mxi*mxq)][1], points.data[(p+mxq) % (mxi*mxq)][2]
+                    points.data[p][0],
+                    points.data[p][1],
+                    points.data[p][2],
+                    points.data[p + 1][0],
+                    points.data[p + 1][1],
+                    points.data[p + 1][2],
+                    points.data[(p + mxq) % (mxi * mxq)][0],
+                    points.data[(p + mxq) % (mxi * mxq)][1],
+                    points.data[(p + mxq) % (mxi * mxq)][2],
                 );
-            } else if (q % mxq != mxq-1) {
+            } else if (q % mxq != mxq - 1) {
                 poly.add_triangle(
-                    points.data[p][0], points.data[p][1], points.data[p][2],
-                    points.data[p+1][0], points.data[p+1][1], points.data[p+1][2],
-                    points.data[(p+mxq+1) % (mxi*mxq)][0], points.data[(p+mxq+1) % (mxi*mxq)][1], points.data[(p+mxq+1) % (mxi*mxq)][2]
+                    points.data[p][0],
+                    points.data[p][1],
+                    points.data[p][2],
+                    points.data[p + 1][0],
+                    points.data[p + 1][1],
+                    points.data[p + 1][2],
+                    points.data[(p + mxq + 1) % (mxi * mxq)][0],
+                    points.data[(p + mxq + 1) % (mxi * mxq)][1],
+                    points.data[(p + mxq + 1) % (mxi * mxq)][2],
                 );
 
                 poly.add_triangle(
-                    points.data[p][0], points.data[p][1], points.data[p][2],
-                    points.data[(p+mxq+1) % (mxi*mxq)][0], points.data[(p+mxq+1) % (mxi*mxq)][1], points.data[(p+mxq+1) % (mxi*mxq)][2],
-                    points.data[(p+mxq) % (mxi*mxq)][0], points.data[(p+mxq) % (mxi*mxq)][1], points.data[(p+mxq) % (mxi*mxq)][2],
+                    points.data[p][0],
+                    points.data[p][1],
+                    points.data[p][2],
+                    points.data[(p + mxq + 1) % (mxi * mxq)][0],
+                    points.data[(p + mxq + 1) % (mxi * mxq)][1],
+                    points.data[(p + mxq + 1) % (mxi * mxq)][2],
+                    points.data[(p + mxq) % (mxi * mxq)][0],
+                    points.data[(p + mxq) % (mxi * mxq)][1],
+                    points.data[(p + mxq) % (mxi * mxq)][2],
                 );
             }
         }
