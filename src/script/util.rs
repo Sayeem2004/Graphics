@@ -105,7 +105,7 @@ pub fn save(arg: &String, edge: &mut Matrix, poly: &mut Matrix, img: &mut Image)
         .arg("image/tmp/save.ppm")
         .arg(&path)
         .status()
-        .expect("Open command failed to run");
+        .expect("Convert command failed to run");
     println!("Image file is named {}", path);
 
     // Removing ppm file

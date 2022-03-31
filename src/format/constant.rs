@@ -20,9 +20,8 @@ pub const TEAL_PIXEL: Pixel = Pixel::new_value(0, 128, 128);
 pub const WHITE_PIXEL: Pixel = Pixel::new_value(255, 255, 255);
 pub const YELLOW_PIXEL: Pixel = Pixel::new_value(255, 255, 0);
 
-/// X difference vector
+/// Difference vectors
 pub const DX: [i32; 4] = [-1, 0, 1, 0];
-/// Y difference vector
 pub const DY: [i32; 4] = [0, 1, 0, -1];
 
 lazy_static! {
@@ -49,4 +48,11 @@ lazy_static! {
             vec![1.00, 0.00, 0.00, 0.00]
         ]
     };
+}
+
+lazy_static! {
+    /// View vectors
+    pub static ref ZVIEW: Vec<f32> = vec![0.0, 0.0, 1.0];
+    pub static ref YVIEW: Vec<f32> = vec![0.0, 1.0, 0.0];
+    pub static ref XVIEW: Vec<f32> = vec![1.0, 0.0, 0.0];
 }

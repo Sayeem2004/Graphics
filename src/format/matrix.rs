@@ -1,6 +1,6 @@
 // Imports
-use crate::algorithm::line;
-use crate::format::{image::Image, pixel::Pixel};
+use crate::algorithm::{line, shape};
+use crate::format::{constant, image::Image, pixel::Pixel};
 use std::f32::consts::PI;
 use std::fmt;
 
@@ -388,6 +388,14 @@ impl Matrix {
         }
         for i in 0..self.col_num {
             if (i % 3 == 2) {
+                let normal = shape::normal(
+                    &(self.data[(i - 2) as usize]),
+                    &(self.data[(i - 1) as usize]),
+                    &(self.data[(i - 0) as usize]),
+                );
+                if (shape::dot(&normal, &constant::ZVIEW) <= 0.0) {
+                    continue;
+                }
                 line::draw_line(
                     self.data[(i - 2) as usize][0] as i32,
                     self.data[(i - 2) as usize][1] as i32,
@@ -426,6 +434,26 @@ impl Matrix {
         }
         for i in 0..self.col_num {
             if (i % 3 == 2) {
+                let normal = shape::normal(
+                    &vec![
+                        self.data[(i - 2) as usize][0],
+                        img.get_height() as f32 - self.data[(i - 2) as usize][1],
+                        self.data[(i - 2) as usize][1],
+                    ],
+                    &vec![
+                        self.data[(i - 1) as usize][0],
+                        img.get_height() as f32 - self.data[(i - 1) as usize][1],
+                        self.data[(i - 1) as usize][1],
+                    ],
+                    &vec![
+                        self.data[(i - 0) as usize][0],
+                        img.get_height() as f32 - self.data[(i - 0) as usize][1],
+                        self.data[(i - 0) as usize][1],
+                    ],
+                );
+                if (shape::dot(&normal, &constant::ZVIEW) <= 0.0) {
+                    continue;
+                }
                 line::draw_line(
                     self.data[(i - 2) as usize][0] as i32,
                     img.get_height() - self.data[(i - 2) as usize][1] as i32,

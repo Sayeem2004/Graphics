@@ -80,11 +80,11 @@ pub fn add_sphere(poly: &mut Matrix, x: f32, y: f32, z: f32, r: f32, itr: u32) {
 
     // Adding triangles to poly matrix
     for i in 0..itr as usize {
-        for q in 0..=itr as usize {
+        for q in 0..itr as usize {
             let mxi: usize = itr as usize;
             let mxq: usize = (itr + 1) as usize;
             let p: usize = (i * mxq + q);
-            if (q % mxq == 0) {
+            if (q % mxq < (mxq - 2)) {
                 poly.add_triangle(
                     points.data[p][0],
                     points.data[p][1],
@@ -96,31 +96,8 @@ pub fn add_sphere(poly: &mut Matrix, x: f32, y: f32, z: f32, r: f32, itr: u32) {
                     points.data[(p + mxq + 1) % (mxi * mxq)][1],
                     points.data[(p + mxq + 1) % (mxi * mxq)][2],
                 );
-            } else if (q % mxq == mxq - 2) {
-                poly.add_triangle(
-                    points.data[p][0],
-                    points.data[p][1],
-                    points.data[p][2],
-                    points.data[p + 1][0],
-                    points.data[p + 1][1],
-                    points.data[p + 1][2],
-                    points.data[(p + mxq) % (mxi * mxq)][0],
-                    points.data[(p + mxq) % (mxi * mxq)][1],
-                    points.data[(p + mxq) % (mxi * mxq)][2],
-                );
-            } else if (q % mxq != mxq - 1) {
-                poly.add_triangle(
-                    points.data[p][0],
-                    points.data[p][1],
-                    points.data[p][2],
-                    points.data[p + 1][0],
-                    points.data[p + 1][1],
-                    points.data[p + 1][2],
-                    points.data[(p + mxq + 1) % (mxi * mxq)][0],
-                    points.data[(p + mxq + 1) % (mxi * mxq)][1],
-                    points.data[(p + mxq + 1) % (mxi * mxq)][2],
-                );
-
+            }
+            if (q % mxq > 0) {
                 poly.add_triangle(
                     points.data[p][0],
                     points.data[p][1],
@@ -182,59 +159,70 @@ pub fn add_torus(poly: &mut Matrix, x: f32, y: f32, z: f32, r1: f32, r2: f32, it
 
     // Adding triangles to poly matrix
     for i in 0..itr as usize {
-        for q in 0..=itr as usize {
+        for q in 0..itr as usize {
             let mxi: usize = itr as usize;
             let mxq: usize = (itr + 1) as usize;
             let p: usize = (i * mxq + q) as usize;
-            if (q % mxq == 0) {
-                poly.add_triangle(
-                    points.data[p][0],
-                    points.data[p][1],
-                    points.data[p][2],
-                    points.data[p + 1][0],
-                    points.data[p + 1][1],
-                    points.data[p + 1][2],
-                    points.data[(p + mxq + 1) % (mxi * mxq)][0],
-                    points.data[(p + mxq + 1) % (mxi * mxq)][1],
-                    points.data[(p + mxq + 1) % (mxi * mxq)][2],
-                );
-            } else if (q % mxq == mxq - 2) {
-                poly.add_triangle(
-                    points.data[p][0],
-                    points.data[p][1],
-                    points.data[p][2],
-                    points.data[p + 1][0],
-                    points.data[p + 1][1],
-                    points.data[p + 1][2],
-                    points.data[(p + mxq) % (mxi * mxq)][0],
-                    points.data[(p + mxq) % (mxi * mxq)][1],
-                    points.data[(p + mxq) % (mxi * mxq)][2],
-                );
-            } else if (q % mxq != mxq - 1) {
-                poly.add_triangle(
-                    points.data[p][0],
-                    points.data[p][1],
-                    points.data[p][2],
-                    points.data[p + 1][0],
-                    points.data[p + 1][1],
-                    points.data[p + 1][2],
-                    points.data[(p + mxq + 1) % (mxi * mxq)][0],
-                    points.data[(p + mxq + 1) % (mxi * mxq)][1],
-                    points.data[(p + mxq + 1) % (mxi * mxq)][2],
-                );
-
-                poly.add_triangle(
-                    points.data[p][0],
-                    points.data[p][1],
-                    points.data[p][2],
-                    points.data[(p + mxq + 1) % (mxi * mxq)][0],
-                    points.data[(p + mxq + 1) % (mxi * mxq)][1],
-                    points.data[(p + mxq + 1) % (mxi * mxq)][2],
-                    points.data[(p + mxq) % (mxi * mxq)][0],
-                    points.data[(p + mxq) % (mxi * mxq)][1],
-                    points.data[(p + mxq) % (mxi * mxq)][2],
-                );
-            }
+            poly.add_triangle(
+                points.data[p][0],
+                points.data[p][1],
+                points.data[p][2],
+                points.data[(p + mxq + 1) % (mxi * mxq)][0],
+                points.data[(p + mxq + 1) % (mxi * mxq)][1],
+                points.data[(p + mxq + 1) % (mxi * mxq)][2],
+                points.data[(p + 1) % (mxi * mxq)][0],
+                points.data[(p + 1) % (mxi * mxq)][1],
+                points.data[(p + 1) % (mxi * mxq)][2],
+            );
+            poly.add_triangle(
+                points.data[p][0],
+                points.data[p][1],
+                points.data[p][2],
+                points.data[(p + mxq) % (mxi * mxq)][0],
+                points.data[(p + mxq) % (mxi * mxq)][1],
+                points.data[(p + mxq) % (mxi * mxq)][2],
+                points.data[(p + mxq + 1) % (mxi * mxq)][0],
+                points.data[(p + mxq + 1) % (mxi * mxq)][1],
+                points.data[(p + mxq + 1) % (mxi * mxq)][2],
+            );
         }
     }
+}
+
+/// Function that returns the surface normal vector of a triangle
+pub fn normal(p1: &Vec<f32>, p2: &Vec<f32>, p3: &Vec<f32>) -> Vec<f32> {
+    // Error checking
+    if (p1.len() < 3 || p2.len() < 3 || p3.len() < 3) {
+        eprintln!("Vectors do not have at least 3 components, returning default value");
+        return vec![0.0; 3];
+    }
+
+    // Getting vector components from vertices
+    let v1: (f32, f32, f32) = (p2[0] - p1[0], p2[1] - p1[1], p2[2] - p1[2]);
+    let v2: (f32, f32, f32) = (p3[0] - p1[0], p3[1] - p1[1], p3[2] - p1[2]);
+
+    // Returning the cross product
+    return vec![
+        (v1.1 * v2.2) - (v1.2 * v2.1),
+        (v1.2 * v2.0) - (v1.0 * v2.2),
+        (v1.0 * v2.1) - (v1.1 * v2.0),
+    ];
+}
+
+/// Function that returns the dot product of two vectors
+pub fn dot(v1: &Vec<f32>, v2: &Vec<f32>) -> f32 {
+    // Error checking
+    if (v1.len() != v2.len()) {
+        eprintln!("Vector are not of the same dimension, returning default value");
+        return 0.0;
+    }
+
+    // Iterating through vectors
+    let mut sum: f32 = 0.0;
+    for i in 0..v1.len() {
+        sum += v1[i] * v2[i];
+    }
+
+    // Exiting function
+    return sum;
 }
