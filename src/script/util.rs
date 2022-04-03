@@ -1,5 +1,6 @@
 // Imports
 use crate::format::{constant, file, image::Image, matrix::Matrix};
+use rand::Rng;
 use std::{fs, process::Command};
 
 /// Function that performs the 'clear' command
@@ -16,25 +17,23 @@ pub fn display(edge: &mut Matrix, poly: &mut Matrix, img: &mut Image) {
 
     // Drawing lines and polygons
     edge.draw_lines_xy(img, constant::WHITE_PIXEL);
-    poly.draw_triangles_xy(img, constant::WHITE_PIXEL);
+    poly.draw_triangles_xy(img, constant::WHITE_PIXEL, &constant::ZVIEW);
 
     // Attempting to create image directory
     fs::create_dir_all("image/tmp").expect("Unable to create image/tmp directory");
 
     // Saving image
-    file::create_ppm_ascii("image/tmp/display.ppm", img, 1);
+    let mut rng = rand::thread_rng();
+    let num: i32 = rng.gen_range(0..100);
+    let name = vec!["image/tmp/display".to_string(), num.to_string(), ".ppm".to_string()].join("");
+    file::create_ppm_ascii(&name, img, 1);
 
     // Displaying image
-    file::open_image("image/tmp/display.ppm");
+    file::open_image(&name);
 
-    // Removing ppm file
-    let res = fs::remove_dir_all("image/tmp");
-    match res {
-        Ok(_) => (),
-        Err(_) => {
-            eprintln!("Unable to remove temporary image/tmp directory");
-        }
-    }
+    // Removing temporary file
+    fs::remove_file(&name)
+        .expect("Unable to delete temporary display file");
 }
 
 /// Function that performs the 'line' command
@@ -85,13 +84,16 @@ pub fn save(arg: &String, edge: &mut Matrix, poly: &mut Matrix, img: &mut Image)
 
     // Drawing lines and polygons
     edge.draw_lines_xy(img, constant::WHITE_PIXEL);
-    poly.draw_triangles_xy(img, constant::WHITE_PIXEL);
+    poly.draw_triangles_xy(img, constant::WHITE_PIXEL, &constant::ZVIEW);
 
     // Attempting to create image directory
     fs::create_dir_all("image/tmp").expect("Unable to create image/tmp directory");
 
     // Saving image
-    file::create_ppm_ascii("image/tmp/save.ppm", img, 1);
+    let mut rng = rand::thread_rng();
+    let num : i32 = rng.gen_range(0..100);
+    let name = vec!["image/tmp/save".to_string(), num.to_string(), ".ppm".to_string()].join("");
+    file::create_ppm_ascii(&name, img, 1);
 
     // Attempting to create image directory
     fs::create_dir_all("image/script").expect("Unable to create image/script directory");
@@ -102,18 +104,13 @@ pub fn save(arg: &String, edge: &mut Matrix, poly: &mut Matrix, img: &mut Image)
 
     // Performing image magick convert command
     Command::new("convert")
-        .arg("image/tmp/save.ppm")
+        .arg(&name)
         .arg(&path)
         .status()
         .expect("Convert command failed to run");
     println!("Image file is named {}", path);
 
-    // Removing ppm file
-    let res = fs::remove_dir_all("image/tmp");
-    match res {
-        Ok(_) => (),
-        Err(_) => {
-            eprintln!("Unable to remove temporary image/tmp directory");
-        }
-    }
+    // Removing temporary file
+    fs::remove_file(&name)
+        .expect("Unable to delete temporary save file");
 }

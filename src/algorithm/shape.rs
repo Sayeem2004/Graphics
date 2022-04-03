@@ -84,7 +84,7 @@ pub fn add_sphere(poly: &mut Matrix, x: f32, y: f32, z: f32, r: f32, itr: u32) {
             let mxi: usize = itr as usize;
             let mxq: usize = (itr + 1) as usize;
             let p: usize = (i * mxq + q);
-            if (q % mxq < (mxq - 2)) {
+            if (p % mxq < (mxq - 2)) {
                 poly.add_triangle(
                     points.data[p][0],
                     points.data[p][1],
@@ -97,7 +97,7 @@ pub fn add_sphere(poly: &mut Matrix, x: f32, y: f32, z: f32, r: f32, itr: u32) {
                     points.data[(p + mxq + 1) % (mxi * mxq)][2],
                 );
             }
-            if (q % mxq > 0) {
+            if (p % mxq > 0) {
                 poly.add_triangle(
                     points.data[p][0],
                     points.data[p][1],
@@ -189,17 +189,21 @@ pub fn add_torus(poly: &mut Matrix, x: f32, y: f32, z: f32, r1: f32, r2: f32, it
     }
 }
 
-/// Function that returns the surface normal vector of a triangle
-pub fn normal(p1: &Vec<f32>, p2: &Vec<f32>, p3: &Vec<f32>) -> Vec<f32> {
+/// Function that returns the surface normal vector of a triangle at a certain position in the triangle matrix
+pub fn normal(poly: &Matrix, ind: usize) -> Vec<f32> {
     // Error checking
-    if (p1.len() < 3 || p2.len() < 3 || p3.len() < 3) {
-        eprintln!("Vectors do not have at least 3 components, returning default value");
+    if (ind >= poly.col_num as usize) {
+        eprintln!("Index is out of range, returning default values");
+        return vec![0.0; 3];
+    }
+    if (poly.row_num != 4) {
+        eprintln!("Matrix is not of size Nx4, returning default values");
         return vec![0.0; 3];
     }
 
     // Getting vector components from vertices
-    let v1: (f32, f32, f32) = (p2[0] - p1[0], p2[1] - p1[1], p2[2] - p1[2]);
-    let v2: (f32, f32, f32) = (p3[0] - p1[0], p3[1] - p1[1], p3[2] - p1[2]);
+    let v1: (f32, f32, f32) = (poly.data[ind-1][0] - poly.data[ind-2][0], poly.data[ind-1][1] - poly.data[ind-2][1], poly.data[ind-1][2] - poly.data[ind-2][2]);
+    let v2: (f32, f32, f32) = (poly.data[ind-0][0] - poly.data[ind-2][0], poly.data[ind-0][1] - poly.data[ind-2][1], poly.data[ind-0][2] - poly.data[ind-2][2]);
 
     // Returning the cross product
     return vec![
