@@ -25,15 +25,19 @@ pub fn display(edge: &mut Matrix, poly: &mut Matrix, img: &mut Image) {
     // Saving image
     let mut rng = rand::thread_rng();
     let num: i32 = rng.gen_range(0..100);
-    let name = vec!["image/tmp/display".to_string(), num.to_string(), ".ppm".to_string()].join("");
+    let name = vec![
+        "image/tmp/display".to_string(),
+        num.to_string(),
+        ".ppm".to_string(),
+    ]
+    .join("");
     file::create_ppm_ascii(&name, img, 1);
 
     // Displaying image
     file::open_image(&name);
 
     // Removing temporary file
-    fs::remove_file(&name)
-        .expect("Unable to delete temporary display file");
+    fs::remove_file(&name).expect("Unable to delete temporary display file");
 }
 
 /// Function that performs the 'line' command
@@ -91,8 +95,13 @@ pub fn save(arg: &String, edge: &mut Matrix, poly: &mut Matrix, img: &mut Image)
 
     // Saving image
     let mut rng = rand::thread_rng();
-    let num : i32 = rng.gen_range(0..100);
-    let name = vec!["image/tmp/save".to_string(), num.to_string(), ".ppm".to_string()].join("");
+    let num: i32 = rng.gen_range(0..100);
+    let name = vec![
+        "image/tmp/save".to_string(),
+        num.to_string(),
+        ".ppm".to_string(),
+    ]
+    .join("");
     file::create_ppm_ascii(&name, img, 1);
 
     // Attempting to create image directory
@@ -111,6 +120,5 @@ pub fn save(arg: &String, edge: &mut Matrix, poly: &mut Matrix, img: &mut Image)
     println!("Image file is named {}", path);
 
     // Removing temporary file
-    fs::remove_file(&name)
-        .expect("Unable to delete temporary save file");
+    fs::remove_file(&name).expect("Unable to delete temporary save file");
 }

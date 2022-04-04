@@ -325,8 +325,16 @@ fn purple_hollow() {
     for i in 0..90 {
         // Drawing spheres
         curr.fill(constant::BLACK_PIXEL);
-        red.draw_triangles_xy(&mut curr, Pixel::new_value(70 + i * 2, 0, 0), &constant::ZVIEW);
-        blue.draw_triangles_xy(&mut curr, Pixel::new_value(0, 0, 70 + i * 2), &constant::ZVIEW);
+        red.draw_triangles_xy(
+            &mut curr,
+            Pixel::new_value(70 + i * 2, 0, 0),
+            &constant::ZVIEW,
+        );
+        blue.draw_triangles_xy(
+            &mut curr,
+            Pixel::new_value(0, 0, 70 + i * 2),
+            &constant::ZVIEW,
+        );
 
         // Adding gojo image
         gojo(&mut edge, &mut curr);
@@ -338,11 +346,7 @@ fn purple_hollow() {
             ".ppm".to_string(),
         ]
         .join("");
-        file::create_ppm_ascii(
-            &name,
-            &curr,
-            0,
-        );
+        file::create_ppm_ascii(&name, &curr, 0);
         names.push(name);
 
         // Translating spheres
@@ -377,12 +381,9 @@ fn purple_hollow() {
             "image/tmp/purple0".to_string(),
             format!("{:0>#3}", q.to_string()),
             ".ppm".to_string(),
-        ].join("");
-        file::create_ppm_ascii(
-            &name,
-            &curr,
-            0,
-        );
+        ]
+        .join("");
+        file::create_ppm_ascii(&name, &curr, 0);
         names.push(name);
 
         // Translating spheres
@@ -405,8 +406,7 @@ fn purple_hollow() {
 
     // Removing temporary files
     for file in names.iter() {
-        fs::remove_file(&file)
-            .expect("Unable to delete temporary gif file");
+        fs::remove_file(&file).expect("Unable to delete temporary gif file");
     }
 }
 
@@ -425,7 +425,11 @@ fn perspectives() {
     // Iterating through perspectives
     for i in 0..=100 {
         // Drawing sphere
-        sphere.draw_triangles_xy(&mut curr, constant::WHITE_PIXEL, &vec![100.0 - 2.0 * (i as f32), 0.0, -1.0]);
+        sphere.draw_triangles_xy(
+            &mut curr,
+            constant::WHITE_PIXEL,
+            &vec![100.0 - 2.0 * (i as f32), 0.0, -1.0],
+        );
 
         // Saving image
         let name = vec![
@@ -434,11 +438,7 @@ fn perspectives() {
             ".ppm".to_string(),
         ]
         .join("");
-        file::create_ppm_ascii(
-            &name,
-            &curr,
-            0,
-        );
+        file::create_ppm_ascii(&name, &curr, 0);
         names.push(name);
     }
 
@@ -457,8 +457,7 @@ fn perspectives() {
 
     // Removing temporary files
     for file in names.iter() {
-        fs::remove_file(&file)
-            .expect("Unable to delete temporary gif file");
+        fs::remove_file(&file).expect("Unable to delete temporary gif file");
     }
 }
 

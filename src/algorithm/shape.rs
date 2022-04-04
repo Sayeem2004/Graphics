@@ -202,8 +202,16 @@ pub fn normal(poly: &Matrix, ind: usize) -> Vec<f32> {
     }
 
     // Getting vector components from vertices
-    let v1: (f32, f32, f32) = (poly.data[ind-1][0] - poly.data[ind-2][0], poly.data[ind-1][1] - poly.data[ind-2][1], poly.data[ind-1][2] - poly.data[ind-2][2]);
-    let v2: (f32, f32, f32) = (poly.data[ind-0][0] - poly.data[ind-2][0], poly.data[ind-0][1] - poly.data[ind-2][1], poly.data[ind-0][2] - poly.data[ind-2][2]);
+    let v1: (f32, f32, f32) = (
+        poly.data[ind - 1][0] - poly.data[ind - 2][0],
+        poly.data[ind - 1][1] - poly.data[ind - 2][1],
+        poly.data[ind - 1][2] - poly.data[ind - 2][2],
+    );
+    let v2: (f32, f32, f32) = (
+        poly.data[ind - 0][0] - poly.data[ind - 2][0],
+        poly.data[ind - 0][1] - poly.data[ind - 2][1],
+        poly.data[ind - 0][2] - poly.data[ind - 2][2],
+    );
 
     // Returning the cross product
     return vec![
