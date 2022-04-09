@@ -11,23 +11,23 @@ fn gojo(edge: &mut Matrix, curr: &mut Image) {
 
     // Drawing gojo lines and adding correction lines
     edge.draw_lines_rc(curr, Pixel::new_value(25, 25, 25));
-    corr.add_edge(333.0, 2.0, 0.0, 345.0, 3.0, 0.0);
-    corr.add_edge(355.0, 3.0, 0.0, 358.0, 2.0, 0.0);
-    corr.add_edge(243.0, 166.0, 0.0, 245.0, 165.0, 0.0);
-    corr.add_edge(271.0, 147.0, 0.0, 273.0, 147.0, 0.0);
-    corr.add_edge(346.0, 213.0, 0.0, 346.0, 211.0, 0.0);
-    corr.add_edge(346.0, 229.0, 0.0, 346.0, 228.0, 0.0);
-    corr.add_edge(349.0, 217.0, 0.0, 349.0, 216.0, 0.0);
-    corr.add_edge(384.0, 139.0, 0.0, 385.0, 139.0, 0.0);
-    corr.add_edge(359.0, 191.0, 0.0, 360.0, 190.0, 0.0);
-    corr.add_edge(414.0, 5.0, 0.0, 414.0, 0.0, 0.0);
-    corr.add_edge(431.0, 120.0, 0.0, 432.0, 119.0, 0.0);
-    corr.add_edge(334.0, 257.0, 0.0, 331.0, 252.0, 0.0);
-    corr.add_edge(368.0, 235.0, 0.0, 367.0, 233.0, 0.0);
-    corr.add_edge(373.0, 237.0, 0.0, 373.0, 235.0, 0.0);
-    corr.add_edge(378.0, 248.0, 0.0, 378.0, 246.0, 0.0);
-    corr.add_edge(351.0, 270.0, 0.0, 350.0, 267.0, 0.0);
-    corr.add_edge(310.0, 275.0, 0.0, 309.0, 277.0, 0.0);
+    corr.add_edge((333.0, 2.0, 0.0), (345.0, 3.0, 0.0));
+    corr.add_edge((355.0, 3.0, 0.0), (358.0, 2.0, 0.0));
+    corr.add_edge((243.0, 166.0, 0.0), (245.0, 165.0, 0.0));
+    corr.add_edge((271.0, 147.0, 0.0), (273.0, 147.0, 0.0));
+    corr.add_edge((346.0, 213.0, 0.0), (346.0, 211.0, 0.0));
+    corr.add_edge((346.0, 229.0, 0.0), (346.0, 228.0, 0.0));
+    corr.add_edge((349.0, 217.0, 0.0), (349.0, 216.0, 0.0));
+    corr.add_edge((384.0, 139.0, 0.0), (385.0, 139.0, 0.0));
+    corr.add_edge((359.0, 191.0, 0.0), (360.0, 190.0, 0.0));
+    corr.add_edge((414.0, 5.0, 0.0), (414.0, 0.0, 0.0));
+    corr.add_edge((431.0, 120.0, 0.0), (432.0, 119.0, 0.0));
+    corr.add_edge((334.0, 257.0, 0.0), (331.0, 252.0, 0.0));
+    corr.add_edge((368.0, 235.0, 0.0), (367.0, 233.0, 0.0));
+    corr.add_edge((373.0, 237.0, 0.0), (373.0, 235.0, 0.0));
+    corr.add_edge((378.0, 248.0, 0.0), (378.0, 246.0, 0.0));
+    corr.add_edge((351.0, 270.0, 0.0), (350.0, 267.0, 0.0));
+    corr.add_edge((310.0, 275.0, 0.0), (309.0, 277.0, 0.0));
     corr.draw_lines_xy(curr, Pixel::new_value(25, 25, 25));
 
     // Adding colors to gojo
@@ -310,13 +310,13 @@ fn purple_hollow() {
     fs::create_dir_all("image/gif").expect("Unable to create image/gif directory");
 
     // Making red sphere and red translation matrix
-    shape::add_sphere(&mut red, 187.0, 200.0, 0.0, 1.0, 120);
+    shape::add_sphere(&mut red, (187.0, 200.0, 0.0), 1.0, 120);
     trans_red.translate(-187.0, -200.0, 0.0);
     trans_red.dilate(1.059, 1.059, 1.059);
     trans_red.translate(187.0, 200.0, 0.0);
 
     // Making blue sphere and blue translation matrix
-    shape::add_sphere(&mut blue, 512.0, 200.0, 0.0, 1.0, 120);
+    shape::add_sphere(&mut blue, (512.0, 200.0, 0.0), 1.0, 120);
     trans_blue.translate(-512.0, -200.0, 0.0);
     trans_blue.dilate(1.059, 1.059, 1.059);
     trans_blue.translate(512.0, 200.0, 0.0);
@@ -416,7 +416,7 @@ fn perspectives() {
     let mut names: Vec<String> = Vec::new();
     let mut curr: Image = Image::new_dimension(500, 500);
     let mut sphere: Matrix = Matrix::new_matrix();
-    shape::add_sphere(&mut sphere, 250.0, 250.0, 0.0, 200.0, 100);
+    shape::add_sphere(&mut sphere, (250.0, 250.0, 0.0), 200.0, 100);
 
     // Attempting to create image directory
     fs::create_dir_all("image/tmp").expect("Unable to create image/tmp directory");
@@ -428,7 +428,7 @@ fn perspectives() {
         sphere.draw_triangles_xy(
             &mut curr,
             constant::WHITE_PIXEL,
-            &vec![100.0 - 2.0 * (i as f32), 0.0, -1.0],
+            &[100.0 - 2.0 * (i as f32), 0.0, -1.0],
         );
 
         // Saving image

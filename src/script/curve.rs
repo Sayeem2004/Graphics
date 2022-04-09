@@ -3,9 +3,9 @@ use crate::algorithm::curve;
 use crate::format::matrix::Matrix;
 
 /// Function that performs the 'bezier' command
-pub fn bezier(arg: &String, ind: usize, edge: &mut Matrix) {
+pub fn bezier(arg: &str, ind: usize, edge: &mut Matrix) {
     // Splitting the argument string
-    let split = arg.split(" ");
+    let split = arg.split(' ');
 
     // Checking if each argument is a number
     for str in split {
@@ -26,7 +26,7 @@ pub fn bezier(arg: &String, ind: usize, edge: &mut Matrix) {
 
     // Converting to floats
     let nums: Vec<f32> = arg
-        .split(" ")
+        .split(' ')
         .map(|x| x.parse::<f32>().unwrap())
         .collect::<Vec<f32>>();
 
@@ -41,14 +41,19 @@ pub fn bezier(arg: &String, ind: usize, edge: &mut Matrix) {
 
     // Adding bezier to matrix
     curve::add_bezier(
-        edge, nums[0], nums[1], nums[2], nums[3], nums[4], nums[5], nums[6], nums[7], 100,
+        edge,
+        (nums[0], nums[1]),
+        (nums[2], nums[3]),
+        (nums[4], nums[5]),
+        (nums[6], nums[7]),
+        100,
     );
 }
 
 /// Function that performs the 'circle' command
-pub fn circle(arg: &String, ind: usize, edge: &mut Matrix) {
+pub fn circle(arg: &str, ind: usize, edge: &mut Matrix) {
     // Splitting the argument string
-    let split = arg.split(" ");
+    let split = arg.split(' ');
 
     // Checking if each argument is a number
     for str in split {
@@ -69,7 +74,7 @@ pub fn circle(arg: &String, ind: usize, edge: &mut Matrix) {
 
     // Converting to floats
     let nums: Vec<f32> = arg
-        .split(" ")
+        .split(' ')
         .map(|x| x.parse::<f32>().unwrap())
         .collect::<Vec<f32>>();
 
@@ -83,13 +88,13 @@ pub fn circle(arg: &String, ind: usize, edge: &mut Matrix) {
     }
 
     // Adding circle to matrix
-    curve::add_circle(edge, nums[0], nums[1], nums[2], nums[3], 100);
+    curve::add_circle(edge, (nums[0], nums[1], nums[2]), nums[3], 100);
 }
 
 /// Function that performs the 'hermite' command
-pub fn hermite(arg: &String, ind: usize, edge: &mut Matrix) {
+pub fn hermite(arg: &str, ind: usize, edge: &mut Matrix) {
     // Splitting the argument string
-    let split = arg.split(" ");
+    let split = arg.split(' ');
 
     // Checking if each argument is a number
     for str in split {
@@ -110,7 +115,7 @@ pub fn hermite(arg: &String, ind: usize, edge: &mut Matrix) {
 
     // Converting to floats
     let nums: Vec<f32> = arg
-        .split(" ")
+        .split(' ')
         .map(|x| x.parse::<f32>().unwrap())
         .collect::<Vec<f32>>();
 
@@ -125,6 +130,11 @@ pub fn hermite(arg: &String, ind: usize, edge: &mut Matrix) {
 
     // Adding hermite to matrix
     curve::add_hermite(
-        edge, nums[0], nums[1], nums[2], nums[3], nums[4], nums[5], nums[6], nums[7], 100,
+        edge,
+        (nums[0], nums[1]),
+        (nums[2], nums[3]),
+        (nums[4], nums[5]),
+        (nums[6], nums[7]),
+        100,
     );
 }

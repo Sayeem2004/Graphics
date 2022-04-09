@@ -3,7 +3,7 @@ use crate::format::{constant, matrix::Matrix};
 use std::f32::consts::PI;
 
 /// Function that adds edges representing a circle to a matrix of edges
-pub fn add_circle(edge: &mut Matrix, cx: f32, cy: f32, cz: f32, r: f32, itr: u32) {
+pub fn add_circle(edge: &mut Matrix, c: (f32, f32, f32), r: f32, itr: u32) {
     // Error checking
     if (r < 0.0) {
         eprintln!("Circle can not have negative radius, no changes made");
@@ -11,18 +11,18 @@ pub fn add_circle(edge: &mut Matrix, cx: f32, cy: f32, cz: f32, r: f32, itr: u32
     }
 
     // Getting initial values
-    let mut px: f32 = cx + r;
-    let mut py: f32 = cy;
+    let mut px: f32 = c.0 + r;
+    let mut py: f32 = c.1;
 
     // Iterating through t values
     for i in 1..itr + 1 {
         // Getting new coordinates
         let t: f32 = (i as f32) / (itr as f32);
-        let nx: f32 = cx + r * f32::cos(2.0 * PI * t);
-        let ny: f32 = cy + r * f32::sin(2.0 * PI * t);
+        let nx: f32 = c.0 + r * f32::cos(2.0 * PI * t);
+        let ny: f32 = c.1 + r * f32::sin(2.0 * PI * t);
 
         // Adding to matrix
-        edge.add_edge(px, py, cz, nx, ny, cz);
+        edge.add_edge((px, py, c.2), (nx, ny, c.2));
 
         // Preparing for next loop
         px = nx;
@@ -33,19 +33,15 @@ pub fn add_circle(edge: &mut Matrix, cx: f32, cy: f32, cz: f32, r: f32, itr: u32
 /// Function that adds edges representing a hermite curve to a matrix of edges
 pub fn add_hermite(
     edge: &mut Matrix,
-    x0: f32,
-    y0: f32,
-    x1: f32,
-    y1: f32,
-    rx0: f32,
-    ry0: f32,
-    rx1: f32,
-    ry1: f32,
+    s: (f32, f32),
+    e: (f32, f32),
+    sr: (f32, f32),
+    er: (f32, f32),
     itr: u32,
 ) {
     // Getting x coefficients
     let mut xmat: Matrix = Matrix::new_matrix();
-    xmat.add_col(&vec![x0, x1, rx0, rx1]);
+    xmat.add_col(&[s.0, e.0, sr.0, er.0]);
     let xret: Matrix = Matrix::multiply_matrices(&constant::HERMITE, &xmat);
     let (ax, bx, cx, dx) = (
         xret.data[0][0],
@@ -56,7 +52,7 @@ pub fn add_hermite(
 
     // Getting y coefficients
     let mut ymat: Matrix = Matrix::new_matrix();
-    ymat.add_col(&vec![y0, y1, ry0, ry1]);
+    ymat.add_col(&[s.1, e.1, sr.1, er.1]);
     let yret: Matrix = Matrix::multiply_matrices(&constant::HERMITE, &ymat);
     let (ay, by, cy, dy) = (
         yret.data[0][0],
@@ -66,8 +62,8 @@ pub fn add_hermite(
     );
 
     // Getting initial values
-    let mut px: f32 = x0;
-    let mut py: f32 = y0;
+    let mut px: f32 = s.0;
+    let mut py: f32 = s.1;
 
     // Iterating through t values
     for i in 1..itr + 1 {
@@ -77,7 +73,7 @@ pub fn add_hermite(
         let ny: f32 = (ay * t * t * t) + (by * t * t) + (cy * t) + dy;
 
         // Adding to matrix
-        edge.add_edge(px, py, 0.0, nx, ny, 0.0);
+        edge.add_edge((px, py, 0.0), (nx, ny, 0.0));
 
         // Preparing for next loop
         px = nx;
@@ -88,19 +84,15 @@ pub fn add_hermite(
 /// Function that adds edges representing a bezier curve to a matrix of edges
 pub fn add_bezier(
     edge: &mut Matrix,
-    x0: f32,
-    y0: f32,
-    x1: f32,
-    y1: f32,
-    x2: f32,
-    y2: f32,
-    x3: f32,
-    y3: f32,
+    s: (f32, f32),
+    e: (f32, f32),
+    m1: (f32, f32),
+    m2: (f32, f32),
     itr: u32,
 ) {
     // Getting x coefficients
     let mut xmat: Matrix = Matrix::new_matrix();
-    xmat.add_col(&vec![x0, x1, x2, x3]);
+    xmat.add_col(&[s.0, e.0, m1.0, m2.0]);
     let xret: Matrix = Matrix::multiply_matrices(&constant::BEZIER, &xmat);
     let (ax, bx, cx, dx) = (
         xret.data[0][0],
@@ -111,7 +103,7 @@ pub fn add_bezier(
 
     // Getting y coefficients
     let mut ymat: Matrix = Matrix::new_matrix();
-    ymat.add_col(&vec![y0, y1, y2, y3]);
+    ymat.add_col(&[s.1, e.1, m1.1, m2.1]);
     let yret: Matrix = Matrix::multiply_matrices(&constant::BEZIER, &ymat);
     let (ay, by, cy, dy) = (
         yret.data[0][0],
@@ -121,8 +113,8 @@ pub fn add_bezier(
     );
 
     // Getting initial values
-    let mut px: f32 = x0;
-    let mut py: f32 = y0;
+    let mut px: f32 = s.0;
+    let mut py: f32 = s.1;
 
     // Iterating through t values
     for i in 1..itr + 1 {
@@ -132,7 +124,7 @@ pub fn add_bezier(
         let ny: f32 = (ay * t * t * t) + (by * t * t) + (cy * t) + dy;
 
         // Adding to matrix
-        edge.add_edge(px, py, 0.0, nx, ny, 0.0);
+        edge.add_edge((px, py, 0.0), (nx, ny, 0.0));
 
         // Preparing for next loop
         px = nx;

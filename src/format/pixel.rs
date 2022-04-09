@@ -9,12 +9,12 @@ pub struct Pixel(u8, u8, u8);
 impl Pixel {
     /// New pixel with defualt values
     pub const fn new() -> Pixel {
-        return Pixel { 0: 0, 1: 0, 2: 0 };
+        Pixel(0, 0, 0)
     }
 
     /// New pixel with values
     pub const fn new_value(r: u8, g: u8, b: u8) -> Pixel {
-        return Pixel { 0: r, 1: g, 2: b };
+        Pixel(r, g, b)
     }
 }
 
@@ -47,17 +47,17 @@ impl Pixel {
 impl Pixel {
     /// Getting red value
     pub fn get_red(&self) -> u8 {
-        return self.0;
+        self.0
     }
 
     /// Getting green value
     pub fn get_green(&self) -> u8 {
-        return self.1;
+        self.1
     }
 
     /// Getting blue value
     pub fn get_blue(&self) -> u8 {
-        return self.2;
+        self.2
     }
 }
 
@@ -65,13 +65,13 @@ impl Pixel {
 impl fmt::Display for Pixel {
     /// Function for formatted printing
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        return write!(f, "{} {} {}  ", self.0, self.1, self.2);
+        write!(f, "{} {} {}  ", self.0, self.1, self.2)
     }
 }
 
 // Implementing comparison for the struct
 impl PartialEq<Pixel> for Pixel {
     fn eq(&self, other: &Pixel) -> bool {
-        return (self.0 == other.0) && (self.1 == other.1) && (self.2 == other.2);
+        (self.0 == other.0) && (self.1 == other.1) && (self.2 == other.2)
     }
 }

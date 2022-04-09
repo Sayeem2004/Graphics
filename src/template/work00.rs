@@ -1,7 +1,7 @@
 // Imports
 use crate::format::{constant, file, image::Image, pixel::Pixel};
 use rand::Rng;
-use std::{cmp, fs};
+use std::{cmp::Ordering, fs};
 
 /// Converts an image into the number spiral gradient
 fn number_spiral(img: &mut Image, scale1: f32, scale2: f32) {
@@ -41,31 +41,35 @@ fn number_spiral_helper(row: i32, col: i32) -> i32 {
     let num: i32;
 
     // Casework
-    if (row > col) {
-        // Row major case
-        if (row % 2 == 0) {
-            num = row * row - col + 1;
-        } else {
-            num = (row - 1) * (row - 1) + col;
+    match row.cmp(&col) {
+        Ordering::Greater => {
+            // Row major case
+            if (row % 2 == 0) {
+                num = row * row - col + 1;
+            } else {
+                num = (row - 1) * (row - 1) + col;
+            }
         }
-    } else if (col > row) {
-        // Column major case
-        if (col % 2 == 1) {
-            num = col * col - row + 1;
-        } else {
-            num = (col - 1) * (col - 1) + row;
+        Ordering::Less => {
+            // Column major case
+            if (col % 2 == 1) {
+                num = col * col - row + 1;
+            } else {
+                num = (col - 1) * (col - 1) + row;
+            }
         }
-    } else {
-        // Neither case
-        if (row % 2 == 0) {
-            num = row * row - col + 1;
-        } else {
-            num = col * col - row + 1;
+        Ordering::Equal => {
+            // Neither case
+            if (row % 2 == 0) {
+                num = row * row - col + 1;
+            } else {
+                num = col * col - row + 1;
+            }
         }
     }
 
     // Ending function
-    return num;
+    num
 }
 
 /// Converts an image into the number grid gradient
@@ -103,7 +107,7 @@ pub fn number_grid_helper(row: i32, col: i32) -> i32 {
     }
 
     // Bitwise stuff
-    return cmp::max((row - 1) ^ (col - 1), 0);
+    ((row - 1) ^ (col - 1)).max(0)
 }
 
 /// Converts an image into a counting bits gradient
@@ -156,7 +160,7 @@ fn counting_bits_helper(n: i64) -> i64 {
     }
 
     // Ending function
-    return ans;
+    ans
 }
 
 /// Binary exponentiation function for counting bits
@@ -178,11 +182,11 @@ fn counting_bits_modpow(x: i64, n: i64) -> i64 {
 
     // Odd case
     if (n % 2 == 1) {
-        u = (u * x);
+        u *= x;
     }
 
     // Ending function
-    return u;
+    u
 }
 
 /// Function that creates the barnsley fern on an image
@@ -254,7 +258,7 @@ pub fn create_work00_images(mode: i32) {
 
     // Number spiral image
     let mut curr1: Image = Image::new_dimension(size, size);
-    number_spiral(&mut curr1, 0.2 as f32, 0.2 as f32);
+    number_spiral(&mut curr1, 0.2_f32, 0.2_f32);
     file::create_ppm_ascii("image/ppm/w00_corridor.ppm", &curr1, 0);
     if (mode == 0) {
         file::open_image("image/ppm/w00_corridor.ppm");
@@ -262,7 +266,7 @@ pub fn create_work00_images(mode: i32) {
 
     // Number grid image
     let mut curr2: Image = Image::new_dimension(size, size);
-    number_grid(&mut curr2, 1.0 as f32, 0.5 as f32);
+    number_grid(&mut curr2, 1.0_f32, 0.5_f32);
     file::create_ppm_ascii("image/ppm/w00_checkerboard.ppm", &curr2, 0);
     if (mode == 0) {
         file::open_image("image/ppm/w00_checkerboard.ppm");
@@ -270,7 +274,7 @@ pub fn create_work00_images(mode: i32) {
 
     // Counting bits image
     let mut curr3: Image = Image::new_dimension(size, size);
-    counting_bits(&mut curr3, 0.6 as f32, 0.6 as f32);
+    counting_bits(&mut curr3, 0.6_f32, 0.6_f32);
     file::create_ppm_ascii("image/ppm/w00_chains.ppm", &curr3, 0);
     if (mode == 0) {
         file::open_image("image/ppm/w00_chains.ppm");

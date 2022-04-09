@@ -9,18 +9,18 @@ use std::fs;
 pub fn filled_sphere(itr: u32) {
     // Variable declarations
     let mut img: Image = Image::new_dimension(750, 750);
-    let mut sphere1: Matrix = shape::gen_sphere(0.0, 0.0, 0.0, 300.0, itr);
-    let mut sphere2: Matrix = shape::gen_sphere(0.0, 0.0, 0.0, 300.0, itr);
+    let mut sphere1: Matrix = shape::gen_sphere((0.0, 0.0, 0.0), 300.0, itr);
+    let mut sphere2: Matrix = shape::gen_sphere((0.0, 0.0, 0.0), 300.0, itr);
     let mut edge: Matrix = Matrix::new_matrix();
     let mut trans: Matrix = Matrix::new_transformation();
 
     // Transforming spheres
     trans.rotate_degree(90.0, "z");
-    sphere1.matrix_transform(&mut trans);
+    sphere1.matrix_transform(&trans);
     trans = Matrix::new_transformation();
     trans.translate(375.0, 375.0, 0.0);
-    sphere1.matrix_transform(&mut trans);
-    sphere2.matrix_transform(&mut trans);
+    sphere1.matrix_transform(&trans);
+    sphere2.matrix_transform(&trans);
 
     // Adding actual lines to sphere
     for i in 0..sphere1.data.len() {
@@ -49,18 +49,18 @@ pub fn filled_sphere(itr: u32) {
 pub fn rgb_sphere(itr: u32) {
     // Variable declarations
     let mut img: Image = Image::new_dimension(750, 750);
-    let mut sphere1: Matrix = shape::gen_sphere(0.0, 0.0, 0.0, 300.0, itr);
-    let mut sphere2: Matrix = shape::gen_sphere(0.0, 0.0, 0.0, 300.0, itr);
+    let mut sphere1: Matrix = shape::gen_sphere((0.0, 0.0, 0.0), 300.0, itr);
+    let mut sphere2: Matrix = shape::gen_sphere((0.0, 0.0, 0.0), 300.0, itr);
     let mut edge: Matrix = Matrix::new_matrix();
     let mut trans: Matrix = Matrix::new_transformation();
 
     // Transforming spheres
     trans.rotate_degree(90.0, "z");
-    sphere1.matrix_transform(&mut trans);
+    sphere1.matrix_transform(&trans);
     trans = Matrix::new_transformation();
     trans.translate(375.0, 375.0, 0.0);
-    sphere1.matrix_transform(&mut trans);
-    sphere2.matrix_transform(&mut trans);
+    sphere1.matrix_transform(&trans);
+    sphere2.matrix_transform(&trans);
 
     // Adding actual lines to sphere
     for i in 0..sphere1.data.len() {

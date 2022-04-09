@@ -1,6 +1,7 @@
 // Imports
 use crate::format::{file, image::Image, matrix::Matrix};
 use crate::script::{curve, shape, transform, util};
+// use std::collections::VecDeque;
 
 /// Function that parses a graphics script file and runs commands
 pub fn parse(path: &str, size: i32, mode: i32) {
@@ -198,9 +199,7 @@ pub fn parse(path: &str, size: i32, mode: i32) {
 
             // Default case
             _ => {
-                if (lines[curr][0..1].eq("#")) {
-                    ();
-                } else {
+                if (!lines[curr][0..1].eq("#")) {
                     eprintln!(
                         "The command \'{}\' found at line {} is invalid",
                         lines[curr],

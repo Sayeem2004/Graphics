@@ -41,9 +41,9 @@ pub fn display(edge: &mut Matrix, poly: &mut Matrix, img: &mut Image) {
 }
 
 /// Function that performs the 'line' command
-pub fn line(arg: &String, ind: usize, edge: &mut Matrix) {
+pub fn line(arg: &str, ind: usize, edge: &mut Matrix) {
     // Splitting the argument string
-    let split = arg.split(" ");
+    let split = arg.split(' ');
 
     // Checking if each argument is a number
     for str in split {
@@ -64,7 +64,7 @@ pub fn line(arg: &String, ind: usize, edge: &mut Matrix) {
 
     // Converting to floats
     let nums: Vec<f32> = arg
-        .split(" ")
+        .split(' ')
         .map(|x| x.parse::<f32>().unwrap())
         .collect::<Vec<f32>>();
 
@@ -78,11 +78,11 @@ pub fn line(arg: &String, ind: usize, edge: &mut Matrix) {
     }
 
     // Adding edge to matrix
-    edge.add_edge(nums[0], nums[1], nums[2], nums[3], nums[4], nums[5]);
+    edge.add_edge((nums[0], nums[1], nums[2]), (nums[3], nums[4], nums[5]));
 }
 
 /// Function that performs the 'save' command
-pub fn save(arg: &String, edge: &mut Matrix, poly: &mut Matrix, img: &mut Image) {
+pub fn save(arg: &str, edge: &mut Matrix, poly: &mut Matrix, img: &mut Image) {
     // Clearing image
     img.fill(constant::BLACK_PIXEL);
 

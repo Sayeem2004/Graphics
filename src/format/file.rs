@@ -25,7 +25,7 @@ pub fn create_ppm_ascii(path: &str, img: &Image, mode: i32) {
 
 /// Checking if a certain file exists
 pub fn file_exists(path: &str) -> bool {
-    return fs::metadata(path).is_ok();
+    fs::metadata(path).is_ok()
 }
 
 /// Parsing lines from a csv into a matrix
@@ -38,7 +38,7 @@ pub fn read_lines_csv(path: &str) -> Matrix {
 
     // Getting data from csv file and splitting it
     let data = fs::read_to_string(path).expect("Unable to read data");
-    let lines = data.split("\n");
+    let lines = data.split('\n');
 
     // Creating edge matrix
     let mut mat = Matrix::new_matrix();
@@ -46,7 +46,7 @@ pub fn read_lines_csv(path: &str) -> Matrix {
     // Iterating through data and adding to matrix
     for line in lines {
         // Splitting into numbers
-        if (line.len() == 0) {
+        if (line.is_empty()) {
             continue;
         }
         let strip = &line[1..line.len() - 1];
@@ -56,11 +56,11 @@ pub fn read_lines_csv(path: &str) -> Matrix {
             .collect();
 
         // Adding numbers to matrix
-        mat.add_edge(nums[0], nums[1], 0.0, nums[2], nums[3], 0.0);
+        mat.add_edge((nums[0], nums[1], 0.0), (nums[2], nums[3], 0.0));
     }
 
     // Returning matrix
-    return mat;
+    mat
 }
 
 /// Function that read lines from a file and returns a vector with the lines
@@ -73,11 +73,11 @@ pub fn read_lines(path: &str) -> Vec<String> {
 
     // Getting data from the file
     let data = fs::read_to_string(path).expect("Unable to read data");
-    let mut lines: Vec<String> = data.split("\n").map(|s| s.to_owned()).collect();
+    let mut lines: Vec<String> = data.split('\n').map(|s| s.to_owned()).collect();
 
     // Exiting function
     lines.pop();
-    return lines;
+    lines
 }
 
 /// Function that displays an image file using built in open command
@@ -109,12 +109,12 @@ pub fn trim_csv(path: &str, scale: i32) {
             }
         }
         ret.add_edge(
-            mat.data[curr][0],
-            mat.data[curr][1],
-            0.0,
-            mat.data[cmp::min(curr + i, (mat.col_num - 1) as usize)][0],
-            mat.data[cmp::min(curr + i, (mat.col_num - 1) as usize)][1],
-            0.0,
+            (mat.data[curr][0], mat.data[curr][1], 0.0),
+            (
+                mat.data[cmp::min(curr + i, (mat.col_num - 1) as usize)][0],
+                mat.data[cmp::min(curr + i, (mat.col_num - 1) as usize)][1],
+                0.0,
+            ),
         );
         curr += i + 1;
     }
@@ -141,7 +141,7 @@ pub fn trim_csv(path: &str, scale: i32) {
         // Writing data
         writer
             .write_all(
-                ["[".to_string(), nums, "]".to_string(), "\n".to_string()]
+                ["[".to_string(), nums, "]".to_string(), '\n'.to_string()]
                     .join("")
                     .as_bytes(),
             )
@@ -171,7 +171,7 @@ pub fn convert_script(path: &str, size: i32) {
 
     // Getting data from csv file and splitting it
     let data = fs::read_to_string(path).expect("Unable to read data");
-    let lines = data.split("\n");
+    let lines = data.split('\n');
 
     // Attempting to create script file and writer
     let file = fs::File::create("data/script").expect("Unable to create file");
@@ -180,7 +180,7 @@ pub fn convert_script(path: &str, size: i32) {
     // Iterating through data and adding to file
     for line in lines {
         // Splitting into numbers
-        if (line.len() == 0) {
+        if (line.is_empty()) {
             continue;
         }
         let strip = &line[1..line.len() - 1];

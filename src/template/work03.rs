@@ -20,18 +20,18 @@ fn tesseract(side: f32) {
     let mut img: Image = Image::new_dimension((side * 3.0) as i32, (side * 3.0) as i32);
 
     // First cube
-    edge1.add_edge(0.0, 0.0, 0.0, side, 0.0, 0.0);
-    edge1.add_edge(side, 0.0, 0.0, side, side, 0.0);
-    edge1.add_edge(side, side, 0.0, 0.0, side, 0.0);
-    edge1.add_edge(0.0, side, 0.0, 0.0, 0.0, 0.0);
-    edge1.add_edge(0.0, 0.0, side, side, 0.0, side);
-    edge1.add_edge(side, 0.0, side, side, side, side);
-    edge1.add_edge(side, side, side, 0.0, side, side);
-    edge1.add_edge(0.0, side, side, 0.0, 0.0, side);
-    edge1.add_edge(0.0, 0.0, 0.0, 0.0, 0.0, side);
-    edge1.add_edge(0.0, side, 0.0, 0.0, side, side);
-    edge1.add_edge(side, side, 0.0, side, side, side);
-    edge1.add_edge(side, 0.0, 0.0, side, 0.0, side);
+    edge1.add_edge((0.0, 0.0, 0.0), (side, 0.0, 0.0));
+    edge1.add_edge((side, 0.0, 0.0), (side, side, 0.0));
+    edge1.add_edge((side, side, 0.0), (0.0, side, 0.0));
+    edge1.add_edge((0.0, side, 0.0), (0.0, 0.0, 0.0));
+    edge1.add_edge((0.0, 0.0, side), (side, 0.0, side));
+    edge1.add_edge((side, 0.0, side), (side, side, side));
+    edge1.add_edge((side, side, side), (0.0, side, side));
+    edge1.add_edge((0.0, side, side), (0.0, 0.0, side));
+    edge1.add_edge((0.0, 0.0, 0.0), (0.0, 0.0, side));
+    edge1.add_edge((0.0, side, 0.0), (0.0, side, side));
+    edge1.add_edge((side, side, 0.0), (side, side, side));
+    edge1.add_edge((side, 0.0, 0.0), (side, 0.0, side));
     trans1.rotate_degree(45.0, "y");
     trans1.rotate_degree(45.0, "x");
     trans1.translate(side / 2.5, side * 1.1, 0.0);
@@ -46,7 +46,7 @@ fn tesseract(side: f32) {
     for i in 0..edge1.col_num {
         let pt1 = &edge1.data[i as usize];
         let pt2 = &edge2.data[i as usize];
-        edge3.add_edge(pt1[0], pt1[1], pt1[2], pt2[0], pt2[1], pt2[2]);
+        edge3.add_edge((pt1[0], pt1[1], pt1[2]), (pt2[0], pt2[1], pt2[2]));
     }
 
     // Drawing and saving

@@ -3,7 +3,7 @@ use crate::format::matrix::Matrix;
 use std::f32::consts::PI;
 
 /// Function that adds triangles representing a rectangular prism to a matrix of triangles
-pub fn add_box(poly: &mut Matrix, x: f32, y: f32, z: f32, w: f32, h: f32, d: f32) {
+pub fn add_box(poly: &mut Matrix, c: (f32, f32, f32), w: f32, h: f32, d: f32) {
     // Error checking
     if (w < 0.0 || h < 0.0 || d < 0.0) {
         eprintln!("Dimensions of box can not be negative, no changes made");
@@ -11,32 +11,32 @@ pub fn add_box(poly: &mut Matrix, x: f32, y: f32, z: f32, w: f32, h: f32, d: f32
     }
 
     // Defining vertices
-    let (x0, y0, z0) = (x + 0.0, y - 0.0, z - 0.0);
-    let (x1, y1, z1) = (x + w, y - 0.0, z - 0.0);
-    let (x2, y2, z2) = (x + 0.0, y - h, z - 0.0);
-    let (x3, y3, z3) = (x + 0.0, y - 0.0, z - d);
-    let (x4, y4, z4) = (x + w, y - h, z - 0.0);
-    let (x5, y5, z5) = (x + w, y - 0.0, z - d);
-    let (x6, y6, z6) = (x + 0.0, y - h, z - d);
-    let (x7, y7, z7) = (x + w, y - h, z - d);
+    let (x0, y0, z0) = (c.0 + 0.0, c.1 - 0.0, c.2 - 0.0);
+    let (x1, y1, z1) = (c.0 + w, c.1 - 0.0, c.2 - 0.0);
+    let (x2, y2, z2) = (c.0 + 0.0, c.1 - h, c.2 - 0.0);
+    let (x3, y3, z3) = (c.0 + 0.0, c.1 - 0.0, c.2 - d);
+    let (x4, y4, z4) = (c.0 + w, c.1 - h, c.2 - 0.0);
+    let (x5, y5, z5) = (c.0 + w, c.1 - 0.0, c.2 - d);
+    let (x6, y6, z6) = (c.0 + 0.0, c.1 - h, c.2 - d);
+    let (x7, y7, z7) = (c.0 + w, c.1 - h, c.2 - d);
 
     // Adding triangles to matrix
-    poly.add_triangle(x0, y0, z0, x2, y2, z2, x4, y4, z4);
-    poly.add_triangle(x0, y0, z0, x4, y4, z4, x1, y1, z1);
-    poly.add_triangle(x3, y3, z3, x6, y6, z6, x2, y2, z2);
-    poly.add_triangle(x3, y3, z3, x2, y2, z2, x0, y0, z0);
-    poly.add_triangle(x5, y5, z5, x7, y7, z7, x6, y6, z6);
-    poly.add_triangle(x5, y5, z5, x6, y6, z6, x3, y3, z3);
-    poly.add_triangle(x1, y1, z1, x4, y4, z4, x7, y7, z7);
-    poly.add_triangle(x1, y1, z1, x7, y7, z7, x5, y5, z5);
-    poly.add_triangle(x3, y3, z3, x0, y0, z0, x1, y1, z1);
-    poly.add_triangle(x3, y3, z3, x1, y1, z1, x5, y5, z5);
-    poly.add_triangle(x2, y2, z2, x6, y6, z6, x7, y7, z7);
-    poly.add_triangle(x2, y2, z2, x7, y7, z7, x4, y4, z4);
+    poly.add_triangle((x0, y0, z0), (x2, y2, z2), (x4, y4, z4));
+    poly.add_triangle((x0, y0, z0), (x4, y4, z4), (x1, y1, z1));
+    poly.add_triangle((x3, y3, z3), (x6, y6, z6), (x2, y2, z2));
+    poly.add_triangle((x3, y3, z3), (x2, y2, z2), (x0, y0, z0));
+    poly.add_triangle((x5, y5, z5), (x7, y7, z7), (x6, y6, z6));
+    poly.add_triangle((x5, y5, z5), (x6, y6, z6), (x3, y3, z3));
+    poly.add_triangle((x1, y1, z1), (x4, y4, z4), (x7, y7, z7));
+    poly.add_triangle((x1, y1, z1), (x7, y7, z7), (x5, y5, z5));
+    poly.add_triangle((x3, y3, z3), (x0, y0, z0), (x1, y1, z1));
+    poly.add_triangle((x3, y3, z3), (x1, y1, z1), (x5, y5, z5));
+    poly.add_triangle((x2, y2, z2), (x6, y6, z6), (x7, y7, z7));
+    poly.add_triangle((x2, y2, z2), (x7, y7, z7), (x4, y4, z4));
 }
 
 /// Function that generates the points in a sphere
-pub fn gen_sphere(x: f32, y: f32, z: f32, r: f32, itr: u32) -> Matrix {
+pub fn gen_sphere(c: (f32, f32, f32), r: f32, itr: u32) -> Matrix {
     // Error checking
     if (r < 0.0) {
         eprintln!("Radius of sphere can not be negative, returning default value");
@@ -54,21 +54,21 @@ pub fn gen_sphere(x: f32, y: f32, z: f32, r: f32, itr: u32) -> Matrix {
             let theta: f32 = PI * (q as f32) / (itr as f32);
 
             // Point coordinates
-            let nx: f32 = r * f32::cos(theta) + x;
-            let ny: f32 = r * f32::sin(theta) * f32::cos(phi) + y;
-            let nz: f32 = r * f32::sin(theta) * f32::sin(phi) + z;
+            let nx: f32 = r * f32::cos(theta) + c.0;
+            let ny: f32 = r * f32::sin(theta) * f32::cos(phi) + c.1;
+            let nz: f32 = r * f32::sin(theta) * f32::sin(phi) + c.2;
 
             // Saving points
-            ret.add_col(&vec![nx, ny, nz, 1.0]);
+            ret.add_col(&[nx, ny, nz, 1.0]);
         }
     }
 
     // Exiting function
-    return ret;
+    ret
 }
 
 /// Function that adds triangles representing a sphere to a matrix of triangles
-pub fn add_sphere(poly: &mut Matrix, x: f32, y: f32, z: f32, r: f32, itr: u32) {
+pub fn add_sphere(poly: &mut Matrix, c: (f32, f32, f32), r: f32, itr: u32) {
     // Error checking
     if (r < 0.0) {
         eprintln!("Radius of sphere can not be negative, no changes made");
@@ -76,7 +76,7 @@ pub fn add_sphere(poly: &mut Matrix, x: f32, y: f32, z: f32, r: f32, itr: u32) {
     }
 
     // Getting points on sphere
-    let points: Matrix = gen_sphere(x, y, z, r, itr);
+    let points: Matrix = gen_sphere(c, r, itr);
 
     // Adding triangles to poly matrix
     for i in 0..itr as usize {
@@ -86,28 +86,32 @@ pub fn add_sphere(poly: &mut Matrix, x: f32, y: f32, z: f32, r: f32, itr: u32) {
             let p: usize = (i * mxq + q);
             if (p % mxq < (mxq - 2)) {
                 poly.add_triangle(
-                    points.data[p][0],
-                    points.data[p][1],
-                    points.data[p][2],
-                    points.data[p + 1][0],
-                    points.data[p + 1][1],
-                    points.data[p + 1][2],
-                    points.data[(p + mxq + 1) % (mxi * mxq)][0],
-                    points.data[(p + mxq + 1) % (mxi * mxq)][1],
-                    points.data[(p + mxq + 1) % (mxi * mxq)][2],
+                    (points.data[p][0], points.data[p][1], points.data[p][2]),
+                    (
+                        points.data[p + 1][0],
+                        points.data[p + 1][1],
+                        points.data[p + 1][2],
+                    ),
+                    (
+                        points.data[(p + mxq + 1) % (mxi * mxq)][0],
+                        points.data[(p + mxq + 1) % (mxi * mxq)][1],
+                        points.data[(p + mxq + 1) % (mxi * mxq)][2],
+                    ),
                 );
             }
             if (p % mxq > 0) {
                 poly.add_triangle(
-                    points.data[p][0],
-                    points.data[p][1],
-                    points.data[p][2],
-                    points.data[(p + mxq + 1) % (mxi * mxq)][0],
-                    points.data[(p + mxq + 1) % (mxi * mxq)][1],
-                    points.data[(p + mxq + 1) % (mxi * mxq)][2],
-                    points.data[(p + mxq) % (mxi * mxq)][0],
-                    points.data[(p + mxq) % (mxi * mxq)][1],
-                    points.data[(p + mxq) % (mxi * mxq)][2],
+                    (points.data[p][0], points.data[p][1], points.data[p][2]),
+                    (
+                        points.data[(p + mxq + 1) % (mxi * mxq)][0],
+                        points.data[(p + mxq + 1) % (mxi * mxq)][1],
+                        points.data[(p + mxq + 1) % (mxi * mxq)][2],
+                    ),
+                    (
+                        points.data[(p + mxq) % (mxi * mxq)][0],
+                        points.data[(p + mxq) % (mxi * mxq)][1],
+                        points.data[(p + mxq) % (mxi * mxq)][2],
+                    ),
                 );
             }
         }
@@ -115,7 +119,7 @@ pub fn add_sphere(poly: &mut Matrix, x: f32, y: f32, z: f32, r: f32, itr: u32) {
 }
 
 /// Function that generates the points in a torus
-pub fn gen_torus(x: f32, y: f32, z: f32, r1: f32, r2: f32, itr: u32) -> Matrix {
+pub fn gen_torus(c: (f32, f32, f32), r1: f32, r2: f32, itr: u32) -> Matrix {
     // Error checking
     if (r1 < 0.0 || r2 < 0.0) {
         eprintln!("Radii of the torus can not be negative, returning default value");
@@ -133,21 +137,21 @@ pub fn gen_torus(x: f32, y: f32, z: f32, r1: f32, r2: f32, itr: u32) -> Matrix {
             let theta: f32 = 2.0 * PI * (q as f32) / (itr as f32);
 
             // Point coordinates
-            let nx: f32 = f32::cos(phi) * (r1 * f32::cos(theta) + r2) + x;
-            let ny: f32 = r1 * f32::sin(theta) + y;
-            let nz: f32 = (-f32::sin(phi)) * (r1 * f32::cos(theta) + r2) + z;
+            let nx: f32 = f32::cos(phi) * (r1 * f32::cos(theta) + r2) + c.0;
+            let ny: f32 = r1 * f32::sin(theta) + c.1;
+            let nz: f32 = (-f32::sin(phi)) * (r1 * f32::cos(theta) + r2) + c.2;
 
             // Saving points
-            ret.add_col(&vec![nx, ny, nz, 1.0]);
+            ret.add_col(&[nx, ny, nz, 1.0]);
         }
     }
 
     // Exiting function
-    return ret;
+    ret
 }
 
 /// Function that adds triangles representing a torus to a matrix of triangles
-pub fn add_torus(poly: &mut Matrix, x: f32, y: f32, z: f32, r1: f32, r2: f32, itr: u32) {
+pub fn add_torus(poly: &mut Matrix, c: (f32, f32, f32), r1: f32, r2: f32, itr: u32) {
     // Error checking
     if (r1 < 0.0 || r2 < 0.0) {
         eprintln!("Radii of the torus can not be negative, no changes made");
@@ -155,7 +159,7 @@ pub fn add_torus(poly: &mut Matrix, x: f32, y: f32, z: f32, r1: f32, r2: f32, it
     }
 
     // Getting points on torus
-    let points: Matrix = gen_torus(x, y, z, r1, r2, itr);
+    let points: Matrix = gen_torus(c, r1, r2, itr);
 
     // Adding triangles to poly matrix
     for i in 0..itr as usize {
@@ -164,26 +168,30 @@ pub fn add_torus(poly: &mut Matrix, x: f32, y: f32, z: f32, r1: f32, r2: f32, it
             let mxq: usize = (itr + 1) as usize;
             let p: usize = (i * mxq + q) as usize;
             poly.add_triangle(
-                points.data[p][0],
-                points.data[p][1],
-                points.data[p][2],
-                points.data[(p + mxq + 1) % (mxi * mxq)][0],
-                points.data[(p + mxq + 1) % (mxi * mxq)][1],
-                points.data[(p + mxq + 1) % (mxi * mxq)][2],
-                points.data[(p + 1) % (mxi * mxq)][0],
-                points.data[(p + 1) % (mxi * mxq)][1],
-                points.data[(p + 1) % (mxi * mxq)][2],
+                (points.data[p][0], points.data[p][1], points.data[p][2]),
+                (
+                    points.data[(p + mxq + 1) % (mxi * mxq)][0],
+                    points.data[(p + mxq + 1) % (mxi * mxq)][1],
+                    points.data[(p + mxq + 1) % (mxi * mxq)][2],
+                ),
+                (
+                    points.data[(p + 1) % (mxi * mxq)][0],
+                    points.data[(p + 1) % (mxi * mxq)][1],
+                    points.data[(p + 1) % (mxi * mxq)][2],
+                ),
             );
             poly.add_triangle(
-                points.data[p][0],
-                points.data[p][1],
-                points.data[p][2],
-                points.data[(p + mxq) % (mxi * mxq)][0],
-                points.data[(p + mxq) % (mxi * mxq)][1],
-                points.data[(p + mxq) % (mxi * mxq)][2],
-                points.data[(p + mxq + 1) % (mxi * mxq)][0],
-                points.data[(p + mxq + 1) % (mxi * mxq)][1],
-                points.data[(p + mxq + 1) % (mxi * mxq)][2],
+                (points.data[p][0], points.data[p][1], points.data[p][2]),
+                (
+                    points.data[(p + mxq) % (mxi * mxq)][0],
+                    points.data[(p + mxq) % (mxi * mxq)][1],
+                    points.data[(p + mxq) % (mxi * mxq)][2],
+                ),
+                (
+                    points.data[(p + mxq + 1) % (mxi * mxq)][0],
+                    points.data[(p + mxq + 1) % (mxi * mxq)][1],
+                    points.data[(p + mxq + 1) % (mxi * mxq)][2],
+                ),
             );
         }
     }
@@ -208,9 +216,9 @@ pub fn normal(poly: &Matrix, ind: usize) -> Vec<f32> {
         poly.data[ind - 1][2] - poly.data[ind - 2][2],
     );
     let v2: (f32, f32, f32) = (
-        poly.data[ind - 0][0] - poly.data[ind - 2][0],
-        poly.data[ind - 0][1] - poly.data[ind - 2][1],
-        poly.data[ind - 0][2] - poly.data[ind - 2][2],
+        poly.data[ind][0] - poly.data[ind - 2][0],
+        poly.data[ind][1] - poly.data[ind - 2][1],
+        poly.data[ind][2] - poly.data[ind - 2][2],
     );
 
     // Returning the cross product
@@ -222,7 +230,7 @@ pub fn normal(poly: &Matrix, ind: usize) -> Vec<f32> {
 }
 
 /// Function that returns the dot product of two vectors
-pub fn dot(v1: &Vec<f32>, v2: &Vec<f32>) -> f32 {
+pub fn dot(v1: &[f32], v2: &[f32]) -> f32 {
     // Error checking
     if (v1.len() != v2.len()) {
         eprintln!("Vector are not of the same dimension, returning default value");
@@ -236,5 +244,5 @@ pub fn dot(v1: &Vec<f32>, v2: &Vec<f32>) -> f32 {
     }
 
     // Exiting function
-    return sum;
+    sum
 }

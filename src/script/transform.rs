@@ -15,9 +15,9 @@ pub fn ident(trans: &mut Matrix) {
 }
 
 /// Function that performs the 'move' command
-pub fn _move(arg: &String, ind: usize, trans: &mut Matrix) {
+pub fn _move(arg: &str, ind: usize, trans: &mut Matrix) {
     // Splitting the argument string
-    let split = arg.split(" ");
+    let split = arg.split(' ');
 
     // Checking if each argument is a number
     for str in split {
@@ -38,7 +38,7 @@ pub fn _move(arg: &String, ind: usize, trans: &mut Matrix) {
 
     // Converting to floats
     let nums: Vec<f32> = arg
-        .split(" ")
+        .split(' ')
         .map(|x| x.parse::<f32>().unwrap())
         .collect::<Vec<f32>>();
 
@@ -56,9 +56,9 @@ pub fn _move(arg: &String, ind: usize, trans: &mut Matrix) {
 }
 
 /// Function that performs the 'rotate' command
-pub fn rotate(arg: &String, ind: usize, trans: &mut Matrix) {
+pub fn rotate(arg: &str, ind: usize, trans: &mut Matrix) {
     // Splitting the argument string
-    let split: Vec<&str> = arg.split(" ").collect();
+    let split: Vec<&str> = arg.split(' ').collect();
 
     // Checking if rotation axis is valid
     match split[0] {
@@ -91,9 +91,9 @@ pub fn rotate(arg: &String, ind: usize, trans: &mut Matrix) {
 }
 
 /// Function that performs the 'scale' command
-pub fn scale(arg: &String, ind: usize, trans: &mut Matrix) {
+pub fn scale(arg: &str, ind: usize, trans: &mut Matrix) {
     // Splitting the argument string
-    let split = arg.split(" ");
+    let split = arg.split(' ');
 
     // Checking if each argument is a number
     for str in split {
@@ -114,7 +114,7 @@ pub fn scale(arg: &String, ind: usize, trans: &mut Matrix) {
 
     // Converting to floats
     let nums: Vec<f32> = arg
-        .split(" ")
+        .split(' ')
         .map(|x| x.parse::<f32>().unwrap())
         .collect::<Vec<f32>>();
 

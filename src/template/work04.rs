@@ -10,10 +10,10 @@ fn optical() {
     // Variable declarations
     let mut img: Image = Image::new_dimension(750, 750);
     let mut crv: Matrix = Matrix::new_matrix();
-    crv.add_col(&vec![30.0, 750.0, 0.0, 1.0]);
-    crv.add_col(&vec![37.5, 250.0, 0.0, 1.0]);
-    crv.add_col(&vec![300.0, 225.0, 0.0, 1.0]);
-    crv.add_col(&vec![375.0, 375.0, 0.0, 1.0]);
+    crv.add_col(&[30.0, 750.0, 0.0, 1.0]);
+    crv.add_col(&[37.5, 250.0, 0.0, 1.0]);
+    crv.add_col(&[300.0, 225.0, 0.0, 1.0]);
+    crv.add_col(&[375.0, 375.0, 0.0, 1.0]);
     let mut trans: Matrix = Matrix::new_transformation();
     trans.translate(-375.0, -375.0, 0.0);
     trans.rotate_degree(6.0, "z");
@@ -25,14 +25,10 @@ fn optical() {
         // Drawing curve
         curve::add_bezier(
             &mut edge,
-            crv.data[0][0],
-            crv.data[0][1],
-            crv.data[1][0],
-            crv.data[1][1],
-            crv.data[2][0],
-            crv.data[2][1],
-            crv.data[3][0],
-            crv.data[3][1],
+            (crv.data[0][0], crv.data[0][1]),
+            (crv.data[1][0], crv.data[1][1]),
+            (crv.data[2][0], crv.data[2][1]),
+            (crv.data[3][0], crv.data[3][1]),
             100,
         );
 

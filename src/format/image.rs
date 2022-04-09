@@ -15,13 +15,13 @@ pub struct Image {
 impl Image {
     /// New image with default values
     pub fn new() -> Image {
-        return Image {
+        Image {
             image_type: String::from("P3"),
             width: 500,
             height: 500,
             max_color: 255,
             pixels: vec![vec![Pixel::new(); 500]; 500],
-        };
+        }
     }
 
     /// New dimensional image
@@ -30,13 +30,13 @@ impl Image {
             eprintln!("Image dimensions are out of range, using default image");
             return Image::new();
         }
-        return Image {
+        Image {
             image_type: String::from("P3"),
-            width: width,
-            height: height,
+            width,
+            height,
             max_color: 255,
             pixels: vec![vec![Pixel::new(); width as usize]; height as usize],
-        };
+        }
     }
 
     /// New formatted image
@@ -45,13 +45,13 @@ impl Image {
             eprintln!("Image dimensions are out of range, using default image");
             return Image::new();
         }
-        return Image {
+        Image {
             image_type: image_type.to_string(),
-            width: width,
-            height: height,
-            max_color: max_color,
+            width,
+            height,
+            max_color,
             pixels: vec![vec![Pixel::new(); width as usize]; height as usize],
-        };
+        }
     }
 }
 
@@ -70,7 +70,7 @@ impl Image {
         }
         self.width = width;
         for row in self.pixels.iter_mut() {
-            row.resize_with(self.width as usize, || Pixel::new());
+            row.resize_with(self.width as usize, Pixel::new);
         }
     }
 
@@ -106,7 +106,6 @@ impl Image {
                     pix.get_green(),
                     pix.get_blue(),
                 );
-                return;
             }
         }
     }
@@ -126,7 +125,6 @@ impl Image {
                     pix.get_green(),
                     pix.get_blue(),
                 );
-                return;
             }
         }
     }
@@ -136,22 +134,22 @@ impl Image {
 impl Image {
     /// Getting image type
     pub fn get_image_type(&mut self) -> &String {
-        return &self.image_type;
+        &self.image_type
     }
 
     /// Getting width
     pub fn get_width(&mut self) -> i32 {
-        return self.width;
+        self.width
     }
 
     /// Getting height
     pub fn get_height(&mut self) -> i32 {
-        return self.height;
+        self.height
     }
 
     /// Getting max color
     pub fn get_max_color(&mut self) -> u8 {
-        return self.max_color;
+        self.max_color
     }
 
     /// Getting a certain pixel
@@ -166,7 +164,7 @@ impl Image {
         eprintln!("Unable to get pixel at row {} and col {}", row, col);
 
         // Ending function
-        return Pixel::new();
+        Pixel::new()
     }
 
     /// Getting a certain pixel
@@ -181,7 +179,7 @@ impl Image {
         eprintln!("Unable to get pixel at x = {} and x = {}", x, y);
 
         // Ending function
-        return Pixel::new();
+        Pixel::new()
     }
 }
 
@@ -203,11 +201,11 @@ impl fmt::Display for Image {
                 write!(f, "{}", val)?;
             }
             // Printing new line
-            write!(f, "\n")?;
+            writeln!(f)?;
         }
 
         // Printing final new line
-        return write!(f, "\n");
+        return writeln!(f);
     }
 }
 
@@ -237,7 +235,7 @@ impl Image {
             queue.push_back((x, y));
 
             // Doing bfs
-            while (queue.len() != 0) {
+            while (!queue.is_empty()) {
                 // Getting point
                 let point: (i32, i32) = queue.pop_front().unwrap();
                 self.update_pixel_xy(point.0, point.1, pix);
@@ -248,15 +246,17 @@ impl Image {
                     let ny = (point.1) + constant::DY[i as usize];
 
                     // Within bounds
-                    if (nx >= 0 && nx < self.width && ny >= 0 && ny < self.height) {
-                        if (vis[ny as usize][nx as usize] == 0
-                            && self.get_pixel_xy(nx, ny) != bdr
-                            && self.get_pixel_xy(nx, ny) != pix)
-                        {
-                            // Adding to queue and visited
-                            vis[ny as usize][nx as usize] = 1;
-                            queue.push_back((nx, ny));
-                        }
+                    if (nx >= 0
+                        && nx < self.width
+                        && ny >= 0
+                        && ny < self.height
+                        && vis[ny as usize][nx as usize] == 0
+                        && self.get_pixel_xy(nx, ny) != bdr
+                        && self.get_pixel_xy(nx, ny) != pix)
+                    {
+                        // Adding to queue and visited
+                        vis[ny as usize][nx as usize] = 1;
+                        queue.push_back((nx, ny));
                     }
                 }
             }
@@ -281,7 +281,7 @@ impl Image {
             queue.push_back((row, col));
 
             // Doing bfs
-            while (queue.len() != 0) {
+            while (!queue.is_empty()) {
                 // Getting point
                 let point: (i32, i32) = queue.pop_front().unwrap();
                 self.update_pixel_rc(point.0, point.1, pix);
@@ -292,15 +292,17 @@ impl Image {
                     let ncol = (point.1) + constant::DY[i as usize];
 
                     // Within bounds
-                    if (ncol >= 0 && ncol < self.width && nrow >= 0 && nrow < self.height) {
-                        if (vis[nrow as usize][ncol as usize] == 0
-                            && self.get_pixel_rc(nrow, ncol) != bdr
-                            && self.get_pixel_rc(nrow, ncol) != pix)
-                        {
-                            // Adding to queue and visited
-                            vis[nrow as usize][ncol as usize] = 1;
-                            queue.push_back((nrow, ncol));
-                        }
+                    if (ncol >= 0
+                        && ncol < self.width
+                        && nrow >= 0
+                        && nrow < self.height
+                        && vis[nrow as usize][ncol as usize] == 0
+                        && self.get_pixel_rc(nrow, ncol) != bdr
+                        && self.get_pixel_rc(nrow, ncol) != pix)
+                    {
+                        // Adding to queue and visited
+                        vis[nrow as usize][ncol as usize] = 1;
+                        queue.push_back((nrow, ncol));
                     }
                 }
             }
