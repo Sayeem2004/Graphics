@@ -1,6 +1,7 @@
 // Imports
-use crate::format::{file, image::Image, matrix::Matrix};
-use crate::script::{curve, shape, transform, util};
+use crate::prev::ver06::format::{file, image::Image, matrix::Matrix};
+use crate::prev::ver06::script::{curve, shape, transform, util};
+// use std::collections::VecDeque;
 
 /// Function that parses a graphics script file and runs commands
 pub fn parse(path: &str, size: i32, mode: i32) {
@@ -15,9 +16,10 @@ pub fn parse(path: &str, size: i32, mode: i32) {
     let mx: usize = lines.len();
     let mut curr: usize = 0;
 
-    // Creating coordinate stack, edge matrix, polygon matrix, and image struct
-    let mut stack: Vec<Matrix> = vec![Matrix::new_transformation()];
-    let mut sz: usize = stack.len();
+    // Creating transformation matrix, edge matrix, polygon matrix, and image struct
+    let mut edge: Matrix = Matrix::new_matrix();
+    let mut poly: Matrix = Matrix::new_matrix();
+    let mut trans: Matrix = Matrix::new_transformation();
     let mut img: Image = Image::new_dimension(size, size);
 
     // Looping through all lines
@@ -31,7 +33,7 @@ pub fn parse(path: &str, size: i32, mode: i32) {
                         curr + 1
                     );
                 } else {
-                    util::line(&lines[curr + 1], curr + 1, &stack[stack.len()-1], &mut img);
+                    util::line(&lines[curr + 1], curr + 1, &mut edge);
                 }
                 curr += 2;
             }
@@ -39,8 +41,14 @@ pub fn parse(path: &str, size: i32, mode: i32) {
             // Display command
             "display" => {
                 if (mode == 0) {
-                    util::display(&img);
+                    util::display(&mut edge, &mut poly, &mut img);
                 }
+                curr += 1;
+            }
+
+            // Ident command
+            "ident" => {
+                transform::ident(&mut trans);
                 curr += 1;
             }
 
@@ -52,9 +60,15 @@ pub fn parse(path: &str, size: i32, mode: i32) {
                         curr + 1
                     );
                 } else {
-                    transform::scale(&lines[curr + 1], curr + 1, &mut stack[sz-1]);
+                    transform::scale(&lines[curr + 1], curr + 1, &mut trans);
                 }
                 curr += 2;
+            }
+
+            // Apply command
+            "apply" => {
+                transform::apply(&mut trans, &mut edge, &mut poly);
+                curr += 1;
             }
 
             // Move command
@@ -65,7 +79,7 @@ pub fn parse(path: &str, size: i32, mode: i32) {
                         curr + 1
                     );
                 } else {
-                    transform::_move(&lines[curr + 1], curr + 1, &mut stack[sz-1]);
+                    transform::_move(&lines[curr + 1], curr + 1, &mut trans);
                 }
                 curr += 2;
             }
@@ -78,7 +92,7 @@ pub fn parse(path: &str, size: i32, mode: i32) {
                         curr + 1
                     );
                 } else {
-                    transform::rotate(&lines[curr + 1], curr + 1, &mut stack[sz-1]);
+                    transform::rotate(&lines[curr + 1], curr + 1, &mut trans);
                 }
                 curr += 2;
             }
@@ -91,7 +105,7 @@ pub fn parse(path: &str, size: i32, mode: i32) {
                         curr + 1
                     );
                 } else {
-                    util::save(&lines[curr + 1], &img);
+                    util::save(&lines[curr + 1], &mut edge, &mut poly, &mut img);
                 }
                 curr += 2;
             }
@@ -104,7 +118,7 @@ pub fn parse(path: &str, size: i32, mode: i32) {
                         curr + 1
                     );
                 } else {
-                    curve::circle(&lines[curr + 1], curr + 1, &stack[stack.len()-1], &mut img);
+                    curve::circle(&lines[curr + 1], curr + 1, &mut edge);
                 }
                 curr += 2;
             }
@@ -117,7 +131,7 @@ pub fn parse(path: &str, size: i32, mode: i32) {
                         curr + 1
                     );
                 } else {
-                    curve::hermite(&lines[curr + 1], curr + 1, &stack[stack.len()-1], &mut img);
+                    curve::hermite(&lines[curr + 1], curr + 1, &mut edge);
                 }
                 curr += 2;
             }
@@ -130,9 +144,15 @@ pub fn parse(path: &str, size: i32, mode: i32) {
                         curr + 1
                     );
                 } else {
-                    curve::bezier(&lines[curr + 1], curr + 1, &stack[stack.len()-1], &mut img);
+                    curve::bezier(&lines[curr + 1], curr + 1, &mut edge);
                 }
                 curr += 2;
+            }
+
+            // Clear command
+            "clear" => {
+                util::clear(&mut edge, &mut poly);
+                curr += 1;
             }
 
             // Box command
@@ -143,7 +163,7 @@ pub fn parse(path: &str, size: i32, mode: i32) {
                         curr + 1
                     );
                 } else {
-                    shape::_box(&lines[curr + 1], curr + 1, &stack[stack.len()-1], &mut img);
+                    shape::_box(&lines[curr + 1], curr + 1, &mut poly);
                 }
                 curr += 2;
             }
@@ -156,7 +176,7 @@ pub fn parse(path: &str, size: i32, mode: i32) {
                         curr + 1
                     );
                 } else {
-                    shape::sphere(&lines[curr + 1], curr + 1, &stack[stack.len()-1], &mut img);
+                    shape::sphere(&lines[curr + 1], curr + 1, &mut poly);
                 }
                 curr += 2;
             }
@@ -169,21 +189,9 @@ pub fn parse(path: &str, size: i32, mode: i32) {
                         curr + 1
                     );
                 } else {
-                    shape::torus(&lines[curr + 1], curr + 1, &stack[stack.len()-1], &mut img);
+                    shape::torus(&lines[curr + 1], curr + 1, &mut poly);
                 }
                 curr += 2;
-            }
-
-            // Push command
-            "push" => {
-                util::push(&mut stack, &mut sz);
-                curr += 1;
-            }
-
-            // Pop command
-            "pop" => {
-                util::pop(&mut stack, &mut sz);
-                curr += 1;
             }
 
             // Empty line case

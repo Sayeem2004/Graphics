@@ -1,9 +1,9 @@
 // Imports
-use crate::algorithm::shape;
-use crate::format::{constant, image::Image, matrix::Matrix};
+use crate::prev::ver06::algorithm::shape;
+use crate::prev::ver06::format::matrix::Matrix;
 
 /// Function that performs the 'box' command
-pub fn _box(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
+pub fn _box(arg: &str, ind: usize, poly: &mut Matrix) {
     // Splitting the argument string
     let split = arg.split(' ');
 
@@ -39,15 +39,12 @@ pub fn _box(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
         return;
     }
 
-    // Adding box to image
-    let mut poly: Matrix = Matrix::new_matrix();
-    shape::add_box(&mut poly, (nums[0], nums[1], nums[2]), nums[3], nums[4], nums[5]);
-    poly.left_transform(cord);
-    poly.draw_triangles_xy(img, constant::WHITE_PIXEL, &constant::ZVIEW);
+    // Adding box to matrix
+    shape::add_box(poly, (nums[0], nums[1], nums[2]), nums[3], nums[4], nums[5]);
 }
 
 /// Function that performs the 'sphere' command
-pub fn sphere(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
+pub fn sphere(arg: &str, ind: usize, poly: &mut Matrix) {
     // Splitting the argument string
     let split = arg.split(' ');
 
@@ -83,15 +80,12 @@ pub fn sphere(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
         return;
     }
 
-    // Adding sphere to image
-    let mut poly: Matrix = Matrix::new_matrix();
-    shape::add_sphere(&mut poly, (nums[0], nums[1], nums[2]), nums[3], 20);
-    poly.left_transform(cord);
-    poly.draw_triangles_xy(img, constant::WHITE_PIXEL, &constant::ZVIEW);
+    // Adding sphere to matrix
+    shape::add_sphere(poly, (nums[0], nums[1], nums[2]), nums[3], 20);
 }
 
 /// Function that performs the 'torus' command
-pub fn torus(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
+pub fn torus(arg: &str, ind: usize, poly: &mut Matrix) {
     // Splitting the argument string
     let split = arg.split(' ');
 
@@ -127,9 +121,6 @@ pub fn torus(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
         return;
     }
 
-    // Adding torus to image
-    let mut poly: Matrix = Matrix::new_matrix();
-    shape::add_torus(&mut poly, (nums[0], nums[1], nums[2]), nums[3], nums[4], 20);
-    poly.left_transform(cord);
-    poly.draw_triangles_xy(img, constant::WHITE_PIXEL, &constant::ZVIEW);
+    // Adding torus to matrix
+    shape::add_torus(poly, (nums[0], nums[1], nums[2]), nums[3], nums[4], 20);
 }

@@ -2,7 +2,7 @@
 use crate::format::file;
 use crate::template::work06;
 
-/// Testing out work05 stuff
+/// Testing out work06 stuff
 #[test]
 fn test_work06() {
     // Running function

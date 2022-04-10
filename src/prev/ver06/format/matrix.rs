@@ -1,6 +1,6 @@
 // Imports
-use crate::algorithm::{line, shape};
-use crate::format::{image::Image, pixel::Pixel};
+use crate::prev::ver06::algorithm::{line, shape};
+use crate::prev::ver06::format::{image::Image, pixel::Pixel};
 use std::f32::consts::PI;
 use std::fmt;
 
@@ -195,32 +195,52 @@ impl Matrix {
 
 // Implementing transformation functions for struct
 impl Matrix {
-    /// Function for making a dilation matrix
-    pub fn dilate(dx: f32, dy: f32, dz: f32) -> Matrix {
+    /// Function for dilating a transformation matrix
+    pub fn dilate(&mut self, dx: f32, dy: f32, dz: f32) {
+        // Making sure current matrix is a tranformation matrix
+        if (self.row_num != 4 || self.col_num != 4) {
+            eprintln!("Matrix undergoing dilation is not a transformation matrix, no changes made");
+            return;
+        }
+
         // Making new transformation matrix
         let mut mat: Matrix = Matrix::new_transformation();
         mat.data[0][0] = dx;
         mat.data[1][1] = dy;
         mat.data[2][2] = dz;
 
-        // Returning transformation matrix
-        mat
+        // Updating transformation matrix
+        *self = Matrix::multiply_matrices(&mat, self);
     }
 
-    /// Function for making a translation matrix
-    pub fn translate(dx: f32, dy: f32, dz: f32) -> Matrix {
+    /// Function for translating a transformation matrix
+    pub fn translate(&mut self, dx: f32, dy: f32, dz: f32) {
+        // Making sure current matrix is a tranformation matrix
+        if (self.row_num != 4 || self.col_num != 4) {
+            eprintln!(
+                "Matrix undergoing translation is not a transformation matrix, no changes made"
+            );
+            return;
+        }
+
         // Making new transformation matrix
         let mut mat: Matrix = Matrix::new_transformation();
         mat.data[3][0] = dx;
         mat.data[3][1] = dy;
         mat.data[3][2] = dz;
 
-        // Returning transformation matrix
-        mat
+        // Updating transformation matrix
+        *self = Matrix::multiply_matrices(&mat, self);
     }
 
-    /// Function for creating a rotation matrix in radians
-    pub fn rotate_radian(angle: f32, axis: &str) -> Matrix {
+    /// Function for rotating a transformation matrix in radians
+    pub fn rotate_radian(&mut self, angle: f32, axis: &str) {
+        // Making sure current matrix is a tranformation matrix
+        if (self.row_num != 4 || self.col_num != 4) {
+            eprintln!("Matrix undergoing rotation is not a transformation matrix, no changes made");
+            return;
+        }
+
         // Casework on axes
         if (axis.eq("x")) {
             // Making new transformation matrix
@@ -230,8 +250,8 @@ impl Matrix {
             mat.data[2][1] = f32::sin(angle) * -1.0;
             mat.data[2][2] = f32::cos(angle);
 
-            // Returning transformation matrix
-            mat
+            // Updating transformation matrix
+            *self = Matrix::multiply_matrices(&mat, self);
         } else if (axis.eq("y")) {
             // Making new transformation matrix
             let mut mat: Matrix = Matrix::new_transformation();
@@ -240,8 +260,8 @@ impl Matrix {
             mat.data[2][0] = f32::sin(angle);
             mat.data[2][2] = f32::cos(angle);
 
-            // Returning transformation matrix
-            mat
+            // Updating transformation matrix
+            *self = Matrix::multiply_matrices(&mat, self);
         } else if (axis.eq("z")) {
             // Making new transformation matrix
             let mut mat: Matrix = Matrix::new_transformation();
@@ -250,36 +270,23 @@ impl Matrix {
             mat.data[1][0] = f32::sin(angle) * -1.0;
             mat.data[1][1] = f32::cos(angle);
 
-            // Returning transformation matrix
-            mat
+            // Updating transformation matrix
+            *self = Matrix::multiply_matrices(&mat, self);
         } else {
-            eprintln!("Axis of rotation is not valid, returning default value");
-            Matrix::new_transformation()
+            eprintln!("Axis of rotation is not valid, no changes made");
         }
     }
 
-    /// Function for creating a rotation matrix in degrees
-    pub fn rotate_degree(angle: f32, axis: &str) -> Matrix {
-        Matrix::rotate_radian(angle * PI / 180.0, axis)
+    /// Function for rotating a transformation matrix in degrees
+    pub fn rotate_degree(&mut self, angle: f32, axis: &str) {
+        self.rotate_radian(angle * PI / 180.0, axis);
     }
 
-    /// Implements the right tranformation of a matrix given the original matrix and a transformation matrix
-    pub fn right_transform(&mut self, trans: &Matrix) {
+    /// Implements tranformation of a matrix given the original matrix and a transformation matrix
+    pub fn matrix_transform(&mut self, trans: &Matrix) {
         // Making sure current matrix is a tranformation matrix
         if (trans.row_num != 4 || trans.col_num != 4) {
             eprintln!("Transformation matrix given is not the right size, no changes made");
-            return;
-        }
-
-        // Multiplying and copying things over
-        *self = Matrix::multiply_matrices(self, trans);
-    }
-
-    /// Implments the left transformation of a matrix given the original matrix and a transformation matrix
-    pub fn left_transform(&mut self, trans: &Matrix) {
-        // Making sure current matrix is a transformation matrix
-        if (trans.row_num != 4 || trans.col_num != 4) {
-            eprintln!("Transformation amtrix given is not the right size, no changes made");
             return;
         }
 

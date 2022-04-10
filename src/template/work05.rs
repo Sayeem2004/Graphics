@@ -1,7 +1,7 @@
 // Imports
-use crate::algorithm::shape;
-use crate::format::{constant, file, image::Image, matrix::Matrix, pixel::Pixel};
-use crate::script::parse;
+use crate::prev::ver06::algorithm::shape;
+use crate::prev::ver06::format::{constant, file, image::Image, matrix::Matrix, pixel::Pixel};
+use crate::prev::ver06::script::parse;
 use crate::template::work00;
 use std::fs;
 
@@ -103,10 +103,10 @@ pub fn create_work05_images(mode: i32) {
     fs::create_dir_all("image/ppm").expect("Unable to create image/ppm directory");
 
     // Creating shapes image test
-    parse::parse("data/w05/w05_script", 500, mode);
+    parse::parse("data/w05/w05_script", 750, mode);
 
     // Creating 3d face image
-    parse::parse("data/w05/w05_face", 500, mode);
+    parse::parse("data/w05/w05_face", 750, mode);
 
     // Creating solar system image
     parse::parse("data/w05/w05_solar", 750, mode);

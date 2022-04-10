@@ -1,9 +1,9 @@
 // Imports
 use crate::algorithm::curve;
-use crate::format::matrix::Matrix;
+use crate::format::{constant, matrix::Matrix, image::Image};
 
 /// Function that performs the 'bezier' command
-pub fn bezier(arg: &str, ind: usize, edge: &mut Matrix) {
+pub fn bezier(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
     // Splitting the argument string
     let split = arg.split(' ');
 
@@ -39,19 +39,22 @@ pub fn bezier(arg: &str, ind: usize, edge: &mut Matrix) {
         return;
     }
 
-    // Adding bezier to matrix
+    // Adding bezier to image
+    let mut edge: Matrix = Matrix::new_matrix();
     curve::add_bezier(
-        edge,
+        &mut edge,
         (nums[0], nums[1]),
         (nums[2], nums[3]),
         (nums[4], nums[5]),
         (nums[6], nums[7]),
         100,
     );
+    edge.left_transform(cord);
+    edge.draw_lines_xy(img, constant::WHITE_PIXEL);
 }
 
 /// Function that performs the 'circle' command
-pub fn circle(arg: &str, ind: usize, edge: &mut Matrix) {
+pub fn circle(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
     // Splitting the argument string
     let split = arg.split(' ');
 
@@ -87,12 +90,15 @@ pub fn circle(arg: &str, ind: usize, edge: &mut Matrix) {
         return;
     }
 
-    // Adding circle to matrix
-    curve::add_circle(edge, (nums[0], nums[1], nums[2]), nums[3], 100);
+    // Adding circle to image
+    let mut edge: Matrix = Matrix::new_matrix();
+    curve::add_circle(&mut edge, (nums[0], nums[1], nums[2]), nums[3], 100);
+    edge.left_transform(cord);
+    edge.draw_lines_xy(img, constant::WHITE_PIXEL);
 }
 
 /// Function that performs the 'hermite' command
-pub fn hermite(arg: &str, ind: usize, edge: &mut Matrix) {
+pub fn hermite(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
     // Splitting the argument string
     let split = arg.split(' ');
 
@@ -128,13 +134,16 @@ pub fn hermite(arg: &str, ind: usize, edge: &mut Matrix) {
         return;
     }
 
-    // Adding hermite to matrix
+    // Adding hermite to image
+    let mut edge: Matrix = Matrix::new_matrix();
     curve::add_hermite(
-        edge,
+        &mut edge,
         (nums[0], nums[1]),
         (nums[2], nums[3]),
         (nums[4], nums[5]),
         (nums[6], nums[7]),
         100,
     );
+    edge.left_transform(cord);
+    edge.draw_lines_xy(img, constant::WHITE_PIXEL);
 }

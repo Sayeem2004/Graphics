@@ -1,8 +1,21 @@
 // Imports
-use crate::format::matrix::Matrix;
+use crate::prev::ver06::format::matrix::Matrix;
+
+/// Function that performs the 'apply' command
+pub fn apply(trans: &mut Matrix, edge: &mut Matrix, poly: &mut Matrix) {
+    // Applying transformation
+    edge.matrix_transform(trans);
+    poly.matrix_transform(trans);
+}
+
+/// Function that performs the 'ident' command
+pub fn ident(trans: &mut Matrix) {
+    // Seting new value
+    *trans = Matrix::new_transformation();
+}
 
 /// Function that performs the 'move' command
-pub fn _move(arg: &str, ind: usize, cord: &mut Matrix) {
+pub fn _move(arg: &str, ind: usize, trans: &mut Matrix) {
     // Splitting the argument string
     let split = arg.split(' ');
 
@@ -39,12 +52,11 @@ pub fn _move(arg: &str, ind: usize, cord: &mut Matrix) {
     }
 
     // Performing translation
-    let trans: Matrix = Matrix::translate(nums[0], nums[1], nums[2]);
-    cord.right_transform(&trans);
+    trans.translate(nums[0], nums[1], nums[2]);
 }
 
 /// Function that performs the 'rotate' command
-pub fn rotate(arg: &str, ind: usize, cord: &mut Matrix) {
+pub fn rotate(arg: &str, ind: usize, trans: &mut Matrix) {
     // Splitting the argument string
     let split: Vec<&str> = arg.split(' ').collect();
 
@@ -75,12 +87,11 @@ pub fn rotate(arg: &str, ind: usize, cord: &mut Matrix) {
     }
 
     // Performing rotation
-    let trans: Matrix = Matrix::rotate_degree(num.unwrap(), split[0]);
-    cord.right_transform(&trans);
+    trans.rotate_degree(num.unwrap(), split[0]);
 }
 
 /// Function that performs the 'scale' command
-pub fn scale(arg: &str, ind: usize, cord: &mut Matrix) {
+pub fn scale(arg: &str, ind: usize, trans: &mut Matrix) {
     // Splitting the argument string
     let split = arg.split(' ');
 
@@ -117,6 +128,5 @@ pub fn scale(arg: &str, ind: usize, cord: &mut Matrix) {
     }
 
     // Performing dilation
-    let trans: Matrix = Matrix::dilate(nums[0], nums[1], nums[2]);
-    cord.right_transform(&trans);
+    trans.dilate(nums[0], nums[1], nums[2]);
 }

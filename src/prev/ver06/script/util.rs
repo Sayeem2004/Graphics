@@ -1,10 +1,24 @@
 // Imports
-use crate::format::{constant, file, image::Image, matrix::Matrix};
+use crate::prev::ver06::format::{constant, file, image::Image, matrix::Matrix};
 use rand::Rng;
 use std::{fs, process::Command};
 
+/// Function that performs the 'clear' command
+pub fn clear(edge: &mut Matrix, poly: &mut Matrix) {
+    // Setting new value
+    *edge = Matrix::new_matrix();
+    *poly = Matrix::new_matrix();
+}
+
 /// Function that performs the 'display' command
-pub fn display(img: &Image) {
+pub fn display(edge: &mut Matrix, poly: &mut Matrix, img: &mut Image) {
+    // Clearing image
+    img.fill(constant::BLACK_PIXEL);
+
+    // Drawing lines and polygons
+    edge.draw_lines_xy(img, constant::WHITE_PIXEL);
+    poly.draw_triangles_xy(img, constant::WHITE_PIXEL, &constant::ZVIEW);
+
     // Attempting to create image directory
     fs::create_dir_all("image/tmp").expect("Unable to create image/tmp directory");
 
@@ -27,7 +41,7 @@ pub fn display(img: &Image) {
 }
 
 /// Function that performs the 'line' command
-pub fn line(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
+pub fn line(arg: &str, ind: usize, edge: &mut Matrix) {
     // Splitting the argument string
     let split = arg.split(' ');
 
@@ -63,36 +77,19 @@ pub fn line(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
         return;
     }
 
-    // Adding edges to matrix and drawing on image
-    let mut edge: Matrix = Matrix::new_matrix();
+    // Adding edge to matrix
     edge.add_edge((nums[0], nums[1], nums[2]), (nums[3], nums[4], nums[5]));
-    edge.left_transform(cord);
-    edge.draw_lines_xy(img, constant::WHITE_PIXEL);
-}
-
-/// Function that performs the 'pop' command
-pub fn pop(stack: &mut Vec<Matrix>, sz: &mut usize) {
-    // Removing top of stack
-    stack.pop();
-
-    // Updating stack size
-    *sz -= 1;
-}
-
-/// Function that performs the 'push' command
-pub fn push(stack: &mut Vec<Matrix>, sz: &mut usize) {
-    // Making copy of top
-    let copy: Matrix = stack[*sz-1].clone();
-
-    // Adding copy to top of stack
-    stack.push(copy);
-
-    // Updating stack size
-    *sz += 1;
 }
 
 /// Function that performs the 'save' command
-pub fn save(arg: &str, img: &Image) {
+pub fn save(arg: &str, edge: &mut Matrix, poly: &mut Matrix, img: &mut Image) {
+    // Clearing image
+    img.fill(constant::BLACK_PIXEL);
+
+    // Drawing lines and polygons
+    edge.draw_lines_xy(img, constant::WHITE_PIXEL);
+    poly.draw_triangles_xy(img, constant::WHITE_PIXEL, &constant::ZVIEW);
+
     // Attempting to create image directory
     fs::create_dir_all("image/tmp").expect("Unable to create image/tmp directory");
 

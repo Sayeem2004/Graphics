@@ -1,7 +1,7 @@
 // Imports
-use crate::algorithm::curve;
-use crate::format::{constant, file, image::Image, matrix::Matrix};
-use crate::script::parse;
+use crate::prev::ver06::algorithm::curve;
+use crate::prev::ver06::format::{constant, file, image::Image, matrix::Matrix};
+use crate::prev::ver06::script::parse;
 use std::f32::consts::PI;
 use std::fs;
 
@@ -58,7 +58,7 @@ pub fn create_work04_images(mode: i32) {
     fs::create_dir_all("image/ppm").expect("Unable to create image/ppm directory");
 
     // Creating face image
-    parse::parse("data/w04/w04_script", 500, mode);
+    parse::parse("data/w04/w04_script", 750, mode);
 
     // Creating optical illusion image
     optical();

@@ -3,6 +3,7 @@
 #![allow(dead_code)]
 mod algorithm;
 mod format;
+mod prev;
 mod script;
 use std::io;
 mod template;
@@ -17,7 +18,8 @@ fn main() {
     // template::work03::create_work03_images(0);
     // template::work04::create_work04_images(0);
     // template::work05::create_work05_images(0);
-    template::work06::create_work06_images(0);
+    // template::work06::create_work06_images(0);
+    template::work07::create_work07_images(0);
 
     // Variable Declarations
     let mut path: String = String::new();

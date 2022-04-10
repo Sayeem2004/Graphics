@@ -1,5 +1,5 @@
 // Imports
-use crate::format::{constant, file, image::Image, matrix::Matrix};
+use crate::prev::ver06::format::{constant, file, image::Image, matrix::Matrix};
 use std::fs;
 
 /// Function thats out the matrix struct and related functions

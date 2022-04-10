@@ -1,7 +1,7 @@
 // Imports
-use crate::algorithm::shape;
-use crate::format::{constant, file, image::Image, matrix::Matrix, pixel::Pixel};
-use crate::script::parse;
+use crate::prev::ver06::algorithm::shape;
+use crate::prev::ver06::format::{constant, file, image::Image, matrix::Matrix, pixel::Pixel};
+use crate::prev::ver06::script::parse;
 use std::{fs, process::Command};
 
 /// Function that adds a gojo character to an image
@@ -414,9 +414,9 @@ fn purple_hollow() {
 fn perspectives() {
     // Variable declarations
     let mut names: Vec<String> = Vec::new();
-    let mut curr: Image = Image::new_dimension(500, 500);
+    let mut curr: Image = Image::new_dimension(750, 750);
     let mut sphere: Matrix = Matrix::new_matrix();
-    shape::add_sphere(&mut sphere, (250.0, 250.0, 0.0), 200.0, 100);
+    shape::add_sphere(&mut sphere, (375.0, 375.0, 0.0), 300.0, 100);
 
     // Attempting to create image directory
     fs::create_dir_all("image/tmp").expect("Unable to create image/tmp directory");
@@ -467,10 +467,10 @@ pub fn create_work06_images(mode: i32) {
     fs::create_dir_all("image/ppm").expect("Unable to create image/ppm directory");
 
     // Creating shapes image test
-    parse::parse("data/w06/w06_script", 500, mode);
+    parse::parse("data/w06/w06_script", 750, mode);
 
     // Creating face image
-    parse::parse("data/w06/w06_face", 500, mode);
+    parse::parse("data/w06/w06_face", 750, mode);
 
     // Creating purple hollow image
     purple_hollow();

@@ -1,6 +1,6 @@
 // Imports
-use crate::algorithm::line;
-use crate::format::{constant, file, image::Image, pixel::Pixel};
+use crate::prev::ver06::algorithm::line;
+use crate::prev::ver06::format::{constant, file, image::Image, pixel::Pixel};
 use std::fs;
 
 /// Function that tests lines in all octants
