@@ -11,4 +11,6 @@ fn test_work07() {
     // Making sure image files exist
     assert!(file::file_exists("image/script/w07_robot.png"));
     assert!(file::file_exists("image/ppm/w07_spiralchain.ppm"));
+    assert!(file::file_exists("image/ppm/w07_olympics.ppm"));
+    assert!(file::file_exists("image/script/w07_umbrella.png"));
 }

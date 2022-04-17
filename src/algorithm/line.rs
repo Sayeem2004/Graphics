@@ -3,17 +3,18 @@ use crate::format::{image::Image, pixel::Pixel};
 use std::f32::consts::PI;
 
 /// Drawing a line in octant I
-fn draw_oct1(img: &mut Image, pix: Pixel, s: (i32, i32), e: (i32, i32)) {
+fn draw_oct1(img: &mut Image, pix: Pixel, s: (i32, i32, f32), e: (i32, i32, f32)) {
     // Variable declarations
-    let (mut x, mut y): (i32, i32) = (s.0, s.1);
+    let (mut x, mut y, mut z): (i32, i32, f32) = (s.0, s.1, s.2);
     let a: i32 = 2 * (e.1 - s.1);
     let b: i32 = 2 * (s.0 - e.0);
+    let dz: f32 = (e.2 - s.2) / (e.0 - s.0).abs() as f32;
     let mut d: i32 = a + b / 2;
 
     // Looping through range
     while (x <= e.0) {
         // Changing pixel
-        img.update_pixel_xy(x, y, pix);
+        img.update_pixel_xy(x, y, z, pix);
 
         // Updating y value if necessary
         if (d > 0) {
@@ -22,23 +23,25 @@ fn draw_oct1(img: &mut Image, pix: Pixel, s: (i32, i32), e: (i32, i32)) {
         }
 
         // Necessary updates
+        z += dz;
         x += 1;
         d += a;
     }
 }
 
 /// Drawing a line in octant II
-fn draw_oct2(img: &mut Image, pix: Pixel, s: (i32, i32), e: (i32, i32)) {
+fn draw_oct2(img: &mut Image, pix: Pixel, s: (i32, i32, f32), e: (i32, i32, f32)) {
     // Variable declarations
-    let (mut x, mut y): (i32, i32) = (s.0, s.1);
+    let (mut x, mut y, mut z): (i32, i32, f32) = (s.0, s.1, s.2);
     let a: i32 = 2 * (e.1 - s.1);
     let b: i32 = 2 * (s.0 - e.0);
+    let dz: f32 = (e.2 - s.2) / (e.1 - s.1).abs() as f32;
     let mut d: i32 = a / 2 + b;
 
     // Looping through range
     while (y <= e.1) {
         // Changing pixel
-        img.update_pixel_xy(x, y, pix);
+        img.update_pixel_xy(x, y, z, pix);
 
         // Updating y value if necessary
         if (d < 0) {
@@ -47,31 +50,34 @@ fn draw_oct2(img: &mut Image, pix: Pixel, s: (i32, i32), e: (i32, i32)) {
         }
 
         // Necessary updates
+        z += dz;
         y += 1;
         d += b;
     }
 }
 
 /// Drawing a line in octant VII
-fn draw_oct7(img: &mut Image, pix: Pixel, s: (i32, i32), e: (i32, i32)) {
+fn draw_oct7(img: &mut Image, pix: Pixel, s: (i32, i32, f32), e: (i32, i32, f32)) {
     // Variable declarations
-    let (mut x, mut y): (i32, i32) = (s.0, s.1);
+    let (mut x, mut y, mut z): (i32, i32, f32) = (s.0, s.1, s.2);
     let a: i32 = 2 * (s.1 - e.1);
     let b: i32 = 2 * (s.0 - e.0);
+    let dz: f32 = (e.2 - s.2) / (e.1 - s.1).abs() as f32;
     let mut d: i32 = a / 2 + b;
 
     // Looping through range
     while (y >= e.1) {
         // Changing pixel
-        img.update_pixel_xy(x, y, pix);
+        img.update_pixel_xy(x, y, z, pix);
 
-        // Updating y value if necessary
+        // Updating x value if necessary
         if (d < 0) {
             x += 1;
             d += a;
         }
 
         // Necessary updates
+        z += dz;
         if (y > 0) {
             y -= 1;
         } else {
@@ -82,17 +88,18 @@ fn draw_oct7(img: &mut Image, pix: Pixel, s: (i32, i32), e: (i32, i32)) {
 }
 
 /// Drawing a line in octant VIII
-fn draw_oct8(img: &mut Image, pix: Pixel, s: (i32, i32), e: (i32, i32)) {
+fn draw_oct8(img: &mut Image, pix: Pixel, s: (i32, i32, f32), e: (i32, i32, f32)) {
     // Variable declarations
-    let (mut x, mut y): (i32, i32) = (s.0, s.1);
+    let (mut x, mut y, mut z): (i32, i32, f32) = (s.0, s.1, s.2);
     let a: i32 = 2 * (s.1 - e.1);
     let b: i32 = 2 * (s.0 - e.0);
+    let dz: f32 = (e.2 - s.2) / (e.0 - s.0).abs() as f32;
     let mut d: i32 = a + b / 2;
 
     // Looping through range
     while (x <= e.0) {
         // Changing pixel
-        img.update_pixel_xy(x, y, pix);
+        img.update_pixel_xy(x, y, z, pix);
 
         // Updating y value if necessary
         if (d > 0) {
@@ -105,13 +112,14 @@ fn draw_oct8(img: &mut Image, pix: Pixel, s: (i32, i32), e: (i32, i32)) {
         }
 
         // Necessary updates
+        z += dz;
         x += 1;
         d += a;
     }
 }
 
 /// Function that draws an arbitrary line by using the 4 octants above
-pub fn draw_line(s: (i32, i32), e: (i32, i32), img: &mut Image, pix: Pixel) {
+pub fn draw_line(s: (i32, i32, f32), e: (i32, i32, f32), img: &mut Image, pix: Pixel) {
     // Quadrant 1, 2, 7, 8 cases
     if (e.0 >= s.0) {
         // Quadrant 1, 2

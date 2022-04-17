@@ -41,7 +41,13 @@ pub fn _box(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
 
     // Adding box to image
     let mut poly: Matrix = Matrix::new_matrix();
-    shape::add_box(&mut poly, (nums[0], nums[1], nums[2]), nums[3], nums[4], nums[5]);
+    shape::add_box(
+        &mut poly,
+        (nums[0], nums[1], nums[2]),
+        nums[3],
+        nums[4],
+        nums[5],
+    );
     poly.left_transform(cord);
     poly.draw_triangles_xy(img, constant::WHITE_PIXEL, &constant::ZVIEW);
 }

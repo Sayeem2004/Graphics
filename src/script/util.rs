@@ -82,7 +82,7 @@ pub fn pop(stack: &mut Vec<Matrix>, sz: &mut usize) {
 /// Function that performs the 'push' command
 pub fn push(stack: &mut Vec<Matrix>, sz: &mut usize) {
     // Making copy of top
-    let copy: Matrix = stack[*sz-1].clone();
+    let copy: Matrix = stack[*sz - 1].clone();
 
     // Adding copy to top of stack
     stack.push(copy);

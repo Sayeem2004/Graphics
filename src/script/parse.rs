@@ -31,7 +31,12 @@ pub fn parse(path: &str, size: i32, mode: i32) {
                         curr + 1
                     );
                 } else {
-                    util::line(&lines[curr + 1], curr + 1, &stack[stack.len()-1], &mut img);
+                    util::line(
+                        &lines[curr + 1],
+                        curr + 1,
+                        &stack[stack.len() - 1],
+                        &mut img,
+                    );
                 }
                 curr += 2;
             }
@@ -52,7 +57,7 @@ pub fn parse(path: &str, size: i32, mode: i32) {
                         curr + 1
                     );
                 } else {
-                    transform::scale(&lines[curr + 1], curr + 1, &mut stack[sz-1]);
+                    transform::scale(&lines[curr + 1], curr + 1, &mut stack[sz - 1]);
                 }
                 curr += 2;
             }
@@ -65,7 +70,7 @@ pub fn parse(path: &str, size: i32, mode: i32) {
                         curr + 1
                     );
                 } else {
-                    transform::_move(&lines[curr + 1], curr + 1, &mut stack[sz-1]);
+                    transform::_move(&lines[curr + 1], curr + 1, &mut stack[sz - 1]);
                 }
                 curr += 2;
             }
@@ -78,7 +83,7 @@ pub fn parse(path: &str, size: i32, mode: i32) {
                         curr + 1
                     );
                 } else {
-                    transform::rotate(&lines[curr + 1], curr + 1, &mut stack[sz-1]);
+                    transform::rotate(&lines[curr + 1], curr + 1, &mut stack[sz - 1]);
                 }
                 curr += 2;
             }
@@ -104,7 +109,12 @@ pub fn parse(path: &str, size: i32, mode: i32) {
                         curr + 1
                     );
                 } else {
-                    curve::circle(&lines[curr + 1], curr + 1, &stack[stack.len()-1], &mut img);
+                    curve::circle(
+                        &lines[curr + 1],
+                        curr + 1,
+                        &stack[stack.len() - 1],
+                        &mut img,
+                    );
                 }
                 curr += 2;
             }
@@ -117,7 +127,12 @@ pub fn parse(path: &str, size: i32, mode: i32) {
                         curr + 1
                     );
                 } else {
-                    curve::hermite(&lines[curr + 1], curr + 1, &stack[stack.len()-1], &mut img);
+                    curve::hermite(
+                        &lines[curr + 1],
+                        curr + 1,
+                        &stack[stack.len() - 1],
+                        &mut img,
+                    );
                 }
                 curr += 2;
             }
@@ -130,7 +145,12 @@ pub fn parse(path: &str, size: i32, mode: i32) {
                         curr + 1
                     );
                 } else {
-                    curve::bezier(&lines[curr + 1], curr + 1, &stack[stack.len()-1], &mut img);
+                    curve::bezier(
+                        &lines[curr + 1],
+                        curr + 1,
+                        &stack[stack.len() - 1],
+                        &mut img,
+                    );
                 }
                 curr += 2;
             }
@@ -143,7 +163,12 @@ pub fn parse(path: &str, size: i32, mode: i32) {
                         curr + 1
                     );
                 } else {
-                    shape::_box(&lines[curr + 1], curr + 1, &stack[stack.len()-1], &mut img);
+                    shape::_box(
+                        &lines[curr + 1],
+                        curr + 1,
+                        &stack[stack.len() - 1],
+                        &mut img,
+                    );
                 }
                 curr += 2;
             }
@@ -156,7 +181,12 @@ pub fn parse(path: &str, size: i32, mode: i32) {
                         curr + 1
                     );
                 } else {
-                    shape::sphere(&lines[curr + 1], curr + 1, &stack[stack.len()-1], &mut img);
+                    shape::sphere(
+                        &lines[curr + 1],
+                        curr + 1,
+                        &stack[stack.len() - 1],
+                        &mut img,
+                    );
                 }
                 curr += 2;
             }
@@ -169,7 +199,12 @@ pub fn parse(path: &str, size: i32, mode: i32) {
                         curr + 1
                     );
                 } else {
-                    shape::torus(&lines[curr + 1], curr + 1, &stack[stack.len()-1], &mut img);
+                    shape::torus(
+                        &lines[curr + 1],
+                        curr + 1,
+                        &stack[stack.len() - 1],
+                        &mut img,
+                    );
                 }
                 curr += 2;
             }

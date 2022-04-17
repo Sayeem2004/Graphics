@@ -9,6 +9,7 @@ pub struct Image {
     height: i32,
     max_color: u8,
     pixels: Vec<Vec<Pixel>>,
+    buff: Vec<Vec<f32>>,
 }
 
 // Implementing constructors
@@ -21,6 +22,7 @@ impl Image {
             height: 500,
             max_color: 255,
             pixels: vec![vec![Pixel::new(); 500]; 500],
+            buff: vec![vec![f32::NEG_INFINITY; 500]; 500],
         }
     }
 
@@ -36,6 +38,7 @@ impl Image {
             height,
             max_color: 255,
             pixels: vec![vec![Pixel::new(); width as usize]; height as usize],
+            buff: vec![vec![f32::NEG_INFINITY; width as usize]; height as usize],
         }
     }
 
@@ -51,6 +54,7 @@ impl Image {
             height,
             max_color,
             pixels: vec![vec![Pixel::new(); width as usize]; height as usize],
+            buff: vec![vec![f32::NEG_INFINITY; width as usize]; height as usize],
         }
     }
 }
@@ -92,7 +96,7 @@ impl Image {
     }
 
     /// Updating a certain pixel with another pixel
-    pub fn update_pixel_rc(&mut self, row: i32, col: i32, pix: Pixel) {
+    pub fn update_pixel_rc(&mut self, row: i32, col: i32, z: f32, pix: Pixel) {
         // Within size range
         if (row >= 0 && row < self.height && col >= 0 && col < self.width) {
             // Within color range
@@ -101,17 +105,20 @@ impl Image {
                 && pix.get_blue() <= self.max_color)
             {
                 // Updating pixel
-                self.pixels[row as usize][col as usize].update(
-                    pix.get_red(),
-                    pix.get_green(),
-                    pix.get_blue(),
-                );
+                if (self.buff[row as usize][col as usize] < z) {
+                    self.pixels[row as usize][col as usize].update(
+                        pix.get_red(),
+                        pix.get_green(),
+                        pix.get_blue(),
+                    );
+                    self.buff[row as usize][col as usize] = z;
+                }
             }
         }
     }
 
     /// Updating a certain pixel with another pixel
-    pub fn update_pixel_xy(&mut self, x: i32, y: i32, pix: Pixel) {
+    pub fn update_pixel_xy(&mut self, x: i32, y: i32, z: f32, pix: Pixel) {
         // Within size range
         if (y >= 0 && y < self.height && x >= 0 && x < self.width) {
             // Within color range
@@ -120,11 +127,14 @@ impl Image {
                 && pix.get_blue() <= self.max_color)
             {
                 // Updating pixel
-                self.pixels[((self.height) - 1 - y) as usize][x as usize].update(
-                    pix.get_red(),
-                    pix.get_green(),
-                    pix.get_blue(),
-                );
+                if (self.buff[((self.height) - 1 - y) as usize][x as usize] < z) {
+                    self.pixels[((self.height) - 1 - y) as usize][x as usize].update(
+                        pix.get_red(),
+                        pix.get_green(),
+                        pix.get_blue(),
+                    );
+                    self.buff[((self.height) - 1 - y) as usize][x as usize] = z;
+                }
             }
         }
     }
@@ -238,7 +248,7 @@ impl Image {
             while (!queue.is_empty()) {
                 // Getting point
                 let point: (i32, i32) = queue.pop_front().unwrap();
-                self.update_pixel_xy(point.0, point.1, pix);
+                self.update_pixel_xy(point.0, point.1, 0.0, pix);
 
                 for i in 0..4 {
                     // New points
@@ -284,7 +294,7 @@ impl Image {
             while (!queue.is_empty()) {
                 // Getting point
                 let point: (i32, i32) = queue.pop_front().unwrap();
-                self.update_pixel_rc(point.0, point.1, pix);
+                self.update_pixel_rc(point.0, point.1, 0.0, pix);
 
                 for i in 0..4 {
                     // New points

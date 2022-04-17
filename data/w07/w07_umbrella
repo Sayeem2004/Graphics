@@ -1,0 +1,220 @@
+# Handle
+push
+move
+370 200 0
+rotate
+x -30
+rotate
+z -45
+move
+-125 -80 0
+box
+0 350 0 10 350 10
+
+# Cloth
+push
+move
+5 350 0
+torus
+0 0 0 3 5
+push
+move
+0 -3 0
+torus
+0 0 0 3 10
+push
+move
+0 -3 0
+torus
+0 0 0 3 15
+push
+move
+0 -3 0
+torus
+0 0 0 3 20
+push
+move
+0 -3 0
+torus
+0 0 0 3 25
+push
+move
+0 -3 0
+torus
+0 0 0 3 30
+push
+move
+0 -3 0
+torus
+0 0 0 3 35
+push
+move
+0 -3 0
+torus
+0 0 0 3 40
+push
+move
+0 -3 0
+torus
+0 0 0 3 45
+push
+move
+0 -3 0
+torus
+0 0 0 3 50
+push
+move
+0 -3 0
+torus
+0 0 0 3 55
+push
+move
+0 -3 0
+torus
+0 0 0 3 60
+push
+move
+0 -3 0
+torus
+0 0 0 3 65
+push
+move
+0 -3 0
+torus
+0 0 0 3 70
+push
+move
+0 -3 0
+torus
+0 0 0 3 75
+push
+move
+0 -3 0
+torus
+0 0 0 3 80
+push
+move
+0 -3 0
+torus
+0 0 0 3 85
+push
+move
+0 -3 0
+torus
+0 0 0 3 90
+push
+move
+0 -3 0
+torus
+0 0 0 3 95
+push
+move
+0 -3 0
+torus
+0 0 0 3 100
+push
+move
+0 -3 0
+torus
+0 0 0 3 105
+push
+move
+0 -3 0
+torus
+0 0 0 3 110
+push
+move
+0 -3 0
+torus
+0 0 0 3 115
+push
+move
+0 -3 0
+torus
+0 0 0 3 120
+push
+move
+0 -3 0
+torus
+0 0 0 3 125
+push
+move
+0 -3 0
+torus
+0 0 0 3 130
+push
+move
+0 -3 0
+torus
+0 0 0 3 135
+push
+move
+0 -3 0
+torus
+0 0 0 3 140
+push
+move
+0 -3 0
+torus
+0 0 0 3 145
+push
+move
+0 -3 0
+torus
+0 0 0 3 150
+push
+move
+0 -3 0
+torus
+0 0 0 3 155
+push
+move
+0 -3 0
+torus
+0 0 0 3 160
+push
+move
+0 -3 0
+torus
+0 0 0 3 165
+push
+move
+0 -3 0
+torus
+0 0 0 3 170
+push
+move
+0 -3 0
+torus
+0 0 0 3 175
+push
+move
+0 -3 0
+torus
+0 0 0 3 180
+push
+move
+0 -3 0
+torus
+0 0 0 3 185
+push
+move
+0 -3 0
+torus
+0 0 0 3 190
+push
+move
+0 -3 0
+torus
+0 0 0 3 195
+push
+move
+0 -3 0
+torus
+0 0 0 3 200
+
+
+# Saving image
+display
+save
+w07_umbrella.png

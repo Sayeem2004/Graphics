@@ -1,6 +1,6 @@
 // Imports
 use crate::algorithm::curve;
-use crate::format::{constant, matrix::Matrix, image::Image};
+use crate::format::{constant, image::Image, matrix::Matrix};
 
 /// Function that performs the 'bezier' command
 pub fn bezier(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {

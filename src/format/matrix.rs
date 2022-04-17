@@ -321,10 +321,12 @@ impl Matrix {
                     (
                         self.data[(i - 1) as usize][0] as i32,
                         self.data[(i - 1) as usize][1] as i32,
+                        self.data[(i - 1) as usize][2],
                     ),
                     (
                         self.data[i as usize][0] as i32,
                         self.data[i as usize][1] as i32,
+                        self.data[i as usize][2],
                     ),
                     img,
                     pix,
@@ -345,10 +347,12 @@ impl Matrix {
                     (
                         self.data[(i - 1) as usize][0] as i32,
                         img.get_height() - self.data[(i - 1) as usize][1] as i32,
+                        self.data[(i - 1) as usize][2],
                     ),
                     (
                         self.data[i as usize][0] as i32,
                         img.get_height() - self.data[i as usize][1] as i32,
+                        self.data[i as usize][2],
                     ),
                     img,
                     pix,
@@ -384,10 +388,12 @@ impl Matrix {
                     (
                         self.data[(i - 2) as usize][0] as i32,
                         self.data[(i - 2) as usize][1] as i32,
+                        self.data[(i - 2) as usize][2],
                     ),
                     (
                         self.data[(i - 1) as usize][0] as i32,
                         self.data[(i - 1) as usize][1] as i32,
+                        self.data[(i - 1) as usize][2],
                     ),
                     img,
                     pix,
@@ -397,10 +403,12 @@ impl Matrix {
                     (
                         self.data[(i - 1) as usize][0] as i32,
                         self.data[(i - 1) as usize][1] as i32,
+                        self.data[(i - 1) as usize][2],
                     ),
                     (
                         self.data[i as usize][0] as i32,
                         self.data[i as usize][1] as i32,
+                        self.data[i as usize][2],
                     ),
                     img,
                     pix,
@@ -410,10 +418,12 @@ impl Matrix {
                     (
                         self.data[i as usize][0] as i32,
                         self.data[i as usize][1] as i32,
+                        self.data[i as usize][2],
                     ),
                     (
                         self.data[(i - 2) as usize][0] as i32,
                         self.data[(i - 2) as usize][1] as i32,
+                        self.data[(i - 2) as usize][2],
                     ),
                     img,
                     pix,
