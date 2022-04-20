@@ -1,6 +1,5 @@
 // Imports
-use crate::format::{image::Image, pixel::Pixel};
-use std::f32::consts::PI;
+use crate::format::{image::Image, matrix::Matrix, pixel::Pixel};
 
 /// Drawing a line in octant I
 fn draw_oct1(img: &mut Image, pix: Pixel, s: (i32, i32, f32), e: (i32, i32, f32)) {
@@ -8,7 +7,7 @@ fn draw_oct1(img: &mut Image, pix: Pixel, s: (i32, i32, f32), e: (i32, i32, f32)
     let (mut x, mut y, mut z): (i32, i32, f32) = (s.0, s.1, s.2);
     let a: i32 = 2 * (e.1 - s.1);
     let b: i32 = 2 * (s.0 - e.0);
-    let dz: f32 = (e.2 - s.2) / (e.0 - s.0).abs() as f32;
+    let dz: f32 = (e.2 - s.2) / (e.0 - s.0 + 1).abs() as f32;
     let mut d: i32 = a + b / 2;
 
     // Looping through range
@@ -35,7 +34,7 @@ fn draw_oct2(img: &mut Image, pix: Pixel, s: (i32, i32, f32), e: (i32, i32, f32)
     let (mut x, mut y, mut z): (i32, i32, f32) = (s.0, s.1, s.2);
     let a: i32 = 2 * (e.1 - s.1);
     let b: i32 = 2 * (s.0 - e.0);
-    let dz: f32 = (e.2 - s.2) / (e.1 - s.1).abs() as f32;
+    let dz: f32 = (e.2 - s.2) / (e.1 - s.1 + 1).abs() as f32;
     let mut d: i32 = a / 2 + b;
 
     // Looping through range
@@ -62,7 +61,7 @@ fn draw_oct7(img: &mut Image, pix: Pixel, s: (i32, i32, f32), e: (i32, i32, f32)
     let (mut x, mut y, mut z): (i32, i32, f32) = (s.0, s.1, s.2);
     let a: i32 = 2 * (s.1 - e.1);
     let b: i32 = 2 * (s.0 - e.0);
-    let dz: f32 = (e.2 - s.2) / (e.1 - s.1).abs() as f32;
+    let dz: f32 = (e.2 - s.2) / (e.1 - s.1 + 1).abs() as f32;
     let mut d: i32 = a / 2 + b;
 
     // Looping through range
@@ -93,7 +92,7 @@ fn draw_oct8(img: &mut Image, pix: Pixel, s: (i32, i32, f32), e: (i32, i32, f32)
     let (mut x, mut y, mut z): (i32, i32, f32) = (s.0, s.1, s.2);
     let a: i32 = 2 * (s.1 - e.1);
     let b: i32 = 2 * (s.0 - e.0);
-    let dz: f32 = (e.2 - s.2) / (e.0 - s.0).abs() as f32;
+    let dz: f32 = (e.2 - s.2) / (e.0 - s.0 + 1).abs() as f32;
     let mut d: i32 = a + b / 2;
 
     // Looping through range
@@ -169,37 +168,147 @@ pub fn draw_line(s: (i32, i32, f32), e: (i32, i32, f32), img: &mut Image, pix: P
     }
 }
 
-/// Function that translates a given line by a certain distance in the x direction
-pub fn translate(s: (i32, i32), e: (i32, i32), xdist: i32, ydist: i32) -> (i32, i32, i32, i32) {
-    // Returning new points
-    (s.0 + xdist, s.1 + ydist, e.0 + xdist, e.1 + ydist)
-}
+/// Function that handles scanline conversion for a triangle
+pub fn scanline(poly: &Matrix, ind: i32, img: &mut Image, pix: Pixel) {
+    // Sorting points by y coordinate
+    let mut list: Vec<(i32, i32, f32)> = vec![
+        (
+            poly.data[ind as usize][0] as i32,
+            poly.data[ind as usize][1] as i32,
+            poly.data[ind as usize][2],
+        ),
+        (
+            poly.data[(ind - 1) as usize][0] as i32,
+            poly.data[(ind - 1) as usize][1] as i32,
+            poly.data[(ind - 1) as usize][2],
+        ),
+        (
+            poly.data[(ind - 2) as usize][0] as i32,
+            poly.data[(ind - 2) as usize][1] as i32,
+            poly.data[(ind - 2) as usize][2],
+        ),
+    ];
+    list.sort_by(|a, b| (a.1).partial_cmp(&(b.1)).unwrap());
 
-/// Function that rotates a given line by a certain angle in degrees
-pub fn rotate_degree(s: (i32, i32), e: (i32, i32), angle: f32) -> (i32, i32, i32, i32) {
-    rotate_radian(s, e, angle * PI / 180.0)
-}
+    // Checking for degenerate triangles
+    if ((list[0].0 == list[1].0 && list[1].0 == list[2].0)
+        || (list[0].1 == list[1].1 && list[1].1 == list[2].1))
+    {
+        draw_line(
+            (list[0].0, list[0].1, list[0].2),
+            (list[1].0, list[1].1, list[1].2),
+            img,
+            pix,
+        );
+        draw_line(
+            (list[2].0, list[2].1, list[2].2),
+            (list[1].0, list[1].1, list[1].2),
+            img,
+            pix,
+        );
+        return;
+    }
 
-/// Function that rotates a given line by a certain angle in radians
-pub fn rotate_radian(s: (i32, i32), e: (i32, i32), angle: f32) -> (i32, i32, i32, i32) {
-    // Getting trig stuff
-    let cos: f32 = f32::cos(angle);
-    let sin: f32 = f32::sin(angle);
+    // Casework on ordering of points
+    let bot: (i32, i32, f32);
+    let mid: (i32, i32, f32);
+    let top: (i32, i32, f32);
+    if (list[0].1 == list[1].1) {
+        // Bottom y == middle y case
+        if ((list[0].0 - list[2].0).abs() >= list[1].0 - list[2].0.abs()) {
+            (bot, mid, top) = (list[0], list[1], list[2]);
+        } else {
+            (mid, bot, top) = (list[0], list[1], list[2]);
+        }
 
-    // Rotating points
-    let nx: i32 = (((e.0 - s.0) as f32) * cos - ((e.1 - s.1) as f32) * sin + s.0 as f32) as i32;
-    let ny: i32 = (((e.0 - s.0) as f32) * sin + ((e.1 - s.1) as f32) * cos + s.1 as f32) as i32;
+        // Initializing coordinates
+        let (mut y, mxy): (i32, i32) = (bot.1, top.1);
+        let (mut x1, mut x2): (f32, f32) = (bot.0 as f32, mid.0 as f32);
+        let (mut z1, mut z2): (f32, f32) = (bot.2, mid.2);
+        let (dx1, dx2): (f32, f32) = (
+            (top.0 - bot.0) as f32 / (top.1 - bot.1) as f32,
+            (top.0 - mid.0) as f32 / (top.1 - mid.1) as f32,
+        );
+        let (dz1, dz2): (f32, f32) = (
+            (top.2 - bot.2) as f32 / (top.1 - bot.1) as f32,
+            (top.2 - mid.2) as f32 / (top.1 - mid.1) as f32,
+        );
 
-    // Returning new points
-    (s.0, s.1, nx, ny)
-}
+        // Iterating through coordinates
+        while (y <= mxy) {
+            // Drawing scanline
+            draw_line((x1 as i32, y, z1), (x2 as i32, y, z2), img, pix);
 
-/// Function that dilates a given line by a certain scale factor
-pub fn dilate(s: (i32, i32), e: (i32, i32), scale: f32) -> (i32, i32, i32, i32) {
-    // Scaling points
-    let nx: i32 = ((s.0 as f32) + ((e.0 - s.0) as f32 * scale)) as i32;
-    let ny: i32 = ((s.1 as f32) + ((e.1 - s.1) as f32 * scale)) as i32;
+            // Updating coordinates
+            x1 += dx1;
+            x2 += dx2;
+            z1 += dz1;
+            z2 += dz2;
+            y += 1;
+        }
+    } else if (list[1].1 == list[2].1) {
+        // Middle y == top y case
+        if ((list[2].0 - list[0].0).abs() >= list[1].0 - list[0].0.abs()) {
+            (bot, mid, top) = (list[0], list[1], list[2]);
+        } else {
+            (bot, top, mid) = (list[0], list[1], list[2]);
+        }
 
-    // Returning new points
-    (s.0, s.1, nx, ny)
+        // Initializing coordinates
+        let (mut y, mxy): (i32, i32) = (bot.1, top.1);
+        let (mut x1, mut x2): (f32, f32) = (bot.0 as f32, bot.0 as f32);
+        let (mut z1, mut z2): (f32, f32) = (bot.2, bot.2);
+        let (dx1, dx2): (f32, f32) = (
+            (top.0 - bot.0) as f32 / (top.1 - bot.1) as f32,
+            (mid.0 - bot.0) as f32 / (mid.1 - bot.1) as f32,
+        );
+        let (dz1, dz2): (f32, f32) = (
+            (top.2 - bot.2) as f32 / (top.1 - bot.1) as f32,
+            (mid.2 - bot.2) as f32 / (mid.1 - bot.1) as f32,
+        );
+
+        // Iterating through coordinates
+        while (y <= mxy) {
+            // Drawing scanline
+            draw_line((x1 as i32, y, z1), (x2 as i32, y, z2), img, pix);
+
+            // Updating coordinates
+            x1 += dx1;
+            x2 += dx2;
+            z1 += dz1;
+            z2 += dz2;
+            y += 1;
+        }
+    } else {
+        // No equivalent y levels case
+        (bot, mid, top) = (list[0], list[1], list[2]);
+
+        // Initializing coordinates
+        let (mut y, miy, mxy): (i32, i32, i32) = (bot.1, mid.1, top.1);
+        let (mut x1, mut x2): (f32, f32) = (bot.0 as f32, bot.0 as f32);
+        let (mut z1, mut z2): (f32, f32) = (bot.2 as f32, bot.2 as f32);
+        let (dx1, dx2, dx3): (f32, f32, f32) = (
+            (top.0 - bot.0) as f32 / (top.1 - bot.1) as f32,
+            (mid.0 - bot.0) as f32 / (mid.1 - bot.1) as f32,
+            (top.0 - mid.0) as f32 / (top.1 - mid.1) as f32,
+        );
+        let (dz1, dz2, dz3): (f32, f32, f32) = (
+            (top.2 - bot.2) as f32 / (top.1 - bot.1) as f32,
+            (mid.2 - bot.2) as f32 / (mid.1 - bot.1) as f32,
+            (top.2 - mid.2) as f32 / (top.1 - mid.1) as f32,
+        );
+
+        // Iterating through coordinates
+        while (y <= mxy) {
+            // Drawing scanline
+            draw_line((x1 as i32, y, z1), (x2 as i32, y, z2), img, pix);
+
+            // Updating coordinates
+            x1 += dx1;
+            x2 += if (y < miy) { dx2 } else { dx3 };
+            z1 += dz1;
+            z2 += if (y < miy) { dz2 } else { dz3 };
+            y += 1;
+        }
+    }
 }

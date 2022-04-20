@@ -3,6 +3,15 @@ use crate::format::{constant, file, image::Image, matrix::Matrix};
 use rand::Rng;
 use std::{fs, process::Command};
 
+/// Function that returns the image to default black and clears the zbuffer
+pub fn clear(img: &mut Image) {
+    // Making the screen black
+    img.fill(constant::BLACK_PIXEL);
+
+    // Resetting zbuffer
+    img.reset_buff();
+}
+
 /// Function that performs the 'display' command
 pub fn display(img: &Image) {
     // Attempting to create image directory

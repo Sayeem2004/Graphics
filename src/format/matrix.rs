@@ -1,6 +1,6 @@
 // Imports
 use crate::algorithm::{line, shape};
-use crate::format::{image::Image, pixel::Pixel};
+use crate::format::{constant, image::Image, pixel::Pixel};
 use std::f32::consts::PI;
 use std::fmt;
 
@@ -373,61 +373,40 @@ impl Matrix {
     }
 
     /// Function for drawing the triangles found in a matrix on an image using xy orientation
-    pub fn draw_triangles_xy(&mut self, img: &mut Image, pix: Pixel, view: &[f32]) {
+    pub fn draw_triangles_xy(&mut self, img: &mut Image, view: &[f32]) {
+        // Error checking
         if (self.row_num != 4) {
             eprintln!("Matrix row number does not equal four, no changes made");
             return;
         }
+
+        // Pixel colors
+        let colors: Vec<Pixel> = vec![
+            constant::AQUA_PIXEL,
+            constant::BLUE_PIXEL,
+            constant::FUCHSIA_PIXEL,
+            constant::GRAY_PIXEL,
+            constant::GREEN_PIXEL,
+            constant::LIME_PIXEL,
+            constant::MAROON_PIXEL,
+            constant::NAVY_PIXEL,
+            constant::OLIVE_PIXEL,
+            constant::PURPLE_PIXEL,
+            constant::RED_PIXEL,
+            constant::SILVER_PIXEL,
+            constant::TEAL_PIXEL,
+            constant::WHITE_PIXEL,
+            constant::YELLOW_PIXEL,
+        ];
+
+        // Drawing triangles
         for i in 0..self.col_num {
             if (i % 3 == 2) {
                 let normal = shape::normal(self, i as usize);
                 if (shape::dot(&normal, view) <= 0.0) {
                     continue;
                 }
-                line::draw_line(
-                    (
-                        self.data[(i - 2) as usize][0] as i32,
-                        self.data[(i - 2) as usize][1] as i32,
-                        self.data[(i - 2) as usize][2],
-                    ),
-                    (
-                        self.data[(i - 1) as usize][0] as i32,
-                        self.data[(i - 1) as usize][1] as i32,
-                        self.data[(i - 1) as usize][2],
-                    ),
-                    img,
-                    pix,
-                );
-
-                line::draw_line(
-                    (
-                        self.data[(i - 1) as usize][0] as i32,
-                        self.data[(i - 1) as usize][1] as i32,
-                        self.data[(i - 1) as usize][2],
-                    ),
-                    (
-                        self.data[i as usize][0] as i32,
-                        self.data[i as usize][1] as i32,
-                        self.data[i as usize][2],
-                    ),
-                    img,
-                    pix,
-                );
-
-                line::draw_line(
-                    (
-                        self.data[i as usize][0] as i32,
-                        self.data[i as usize][1] as i32,
-                        self.data[i as usize][2],
-                    ),
-                    (
-                        self.data[(i - 2) as usize][0] as i32,
-                        self.data[(i - 2) as usize][1] as i32,
-                        self.data[(i - 2) as usize][2],
-                    ),
-                    img,
-                    pix,
-                );
+                line::scanline(self, i, img, colors[(i / 3) as usize % colors.len()]);
             }
         }
     }

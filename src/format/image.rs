@@ -336,4 +336,15 @@ impl Image {
             }
         }
     }
+
+    /// Function that resets the zbuffer
+    pub fn reset_buff(&mut self) {
+        // Iterating through image
+        for i in 0..self.height {
+            for q in 0..self.width {
+                // Resetting zbuffer
+                self.buff[i as usize][q as usize] = f32::NEG_INFINITY;
+            }
+        }
+    }
 }

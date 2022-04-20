@@ -111,19 +111,19 @@ pub fn olympics(mode: i32) {
     }
 }
 
-/// Function that creates all images from work 06
+/// Function that creates all images from work 07
 pub fn create_work07_images(mode: i32) {
     // Attempting to create image directory
     fs::create_dir_all("image/ppm").expect("Unable to create image/ppm directory");
 
-    // Creating shapes image test
-    // parse::parse("data/w07/w07_robot", 750, mode);
+    // Creating robot image test
+    parse::parse("data/w07/w07_robot", 750, mode);
 
     // Creating spiral unraveling gif
-    // spiral_chain(mode);
+    spiral_chain(mode);
 
     // Creating olympics symbol image
-    // olympics(mode);
+    olympics(mode);
 
     // Creating umbrella image
     parse::parse("data/w07/w07_umbrella", 750, mode);

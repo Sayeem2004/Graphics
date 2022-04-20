@@ -221,6 +221,12 @@ pub fn parse(path: &str, size: i32, mode: i32) {
                 curr += 1;
             }
 
+            // Clear command
+            "clear" => {
+                util::clear(&mut img);
+                curr += 1;
+            }
+
             // Empty line case
             "" => curr += 1,
 
