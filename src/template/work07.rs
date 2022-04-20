@@ -1,7 +1,7 @@
 // Imports
-use crate::algorithm::shape;
-use crate::format::{constant, file, image::Image, matrix::Matrix};
-use crate::script::parse;
+use crate::prev::ver07::algorithm::shape;
+use crate::prev::ver07::format::{constant, file, image::Image, matrix::Matrix};
+use crate::prev::ver07::script::parse;
 use std::{f32::consts::PI, fs};
 
 /// Function that creates the spiral unraveling gif

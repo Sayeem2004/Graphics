@@ -13,7 +13,7 @@ mod work04;
 mod work05;
 #[cfg(test)]
 mod work06;
-// #[cfg(test)]
-// mod work07;
+#[cfg(test)]
+mod work07;
 #[cfg(test)]
 mod work08;

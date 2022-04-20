@@ -1,5 +1,5 @@
 // Imports
-use crate::prev::ver06::format::{image::Image, pixel::Pixel};
+use crate::prev::ver07::format::{image::Image, pixel::Pixel};
 
 /// Drawing a line in octant I
 fn draw_oct1(img: &mut Image, pix: Pixel, s: (i32, i32), e: (i32, i32)) {

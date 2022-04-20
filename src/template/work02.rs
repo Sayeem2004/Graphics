@@ -1,5 +1,6 @@
 // Imports
-use crate::prev::ver06::format::{constant, file, image::Image, matrix::Matrix};
+use crate::prev::ver05::algorithm::matrix;
+use crate::prev::ver05::format::{constant, file, image::Image, matrix::Matrix};
 use std::fs;
 
 /// Function thats out the matrix struct and related functions
@@ -9,7 +10,7 @@ fn test_matrix(mode: i32) {
     let mut mat1: Matrix = Matrix::new_matrix();
     println!("mat1 = Matrix::new_matrix()");
     print!("mat1 = \n{}", mat1);
-    mat1.add_edge((1.0, 2.0, 3.0), (4.0, 5.0, 6.0));
+    mat1.add_edge(1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
     println!("mat1.add_edge(1.0, 2.0, 3.0, 4.0, 5.0, 6.0)");
     print!("mat1 = \n{}", mat1);
 
@@ -21,18 +22,18 @@ fn test_matrix(mode: i32) {
 
     // Testing matrix multiplication
     println!("Testing matrix multiplication");
-    let mat3: Matrix = Matrix::multiply_matrices(&mat2, &mat1);
+    let mat3: Matrix = matrix::multiply_matrices(&mat2, &mat1);
     println!("mat3 = Matrix::multiply_matrices(mat2, mat1)");
     print!("mat3 =\n{}", mat3);
 
     // Testing matrix multiplication again
     println!("Testing matrix multiplication");
     let mut mat4: Matrix = Matrix::new_matrix();
-    mat4.add_edge((1.0, 2.0, 3.0), (4.0, 5.0, 6.0));
-    mat4.add_edge((7.0, 8.0, 9.0), (10.0, 11.0, 12.0));
+    mat4.add_edge(1.0, 2.0, 3.0, 4.0, 5.0, 6.0);
+    mat4.add_edge(7.0, 8.0, 9.0, 10.0, 11.0, 12.0);
     print!("mat4 =\n{}", mat4);
     print!("mat3 =\n{}", mat3);
-    let mat5: Matrix = Matrix::multiply_matrices(&mat4, &mat3);
+    let mat5: Matrix = matrix::multiply_matrices(&mat4, &mat3);
     println!("mat5 : Matrix = Matrix::multiply_matrices(mat4, mat3)");
     print!("mat5 =\n{}", mat5);
 
@@ -41,24 +42,24 @@ fn test_matrix(mode: i32) {
     let size: i32 = 750;
     let mut img: Image = Image::new_dimension(size, size);
     let mut mat6: Matrix = Matrix::new_matrix();
-    mat6.add_edge((50.0, 450.0, 0.0), (100.0, 450.0, 0.0));
-    mat6.add_edge((50.0, 450.0, 0.0), (50.0, 400.0, 0.0));
-    mat6.add_edge((100.0, 450.0, 0.0), (100.0, 400.0, 0.0));
-    mat6.add_edge((100.0, 400.0, 0.0), (50.0, 400.0, 0.0));
+    mat6.add_edge(50.0, 450.0, 0.0, 100.0, 450.0, 0.0);
+    mat6.add_edge(50.0, 450.0, 0.0, 50.0, 400.0, 0.0);
+    mat6.add_edge(100.0, 450.0, 0.0, 100.0, 400.0, 0.0);
+    mat6.add_edge(100.0, 400.0, 0.0, 50.0, 400.0, 0.0);
 
-    mat6.add_edge((200.0, 450.0, 0.0), (250.0, 450.0, 0.0));
-    mat6.add_edge((200.0, 450.0, 0.0), (200.0, 400.0, 0.0));
-    mat6.add_edge((250.0, 450.0, 0.0), (250.0, 400.0, 0.0));
-    mat6.add_edge((250.0, 400.0, 0.0), (200.0, 400.0, 0.0));
+    mat6.add_edge(200.0, 450.0, 0.0, 250.0, 450.0, 0.0);
+    mat6.add_edge(200.0, 450.0, 0.0, 200.0, 400.0, 0.0);
+    mat6.add_edge(250.0, 450.0, 0.0, 250.0, 400.0, 0.0);
+    mat6.add_edge(250.0, 400.0, 0.0, 200.0, 400.0, 0.0);
 
-    mat6.add_edge((150.0, 400.0, 0.0), (130.0, 360.0, 0.0));
-    mat6.add_edge((150.0, 400.0, 0.0), (170.0, 360.0, 0.0));
-    mat6.add_edge((130.0, 360.0, 0.0), (170.0, 360.0, 0.0));
+    mat6.add_edge(150.0, 400.0, 0.0, 130.0, 360.0, 0.0);
+    mat6.add_edge(150.0, 400.0, 0.0, 170.0, 360.0, 0.0);
+    mat6.add_edge(130.0, 360.0, 0.0, 170.0, 360.0, 0.0);
 
-    mat6.add_edge((100.0, 340.0, 0.0), (200.0, 340.0, 0.0));
-    mat6.add_edge((100.0, 320.0, 0.0), (200.0, 320.0, 0.0));
-    mat6.add_edge((100.0, 340.0, 0.0), (100.0, 320.0, 0.0));
-    mat6.add_edge((200.0, 340.0, 0.0), (200.0, 320.0, 0.0));
+    mat6.add_edge(100.0, 340.0, 0.0, 200.0, 340.0, 0.0);
+    mat6.add_edge(100.0, 320.0, 0.0, 200.0, 320.0, 0.0);
+    mat6.add_edge(100.0, 340.0, 0.0, 100.0, 320.0, 0.0);
+    mat6.add_edge(200.0, 340.0, 0.0, 200.0, 320.0, 0.0);
     print!("mat6 =\n{}", mat6);
     println!("mat6.draw_lines(img, constant::WHITE_PIXEL)");
     mat6.draw_lines_xy(&mut img, constant::WHITE_PIXEL);
@@ -84,16 +85,12 @@ fn spiral(mat: &mut Matrix, ds: f32, da: f32, itr: u32, size: i32) {
     // Iterating and adding edges
     for _i in 0..itr {
         mat.add_edge(
-            (
-                (size / 2) as f32 + f32::cos(prev_angle) * prev_size,
-                (size / 2) as f32 + f32::sin(prev_angle) * prev_size,
-                0.0,
-            ),
-            (
-                (size / 2) as f32 + f32::cos(prev_angle + da) * (prev_size + ds),
-                (size / 2) as f32 + f32::sin(prev_angle + da) * (prev_size + ds),
-                0.0,
-            ),
+            (size / 2) as f32 + f32::cos(prev_angle) * prev_size,
+            (size / 2) as f32 + f32::sin(prev_angle) * prev_size,
+            0.0,
+            (size / 2) as f32 + f32::cos(prev_angle + da) * (prev_size + ds),
+            (size / 2) as f32 + f32::sin(prev_angle + da) * (prev_size + ds),
+            0.0,
         );
         prev_size += ds;
         prev_angle += da;
@@ -130,12 +127,12 @@ pub fn create_work02_images(mode: i32) {
     trans.dilate(0.8, 0.8, 1.0);
     trans.translate(-7.0, 50.0, 0.0);
     mat.matrix_transform(&trans);
-    mat.add_edge((410.0, 215.0, 0.0), (415.0, 215.0, 0.0));
-    mat.add_edge((521.0, 275.0, 0.0), (521.0, 270.0, 0.0));
-    mat.add_edge((101.0, 380.0, 0.0), (101.0, 372.0, 0.0));
-    mat.add_edge((733.0, 430.0, 0.0), (733.0, 434.0, 0.0));
-    mat.add_edge((650.0, 380.0, 0.0), (645.0, 380.0, 0.0));
-    mat.add_edge((576.0, 240.0, 0.0), (578.0, 240.0, 0.0));
+    mat.add_edge(410.0, 215.0, 0.0, 415.0, 215.0, 0.0);
+    mat.add_edge(521.0, 275.0, 0.0, 521.0, 270.0, 0.0);
+    mat.add_edge(101.0, 380.0, 0.0, 101.0, 372.0, 0.0);
+    mat.add_edge(733.0, 430.0, 0.0, 733.0, 434.0, 0.0);
+    mat.add_edge(650.0, 380.0, 0.0, 645.0, 380.0, 0.0);
+    mat.add_edge(576.0, 240.0, 0.0, 578.0, 240.0, 0.0);
     let mut curr2: Image = Image::new_dimension(size, size);
     mat.draw_lines_rc(&mut curr2, constant::WHITE_PIXEL);
     curr2.flood_xy(375, 425, constant::WHITE_PIXEL, constant::YELLOW_PIXEL);

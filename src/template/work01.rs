@@ -1,6 +1,6 @@
 // Imports
-use crate::prev::ver06::algorithm::line;
-use crate::prev::ver06::format::{constant, file, image::Image, pixel::Pixel};
+use crate::prev::ver05::algorithm::line;
+use crate::prev::ver05::format::{constant, file, image::Image, pixel::Pixel};
 use std::fs;
 
 /// Function that tests lines in all octants
@@ -9,74 +9,52 @@ fn test_lines(img: &mut Image) {
     let mut pix: Pixel = Pixel::new_value(0, 255, 0);
 
     // // Octants 1 and 5
+    line::draw_line(0, 0, img.get_width() - 1, img.get_height() - 1, img, pix);
+    line::draw_line(0, 0, img.get_width() - 1, img.get_height() / 2, img, pix);
     line::draw_line(
-        (0, 0),
-        (img.get_width() - 1, img.get_height() - 1),
-        img,
-        pix,
-    );
-    line::draw_line(
-        (0, 0),
-        (img.get_width() - 1, img.get_height() / 2),
-        img,
-        pix,
-    );
-    line::draw_line(
-        (img.get_width() - 1, img.get_height() - 1),
-        (0, img.get_height() / 2),
+        img.get_width() - 1,
+        img.get_height() - 1,
+        0,
+        img.get_height() / 2,
         img,
         pix,
     );
 
     // Octants 8 and 4
     pix.change_blue(255);
+    line::draw_line(0, img.get_height() - 1, img.get_width() - 1, 0, img, pix);
     line::draw_line(
-        (0, img.get_height() - 1),
-        (img.get_width() - 1, 0),
+        0,
+        img.get_height() - 1,
+        img.get_width() - 1,
+        img.get_height() / 2,
         img,
         pix,
     );
-    line::draw_line(
-        (0, img.get_height() - 1),
-        (img.get_width() - 1, img.get_height() / 2),
-        img,
-        pix,
-    );
-    line::draw_line(
-        (img.get_width() - 1, 0),
-        (0, img.get_height() / 2),
-        img,
-        pix,
-    );
+    line::draw_line(img.get_width() - 1, 0, 0, img.get_height() / 2, img, pix);
 
     // Octants 2 and 6
     pix.change_red(255);
     pix.change_green(0);
     pix.change_blue(0);
+    line::draw_line(0, 0, img.get_width() / 2, img.get_height() - 1, img, pix);
     line::draw_line(
-        (0, 0),
-        (img.get_width() / 2, img.get_height() - 1),
-        img,
-        pix,
-    );
-    line::draw_line(
-        (img.get_width() - 1, img.get_height() - 1),
-        (img.get_width() / 2, 0),
+        img.get_width() - 1,
+        img.get_height() - 1,
+        img.get_width() / 2,
+        0,
         img,
         pix,
     );
 
     // Octants 7 and 3
     pix.change_blue(255);
+    line::draw_line(0, img.get_height() - 1, img.get_width() / 2, 0, img, pix);
     line::draw_line(
-        (0, img.get_height() - 1),
-        (img.get_width() / 2, 0),
-        img,
-        pix,
-    );
-    line::draw_line(
-        (img.get_width() - 1, 0),
-        (img.get_width() / 2, img.get_height() - 1),
+        img.get_width() - 1,
+        0,
+        img.get_width() / 2,
+        img.get_height() - 1,
         img,
         pix,
     );
@@ -85,14 +63,18 @@ fn test_lines(img: &mut Image) {
     pix.change_blue(0);
     pix.change_green(255);
     line::draw_line(
-        (0, img.get_height() / 2),
-        (img.get_width() - 1, img.get_height() / 2),
+        0,
+        img.get_height() / 2,
+        img.get_width() - 1,
+        img.get_height() / 2,
         img,
         pix,
     );
     line::draw_line(
-        (img.get_width() / 2, 0),
-        (img.get_width() / 2, img.get_height() - 1),
+        img.get_width() / 2,
+        0,
+        img.get_width() / 2,
+        img.get_height() - 1,
         img,
         pix,
     );
@@ -112,22 +94,20 @@ fn sierpinski(img: &mut Image, pix: Pixel, s: (i32, i32), e: (i32, i32), n: i32)
     }
 
     // Drawing triangle
-    line::draw_line(s, e, img, pix);
+    line::draw_line(s.0, s.1, e.0, e.1, img, pix);
     line::draw_line(
-        s,
-        (
-            s.0 + (e.0 - s.0) / 2,
-            s.1 + ((((e.0 - s.0) / 2) as f32) * f32::sqrt(3.0)) as i32,
-        ),
+        s.0,
+        s.1,
+        s.0 + (e.0 - s.0) / 2,
+        s.1 + ((((e.0 - s.0) / 2) as f32) * f32::sqrt(3.0)) as i32,
         img,
         pix,
     );
     line::draw_line(
-        e,
-        (
-            s.0 + (e.0 - s.0) / 2,
-            s.1 + ((((e.0 - s.0) / 2) as f32) * f32::sqrt(3.0)) as i32,
-        ),
+        e.0,
+        e.1,
+        s.0 + (e.0 - s.0) / 2,
+        s.1 + ((((e.0 - s.0) / 2) as f32) * f32::sqrt(3.0)) as i32,
         img,
         pix,
     );
@@ -172,7 +152,7 @@ fn heighway(
 
     // Base case
     if (n == 0) {
-        line::draw_line(s, e, img, pix);
+        line::draw_line(s.0, s.1, e.0, e.1, img, pix);
         return;
     }
 
@@ -219,7 +199,7 @@ fn bintree(
     }
 
     // Drawing line
-    line::draw_line(s, e, img, pix);
+    line::draw_line(s.0, s.1, e.0, e.1, img, pix);
 
     // Left recursion
     let mut l1: (i32, i32, i32, i32) = (e.0, e.1, e.0 + (e.0 - s.0), e.1 + (e.1 - s.1));
@@ -244,7 +224,7 @@ fn koch(img: &mut Image, pix: Pixel, s: (i32, i32), e: (i32, i32), n: i32, angle
 
     // Base case
     if (n == 0) {
-        line::draw_line(s, e, img, pix);
+        line::draw_line(s.0, s.1, e.0, e.1, img, pix);
         return;
     }
 

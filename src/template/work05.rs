@@ -1,7 +1,8 @@
 // Imports
-use crate::prev::ver06::algorithm::shape;
-use crate::prev::ver06::format::{constant, file, image::Image, matrix::Matrix, pixel::Pixel};
-use crate::prev::ver06::script::parse;
+use crate::prev::ver05::algorithm::shape;
+use crate::prev::ver05::format::{
+    constant, file, image::Image, matrix::Matrix, parse, pixel::Pixel,
+};
 use crate::template::work00;
 use std::fs;
 
@@ -9,8 +10,8 @@ use std::fs;
 pub fn filled_sphere(itr: u32) {
     // Variable declarations
     let mut img: Image = Image::new_dimension(750, 750);
-    let mut sphere1: Matrix = shape::gen_sphere((0.0, 0.0, 0.0), 300.0, itr);
-    let mut sphere2: Matrix = shape::gen_sphere((0.0, 0.0, 0.0), 300.0, itr);
+    let mut sphere1: Matrix = shape::gen_sphere(0.0, 0.0, 0.0, 300.0, itr);
+    let mut sphere2: Matrix = shape::gen_sphere(0.0, 0.0, 0.0, 300.0, itr);
     let mut edge: Matrix = Matrix::new_matrix();
     let mut trans: Matrix = Matrix::new_transformation();
 
@@ -49,8 +50,8 @@ pub fn filled_sphere(itr: u32) {
 pub fn rgb_sphere(itr: u32) {
     // Variable declarations
     let mut img: Image = Image::new_dimension(750, 750);
-    let mut sphere1: Matrix = shape::gen_sphere((0.0, 0.0, 0.0), 300.0, itr);
-    let mut sphere2: Matrix = shape::gen_sphere((0.0, 0.0, 0.0), 300.0, itr);
+    let mut sphere1: Matrix = shape::gen_sphere(0.0, 0.0, 0.0, 300.0, itr);
+    let mut sphere2: Matrix = shape::gen_sphere(0.0, 0.0, 0.0, 300.0, itr);
     let mut edge: Matrix = Matrix::new_matrix();
     let mut trans: Matrix = Matrix::new_transformation();
 
