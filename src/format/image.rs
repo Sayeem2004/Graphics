@@ -347,4 +347,15 @@ impl Image {
             }
         }
     }
+
+    /// Function that implements a gradient on an image given a gradient function
+    pub fn gradient<F: Fn(i32, i32) -> Pixel>(&mut self, grad: F, z: f32) {
+        // Iterating through pixels
+        for y in 0..self.height {
+            for x in 0..self.width {
+                // Updating pixel
+                self.update_pixel_xy(x, y, z, grad(x, y));
+            }
+        }
+    }
 }
