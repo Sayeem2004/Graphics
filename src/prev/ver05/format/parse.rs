@@ -183,9 +183,7 @@ pub fn parse(path: &str, size: i32, mode: i32) {
             "" => curr += 1,
             // Default case
             _ => {
-                if (lines[curr][0..1].eq("#")) {
-                    continue;
-                } else {
+                if (!lines[curr][0..1].eq("#")) {
                     eprintln!(
                         "The command \'{}\' found at line {} is invalid",
                         lines[curr],

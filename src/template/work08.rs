@@ -91,7 +91,7 @@ pub fn add_star(img: &mut Image, p: (i32, i32, f32), sz: i32, pix: Pixel) {
 /// Function that creates the night sky gif
 pub fn night_sky() {
     // Variable declarations
-    let mut img: Image = Image::new_dimension(500, 500);
+    let mut img: Image = Image::new_dimension(750, 750);
     let mut stars: Vec<(i32, i32, f32, i32, bool, Pixel)> = Vec::new();
     let mut names: Vec<String> = Vec::new();
     let mut rng = rand::thread_rng();
@@ -116,9 +116,9 @@ pub fn night_sky() {
         img.gradient(
             |x, y| {
                 Pixel::new_value(
-                    (19_f32 * (1_f32 - (((y as f32 * 0.95) + (x as f32 * 0.05)) / 500_f32))) as u8,
-                    (24_f32 * (1_f32 - (((y as f32 * 0.95) + (x as f32 * 0.05)) / 500_f32))) as u8,
-                    (98_f32 * (1_f32 - (((y as f32 * 0.95) + (x as f32 * 0.05)) / 500_f32))) as u8,
+                    (19_f32 * (1_f32 - (((y as f32 * 0.95) + (x as f32 * 0.05)) / 750_f32))) as u8,
+                    (24_f32 * (1_f32 - (((y as f32 * 0.95) + (x as f32 * 0.05)) / 750_f32))) as u8,
+                    (98_f32 * (1_f32 - (((y as f32 * 0.95) + (x as f32 * 0.05)) / 750_f32))) as u8,
                 )
             },
             0.0,
