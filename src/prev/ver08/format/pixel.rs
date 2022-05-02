@@ -3,7 +3,7 @@ use std::fmt;
 
 /// Pixel struct
 #[derive(Clone, Copy)]
-pub struct Pixel(pub u8, pub u8, pub u8);
+pub struct Pixel(u8, u8, u8);
 
 // Implementing constructors
 impl Pixel {
@@ -16,15 +16,6 @@ impl Pixel {
     pub const fn new_value(r: u8, g: u8, b: u8) -> Pixel {
         Pixel(r, g, b)
     }
-
-    /// New pixel based on scale
-    pub fn new_scale(scale: f32) -> Pixel {
-        Pixel(
-            (255_f32 * scale) as u8,
-            (255_f32 * scale) as u8,
-            (255_f32 * scale) as u8,
-        )
-    }
 }
 
 // Implementing mutators
@@ -34,6 +25,39 @@ impl Pixel {
         self.0 = r;
         self.1 = g;
         self.2 = b;
+    }
+
+    /// Updating red value
+    pub fn change_red(&mut self, val: u8) {
+        self.0 = val;
+    }
+
+    /// Updating green value
+    pub fn change_green(&mut self, val: u8) {
+        self.1 = val;
+    }
+
+    /// Updating blue value
+    pub fn change_blue(&mut self, val: u8) {
+        self.2 = val;
+    }
+}
+
+// Implementing accessors
+impl Pixel {
+    /// Getting red value
+    pub fn get_red(&self) -> u8 {
+        self.0
+    }
+
+    /// Getting green value
+    pub fn get_green(&self) -> u8 {
+        self.1
+    }
+
+    /// Getting blue value
+    pub fn get_blue(&self) -> u8 {
+        self.2
     }
 }
 

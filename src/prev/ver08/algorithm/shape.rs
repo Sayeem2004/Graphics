@@ -1,5 +1,5 @@
 // Imports
-use crate::format::matrix::Matrix;
+use crate::prev::ver08::format::matrix::Matrix;
 use std::f32::consts::PI;
 
 /// Function that adds triangles representing a rectangular prism to a matrix of triangles
@@ -198,15 +198,15 @@ pub fn add_torus(poly: &mut Matrix, c: (f32, f32, f32), r1: f32, r2: f32, itr: u
 }
 
 /// Function that returns the surface normal vector of a triangle at a certain position in the triangle matrix
-pub fn normal(poly: &Matrix, ind: usize) -> (f32, f32, f32) {
+pub fn normal(poly: &Matrix, ind: usize) -> Vec<f32> {
     // Error checking
     if (ind >= poly.col_num as usize) {
         eprintln!("Index is out of range, returning default values");
-        return (0.0, 0.0, 0.0);
+        return vec![0.0; 3];
     }
     if (poly.row_num != 4) {
         eprintln!("Matrix is not of size Nx4, returning default values");
-        return (0.0, 0.0, 0.0);
+        return vec![0.0; 3];
     }
 
     // Getting vector components from vertices
@@ -222,9 +222,27 @@ pub fn normal(poly: &Matrix, ind: usize) -> (f32, f32, f32) {
     );
 
     // Returning the cross product
-    (
+    return vec![
         (v1.1 * v2.2) - (v1.2 * v2.1),
         (v1.2 * v2.0) - (v1.0 * v2.2),
         (v1.0 * v2.1) - (v1.1 * v2.0),
-    )
+    ];
+}
+
+/// Function that returns the dot product of two vectors
+pub fn dot(v1: &[f32], v2: &[f32]) -> f32 {
+    // Error checking
+    if (v1.len() != v2.len()) {
+        eprintln!("Vector are not of the same dimension, returning default value");
+        return 0.0;
+    }
+
+    // Iterating through vectors
+    let mut sum: f32 = 0.0;
+    for i in 0..v1.len() {
+        sum += v1[i] * v2[i];
+    }
+
+    // Exiting function
+    sum
 }

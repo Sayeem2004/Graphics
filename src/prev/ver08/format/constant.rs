@@ -1,5 +1,5 @@
 // Imports
-use crate::format::{matrix::Matrix, pixel::Pixel};
+use crate::prev::ver08::format::{matrix::Matrix, pixel::Pixel};
 use lazy_static::lazy_static;
 
 /// Common color constants
@@ -50,16 +50,9 @@ lazy_static! {
     };
 }
 
-/// View vectors
-pub const ZVIEW: (f32, f32, f32) = (0.0, 0.0, 1.0);
-pub const YVIEW: (f32, f32, f32) = (0.0, 1.0, 0.0);
-pub const XVIEW: (f32, f32, f32) = (1.0, 0.0, 0.0);
-
-// Common lighting divisions
-pub const AMB: (f32, f32, f32) = (1.00, 0.00, 0.00);
-pub const DIF: (f32, f32, f32) = (0.00, 1.00, 0.00);
-pub const SPC: (f32, f32, f32) = (0.00, 0.00, 1.00);
-pub const EQV: (f32, f32, f32) = (0.33, 0.33, 0.33);
-
-// Specular lighting cosine power
-pub const EXP: f32 = 3_f32;
+lazy_static! {
+    /// View vectors
+    pub static ref ZVIEW: Vec<f32> = vec![0.0, 0.0, 1.0];
+    pub static ref YVIEW: Vec<f32> = vec![0.0, 1.0, 0.0];
+    pub static ref XVIEW: Vec<f32> = vec![1.0, 0.0, 0.0];
+}

@@ -1,6 +1,6 @@
 // Imports
-use crate::algorithm::{light, line, shape};
-use crate::format::{image::Image, pixel::Pixel};
+use crate::prev::ver08::algorithm::{line, shape};
+use crate::prev::ver08::format::{constant, image::Image, pixel::Pixel};
 use std::f32::consts::PI;
 use std::fmt;
 
@@ -346,12 +346,12 @@ impl Matrix {
                 line::draw_line(
                     (
                         self.data[(i - 1) as usize][0] as i32,
-                        img.height - self.data[(i - 1) as usize][1] as i32,
+                        img.get_height() - self.data[(i - 1) as usize][1] as i32,
                         self.data[(i - 1) as usize][2],
                     ),
                     (
                         self.data[i as usize][0] as i32,
-                        img.height - self.data[i as usize][1] as i32,
+                        img.get_height() - self.data[i as usize][1] as i32,
                         self.data[i as usize][2],
                     ),
                     img,
@@ -373,39 +373,40 @@ impl Matrix {
     }
 
     /// Function for drawing the triangles found in a matrix on an image using xy orientation
-    pub fn draw_triangles_xy(
-        &mut self,
-        img: &mut Image,
-        amb: Pixel,
-        pnt: (Pixel, f32, f32, f32),
-        view: (f32, f32, f32),
-        div: (f32, f32, f32),
-    ) {
+    pub fn draw_triangles_xy(&mut self, img: &mut Image, view: &[f32]) {
         // Error checking
         if (self.row_num != 4) {
             eprintln!("Matrix row number does not equal four, no changes made");
             return;
         }
 
+        // Pixel colors
+        let colors: Vec<Pixel> = vec![
+            constant::AQUA_PIXEL,
+            constant::BLUE_PIXEL,
+            constant::FUCHSIA_PIXEL,
+            constant::GRAY_PIXEL,
+            constant::GREEN_PIXEL,
+            constant::LIME_PIXEL,
+            constant::MAROON_PIXEL,
+            constant::NAVY_PIXEL,
+            constant::OLIVE_PIXEL,
+            constant::PURPLE_PIXEL,
+            constant::RED_PIXEL,
+            constant::SILVER_PIXEL,
+            constant::TEAL_PIXEL,
+            constant::WHITE_PIXEL,
+            constant::YELLOW_PIXEL,
+        ];
+
         // Drawing triangles
         for i in 0..self.col_num {
             if (i % 3 == 2) {
-                // Backface culling
                 let normal = shape::normal(self, i as usize);
-                if (light::dot(normal, view) <= 0.0) {
+                if (shape::dot(&normal, view) <= 0.0) {
                     continue;
                 }
-
-                // Getting lighting value
-                let surf = (
-                    self.data[(i - 2) as usize][0],
-                    self.data[(i - 2) as usize][1],
-                    self.data[(i - 2) as usize][2],
-                );
-                let color: Pixel = light::calculate(amb, pnt, surf, view, normal, div);
-
-                // Drawing polygon with color
-                line::scanline(self, i, img, color);
+                line::scanline(self, i, img, colors[(i / 3) as usize % colors.len()]);
             }
         }
     }

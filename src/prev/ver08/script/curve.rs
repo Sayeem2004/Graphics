@@ -1,9 +1,9 @@
 // Imports
-use crate::algorithm::shape;
-use crate::format::{constant, image::Image, matrix::Matrix, pixel::Pixel};
+use crate::prev::ver08::algorithm::curve;
+use crate::prev::ver08::format::{constant, image::Image, matrix::Matrix};
 
-/// Function that performs the 'box' command
-pub fn _box(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
+/// Function that performs the 'bezier' command
+pub fn bezier(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
     // Splitting the argument string
     let split = arg.split(' ');
 
@@ -16,7 +16,7 @@ pub fn _box(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
             }
             Err(_) => {
                 eprintln!(
-                    "A \'box\' argument found at line {} is not a number",
+                    "A \'bezier\' argument found at line {} is not a number",
                     ind + 1
                 );
                 return;
@@ -31,35 +31,30 @@ pub fn _box(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
         .collect::<Vec<f32>>();
 
     // Checking if right number of floats is found
-    if (nums.len() != 6) {
+    if (nums.len() != 8) {
         eprintln!(
-            "\'box\' expected 6 numerical arguments, but {} were found",
+            "\'bezier\' expected 8 numerical arguments, but {} were found",
             nums.len()
         );
         return;
     }
 
-    // Adding box to image
-    let mut poly: Matrix = Matrix::new_matrix();
-    shape::add_box(
-        &mut poly,
-        (nums[0], nums[1], nums[2]),
-        nums[3],
-        nums[4],
-        nums[5],
+    // Adding bezier to image
+    let mut edge: Matrix = Matrix::new_matrix();
+    curve::add_bezier(
+        &mut edge,
+        (nums[0], nums[1]),
+        (nums[2], nums[3]),
+        (nums[4], nums[5]),
+        (nums[6], nums[7]),
+        100,
     );
-    poly.left_transform(cord);
-    poly.draw_triangles_xy(
-        img,
-        Pixel::new_scale(0.5),
-        (Pixel::new_scale(1.0), 750.0, 750.0, 750.0),
-        constant::ZVIEW,
-        constant::EQV,
-    );
+    edge.left_transform(cord);
+    edge.draw_lines_xy(img, constant::WHITE_PIXEL);
 }
 
-/// Function that performs the 'sphere' command
-pub fn sphere(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
+/// Function that performs the 'circle' command
+pub fn circle(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
     // Splitting the argument string
     let split = arg.split(' ');
 
@@ -72,7 +67,7 @@ pub fn sphere(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
             }
             Err(_) => {
                 eprintln!(
-                    "A \'sphere\' argument found at line {} is not a number",
+                    "A \'circle\' argument found at line {} is not a number",
                     ind + 1
                 );
                 return;
@@ -89,27 +84,21 @@ pub fn sphere(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
     // Checking if right number of floats is found
     if (nums.len() != 4) {
         eprintln!(
-            "\'sphere\' expected 4 numerical arguments, but {} were found",
+            "\'circle\' expected 4 numerical arguments, but {} were found",
             nums.len()
         );
         return;
     }
 
-    // Adding sphere to image
-    let mut poly: Matrix = Matrix::new_matrix();
-    shape::add_sphere(&mut poly, (nums[0], nums[1], nums[2]), nums[3], 40);
-    poly.left_transform(cord);
-    poly.draw_triangles_xy(
-        img,
-        Pixel::new_scale(0.5),
-        (Pixel::new_scale(1.0), 750.0, 750.0, 750.0),
-        constant::ZVIEW,
-        constant::EQV,
-    );
+    // Adding circle to image
+    let mut edge: Matrix = Matrix::new_matrix();
+    curve::add_circle(&mut edge, (nums[0], nums[1], nums[2]), nums[3], 100);
+    edge.left_transform(cord);
+    edge.draw_lines_xy(img, constant::WHITE_PIXEL);
 }
 
-/// Function that performs the 'torus' command
-pub fn torus(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
+/// Function that performs the 'hermite' command
+pub fn hermite(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
     // Splitting the argument string
     let split = arg.split(' ');
 
@@ -122,7 +111,7 @@ pub fn torus(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
             }
             Err(_) => {
                 eprintln!(
-                    "A \'torus\' argument found at line {} is not a number",
+                    "A \'hermite\' argument found at line {} is not a number",
                     ind + 1
                 );
                 return;
@@ -137,23 +126,24 @@ pub fn torus(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
         .collect::<Vec<f32>>();
 
     // Checking if right number of floats is found
-    if (nums.len() != 5) {
+    if (nums.len() != 8) {
         eprintln!(
-            "\'torus\' expected 5 numerical arguments, but {} were found",
+            "\'hermite\' expected 8 numerical arguments, but {} were found",
             nums.len()
         );
         return;
     }
 
-    // Adding torus to image
-    let mut poly: Matrix = Matrix::new_matrix();
-    shape::add_torus(&mut poly, (nums[0], nums[1], nums[2]), nums[3], nums[4], 40);
-    poly.left_transform(cord);
-    poly.draw_triangles_xy(
-        img,
-        Pixel::new_scale(0.5),
-        (Pixel::new_scale(1.0), 750.0, 750.0, 750.0),
-        constant::ZVIEW,
-        constant::EQV,
+    // Adding hermite to image
+    let mut edge: Matrix = Matrix::new_matrix();
+    curve::add_hermite(
+        &mut edge,
+        (nums[0], nums[1]),
+        (nums[2], nums[3]),
+        (nums[4], nums[5]),
+        (nums[6], nums[7]),
+        100,
     );
+    edge.left_transform(cord);
+    edge.draw_lines_xy(img, constant::WHITE_PIXEL);
 }

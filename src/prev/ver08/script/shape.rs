@@ -1,6 +1,6 @@
 // Imports
-use crate::algorithm::shape;
-use crate::format::{constant, image::Image, matrix::Matrix, pixel::Pixel};
+use crate::prev::ver08::algorithm::shape;
+use crate::prev::ver08::format::{constant, image::Image, matrix::Matrix};
 
 /// Function that performs the 'box' command
 pub fn _box(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
@@ -49,13 +49,7 @@ pub fn _box(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
         nums[5],
     );
     poly.left_transform(cord);
-    poly.draw_triangles_xy(
-        img,
-        Pixel::new_scale(0.5),
-        (Pixel::new_scale(1.0), 750.0, 750.0, 750.0),
-        constant::ZVIEW,
-        constant::EQV,
-    );
+    poly.draw_triangles_xy(img, &constant::ZVIEW);
 }
 
 /// Function that performs the 'sphere' command
@@ -97,15 +91,9 @@ pub fn sphere(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
 
     // Adding sphere to image
     let mut poly: Matrix = Matrix::new_matrix();
-    shape::add_sphere(&mut poly, (nums[0], nums[1], nums[2]), nums[3], 40);
+    shape::add_sphere(&mut poly, (nums[0], nums[1], nums[2]), nums[3], 16);
     poly.left_transform(cord);
-    poly.draw_triangles_xy(
-        img,
-        Pixel::new_scale(0.5),
-        (Pixel::new_scale(1.0), 750.0, 750.0, 750.0),
-        constant::ZVIEW,
-        constant::EQV,
-    );
+    poly.draw_triangles_xy(img, &constant::ZVIEW);
 }
 
 /// Function that performs the 'torus' command
@@ -147,13 +135,7 @@ pub fn torus(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
 
     // Adding torus to image
     let mut poly: Matrix = Matrix::new_matrix();
-    shape::add_torus(&mut poly, (nums[0], nums[1], nums[2]), nums[3], nums[4], 40);
+    shape::add_torus(&mut poly, (nums[0], nums[1], nums[2]), nums[3], nums[4], 16);
     poly.left_transform(cord);
-    poly.draw_triangles_xy(
-        img,
-        Pixel::new_scale(0.5),
-        (Pixel::new_scale(1.0), 750.0, 750.0, 750.0),
-        constant::ZVIEW,
-        constant::EQV,
-    );
+    poly.draw_triangles_xy(img, &constant::ZVIEW);
 }

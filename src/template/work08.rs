@@ -1,7 +1,7 @@
 // Imports
-use crate::algorithm::{line, shape};
-use crate::format::{constant, file, image::Image, matrix::Matrix, pixel::Pixel};
-use crate::script::parse;
+use crate::prev::ver08::algorithm::{line, shape};
+use crate::prev::ver08::format::{constant, file, image::Image, matrix::Matrix, pixel::Pixel};
+use crate::prev::ver08::script::parse;
 use rand::Rng;
 use std::{f32::consts::PI, fs, process::Command};
 
@@ -259,7 +259,7 @@ pub fn create_work08_images(mode: i32) {
     fs::create_dir_all("image/ppm").expect("Unable to create image/ppm directory");
 
     // Creating shapes image test
-    parse::parse("data/w08/w08_script", 500, mode);
+    parse::parse("data/w08/w08_script", 750, mode);
 
     // Creating gradient sphere image
     gradient_sphere(mode);

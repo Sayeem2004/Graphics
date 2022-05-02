@@ -1,15 +1,15 @@
 // Imports
-use crate::format::{constant, pixel::Pixel};
+use crate::prev::ver08::format::{constant, pixel::Pixel};
 use std::{collections::VecDeque, fmt};
 
 /// Image struct
 pub struct Image {
-    pub image_type: String,
-    pub width: i32,
-    pub height: i32,
-    pub max_color: u8,
-    pub pixels: Vec<Vec<Pixel>>,
-    pub buff: Vec<Vec<f32>>,
+    image_type: String,
+    width: i32,
+    height: i32,
+    max_color: u8,
+    pixels: Vec<Vec<Pixel>>,
+    buff: Vec<Vec<f32>>,
 }
 
 // Implementing constructors
@@ -61,15 +61,56 @@ impl Image {
 
 // Implementing mutators
 impl Image {
+    /// Changing image type
+    pub fn update_image_type(&mut self, image_type: &str) {
+        self.image_type = image_type.to_string();
+    }
+
+    /// Changing width
+    pub fn update_width(&mut self, width: i32) {
+        if (width < 0) {
+            eprintln!("Image width is out of range, no changes made");
+            return;
+        }
+        self.width = width;
+        for row in self.pixels.iter_mut() {
+            row.resize_with(self.width as usize, Pixel::new);
+        }
+    }
+
+    /// Changing height
+    pub fn update_height(&mut self, height: i32) {
+        if (height < 0) {
+            eprintln!("Image height is out of range, no changes made");
+            return;
+        }
+        self.height = height;
+        self.pixels.resize_with(self.height as usize, || {
+            vec![Pixel::new(); self.width as usize]
+        });
+    }
+
+    /// Changing max color
+    pub fn update_max_color(&mut self, max_color: u8) {
+        self.max_color = max_color;
+    }
+
     /// Updating a certain pixel with another pixel
     pub fn update_pixel_rc(&mut self, row: i32, col: i32, z: f32, pix: Pixel) {
         // Within size range
         if (row >= 0 && row < self.height && col >= 0 && col < self.width) {
             // Within color range
-            if (pix.0 <= self.max_color && pix.1 <= self.max_color && pix.2 <= self.max_color) {
+            if (pix.get_red() <= self.max_color
+                && pix.get_green() <= self.max_color
+                && pix.get_blue() <= self.max_color)
+            {
                 // Updating pixel
                 if (self.buff[row as usize][col as usize] < z) {
-                    self.pixels[row as usize][col as usize].update(pix.0, pix.1, pix.2);
+                    self.pixels[row as usize][col as usize].update(
+                        pix.get_red(),
+                        pix.get_green(),
+                        pix.get_blue(),
+                    );
                     self.buff[row as usize][col as usize] = z;
                 }
             }
@@ -81,11 +122,17 @@ impl Image {
         // Within size range
         if (y >= 0 && y < self.height && x >= 0 && x < self.width) {
             // Within color range
-            if (pix.0 <= self.max_color && pix.1 <= self.max_color && pix.2 <= self.max_color) {
+            if (pix.get_red() <= self.max_color
+                && pix.get_green() <= self.max_color
+                && pix.get_blue() <= self.max_color)
+            {
                 // Updating pixel
                 if (self.buff[((self.height) - 1 - y) as usize][x as usize] < z) {
-                    self.pixels[((self.height) - 1 - y) as usize][x as usize]
-                        .update(pix.0, pix.1, pix.2);
+                    self.pixels[((self.height) - 1 - y) as usize][x as usize].update(
+                        pix.get_red(),
+                        pix.get_green(),
+                        pix.get_blue(),
+                    );
                     self.buff[((self.height) - 1 - y) as usize][x as usize] = z;
                 }
             }
@@ -95,6 +142,26 @@ impl Image {
 
 // Implementing accessors
 impl Image {
+    /// Getting image type
+    pub fn get_image_type(&mut self) -> &String {
+        &self.image_type
+    }
+
+    /// Getting width
+    pub fn get_width(&mut self) -> i32 {
+        self.width
+    }
+
+    /// Getting height
+    pub fn get_height(&mut self) -> i32 {
+        self.height
+    }
+
+    /// Getting max color
+    pub fn get_max_color(&mut self) -> u8 {
+        self.max_color
+    }
+
     /// Getting a certain pixel
     pub fn get_pixel_rc(&mut self, row: i32, col: i32) -> Pixel {
         // Within size range
