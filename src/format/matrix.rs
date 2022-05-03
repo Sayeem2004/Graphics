@@ -377,7 +377,7 @@ impl Matrix {
         &mut self,
         img: &mut Image,
         amb: Pixel,
-        pnt: (Pixel, f32, f32, f32),
+        pnts: &[(Pixel, f32, f32, f32)],
         view: (f32, f32, f32),
         div: (f32, f32, f32),
     ) {
@@ -402,7 +402,7 @@ impl Matrix {
                     self.data[(i - 2) as usize][1],
                     self.data[(i - 2) as usize][2],
                 );
-                let color: Pixel = light::calculate(amb, pnt, surf, view, normal, div);
+                let color: Pixel = light::calculate(amb, pnts, surf, view, normal, div);
 
                 // Drawing polygon with color
                 line::scanline(self, i, img, color);

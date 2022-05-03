@@ -52,7 +52,7 @@ pub fn _box(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
     poly.draw_triangles_xy(
         img,
         Pixel::new_scale(0.5),
-        (Pixel::new_scale(1.0), 750.0, 750.0, 750.0),
+        &[(Pixel::new_scale(1.0), 750.0, 750.0, 750.0)],
         constant::ZVIEW,
         constant::EQV,
     );
@@ -102,7 +102,7 @@ pub fn sphere(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
     poly.draw_triangles_xy(
         img,
         Pixel::new_scale(0.5),
-        (Pixel::new_scale(1.0), 750.0, 750.0, 750.0),
+        &[(Pixel::new_scale(1.0), 750.0, 750.0, 750.0)],
         constant::ZVIEW,
         constant::EQV,
     );
@@ -152,7 +152,7 @@ pub fn torus(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
     poly.draw_triangles_xy(
         img,
         Pixel::new_scale(0.5),
-        (Pixel::new_scale(1.0), 750.0, 750.0, 750.0),
+        &[(Pixel::new_scale(1.0), 750.0, 750.0, 750.0)],
         constant::ZVIEW,
         constant::EQV,
     );

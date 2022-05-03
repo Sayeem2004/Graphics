@@ -7,7 +7,8 @@ use std::{fs, process::Command};
 /// Function that creates the rotating slab gif
 pub fn rotating_slab() {
     // Variable declarations
-    let mut img: Image = Image::new_dimension(500, 500);
+    let sz: i32 = 750;
+    let mut img: Image = Image::new_dimension(sz, sz);
     let mut names: Vec<String> = Vec::new();
 
     // Attempting to create image directory
@@ -17,25 +18,25 @@ pub fn rotating_slab() {
     // Iterating through scenes
     for i in 0..180 {
         // Iterating through rectangles
-        let mut x: f32 = -225.0;
-        while (x <= 200.0) {
-            let mut y: f32 = 50.0;
-            while (y <= 475.0) {
-                // Uodating coordinate system
+        let mut x: f32 = (-sz / 2 + 25) as f32;
+        while (x <= (sz / 2) as f32 - 37.5) {
+            let mut y: f32 = 37.5;
+            while (y <= (sz - 25) as f32) {
+                // Updating coordinate system
                 let mut cord: Matrix = Matrix::new_transformation();
                 let trans1: Matrix = Matrix::rotate_degree(2.0 * i as f32, "y");
-                let trans2: Matrix = Matrix::translate(25.0, 0.0, 0.0);
+                let trans2: Matrix = Matrix::translate((sz / 2) as f32, 0.0, 0.0);
                 cord.right_transform(&trans2);
                 cord.right_transform(&trans1);
 
                 // Adding box
                 let mut poly: Matrix = Matrix::new_matrix();
-                shape::add_box(&mut poly, (x, y, 0.0), 25.0, 25.0, 25.0);
+                shape::add_box(&mut poly, (x, y, 0.0), 12.5, 12.5, 12.5);
                 poly.left_transform(&cord);
                 poly.draw_triangles_xy(
                     &mut img,
                     Pixel::new_scale(0.25),
-                    (Pixel::new_scale(1.0), 375.0, 375.0, 400.0),
+                    &[(Pixel::new_scale(1.0), 375.0, 375.0, 400.0)],
                     constant::ZVIEW,
                     constant::EQV,
                 );
@@ -82,6 +83,121 @@ pub fn rotating_slab() {
     }
 }
 
+/// Function that creates the colorful sphere image
+pub fn colorful_marble(mode: i32) {
+    // Variable declarations
+    let itr: i32 = 500;
+    let sz: i32 = 750;
+    let mut img: Image = Image::new_dimension(sz, sz);
+    let mut poly: Matrix = Matrix::new_matrix();
+    shape::add_sphere(
+        &mut poly,
+        ((sz / 2) as f32, (sz / 2) as f32, (sz / 2) as f32),
+        sz as f32 / 3.0,
+        itr as u32,
+    );
+
+    // Creating point light sources
+    let pnts: Vec<(Pixel, f32, f32, f32)> = vec![
+        (Pixel::new_value(255, 255, 255), 0_f32, 0_f32, 1000_f32),
+        (
+            Pixel::new_value(255, 255, 0),
+            0_f32,
+            (sz / 2) as f32,
+            1000_f32,
+        ),
+        (Pixel::new_value(255, 0, 255), 0_f32, sz as f32, 1000_f32),
+        (
+            Pixel::new_value(0, 255, 255),
+            (sz / 2) as f32,
+            0_f32,
+            1000_f32,
+        ),
+        (Pixel::new_value(0, 0, 255), sz as f32, 0_f32, 1000_f32),
+        (
+            Pixel::new_value(0, 255, 0),
+            sz as f32,
+            (sz / 2) as f32,
+            1000_f32,
+        ),
+        (
+            Pixel::new_value(255, 0, 0),
+            (sz / 2) as f32,
+            sz as f32,
+            1000_f32,
+        ),
+        (
+            Pixel::new_value(255, 255, 255),
+            (sz + 1) as f32,
+            (sz + 1) as f32,
+            1000_f32,
+        ),
+    ];
+
+    // Modifying image
+    poly.draw_triangles_xy(
+        &mut img,
+        Pixel::new_value(0, 0, 192),
+        &pnts,
+        constant::ZVIEW,
+        constant::EQV,
+    );
+
+    // Saving image and displaying
+    file::create_ppm_ascii("image/ppm/w09_marble.ppm", &img, 0);
+    if (mode == 0) {
+        file::open_image("image/ppm/w09_marble.ppm");
+    }
+}
+
+/// Function that creates the bright sphere image
+pub fn bright_sphere(mode: i32) {
+    // Variable declarations
+    let itr: u32 = 100;
+    let sz: i32 = 750;
+    let mut img: Image = Image::new_dimension(sz, sz);
+
+    // Creating point light sources
+    let pnts: Vec<(Pixel, f32, f32, f32)> = vec![(
+        Pixel::new_value(200, 200, 224),
+        (sz / 2) as f32,
+        (sz / 2) as f32,
+        0.0,
+    )];
+
+    // Adding rings around light
+    for i in 0..36 {
+        // Creating transformations and torus
+        let mut poly: Matrix = Matrix::new_matrix();
+        shape::add_torus(&mut poly, (0.0, 0.0, 0.0), 5.0, (sz / 3) as f32, itr);
+        let rotx: Matrix = Matrix::rotate_degree((i * 10) as f32, "x");
+        let roty: Matrix = Matrix::rotate_degree(-30_f32, "y");
+        let rotz: Matrix = Matrix::rotate_degree(60_f32, "z");
+        let trans: Matrix = Matrix::translate((sz / 2) as f32, (sz / 2) as f32, 0.0);
+
+        // Transformations
+        poly.left_transform(&rotx);
+        poly.left_transform(&roty);
+        poly.left_transform(&rotz);
+        poly.left_transform(&trans);
+
+        // Modifying image
+        poly.draw_triangles_xy(
+            &mut img,
+            Pixel::new_value(200, 200, 255),
+            &pnts,
+            constant::ZVIEW,
+            constant::EQV,
+        );
+    }
+
+    // Saving image and displaying
+    file::create_ppm_ascii("image/ppm/w09_bright_sphere.ppm", &img, 0);
+    if (mode == 0) {
+        file::open_image("image/ppm/w09_bright_sphere.ppm");
+    }
+}
+
 /// Function that creates all images from work 09
 pub fn create_work09_images(mode: i32) {
     // Attempting to create image directory
@@ -98,4 +214,10 @@ pub fn create_work09_images(mode: i32) {
 
     // Creating rotating slab gif
     rotating_slab();
+
+    // Creating colorful marble image
+    colorful_marble(mode);
+
+    // Creating dyson sphere iamge
+    bright_sphere(mode);
 }

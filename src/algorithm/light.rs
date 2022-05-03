@@ -10,7 +10,7 @@ pub fn dot(v1: (f32, f32, f32), v2: (f32, f32, f32)) -> f32 {
 /// Function that returns the lighting of a certain polygon
 pub fn calculate(
     amb: Pixel,
-    pnt: (Pixel, f32, f32, f32),
+    pnts: &[(Pixel, f32, f32, f32)],
     surf: (f32, f32, f32),
     view: (f32, f32, f32),
     normal: (f32, f32, f32),
@@ -21,8 +21,12 @@ pub fn calculate(
     let (ka, kd, ks): (f32, f32, f32) = scale(div, 1.0 / (div.0 + div.1 + div.2));
     let hnorm: (f32, f32, f32) = normalize(normal);
     let hview: (f32, f32, f32) = normalize(view);
-    let cpnt: Pixel = pnt.0;
-    let hpnt: (f32, f32, f32) = normalize(diff((pnt.1, pnt.2, pnt.3), surf));
+    let mut cpnt: Vec<Pixel> = vec![Pixel::new(); pnts.len()];
+    let mut hpnt: Vec<(f32, f32, f32)> = vec![(0.0, 0.0, 0.0); pnts.len()];
+    for i in 0..pnts.len() {
+        cpnt[i] = pnts[i].0;
+        hpnt[i] = normalize(diff((pnts[i].1, pnts[i].2, pnts[i].3), surf));
+    }
 
     // Ambient lighting
     fr += (amb.0 as f32 * ka) as u8;
@@ -30,16 +34,28 @@ pub fn calculate(
     fb += (amb.2 as f32 * ka) as u8;
 
     // Diffuse lighting
-    fr += (cpnt.0 as f32 * kd * dot(hnorm, hpnt)) as u8;
-    fg += (cpnt.1 as f32 * kd * dot(hnorm, hpnt)) as u8;
-    fb += (cpnt.2 as f32 * kd * dot(hnorm, hpnt)) as u8;
+    let (mut rs1, mut gs1, mut bs1): (f32, f32, f32) = (0.0, 0.0, 0.0);
+    for i in 0..pnts.len() {
+        rs1 += (cpnt[i].0 as f32 * dot(hnorm, hpnt[i]));
+        gs1 += (cpnt[i].1 as f32 * dot(hnorm, hpnt[i]));
+        bs1 += (cpnt[i].2 as f32 * dot(hnorm, hpnt[i]));
+    }
+    fr += (rs1.min(255.0) * kd) as u8;
+    fg += (gs1.min(255.0) * kd) as u8;
+    fb += (bs1.min(255.0) * kd) as u8;
 
     // Specular lighting
-    let rhat: (f32, f32, f32) = diff(scale(hnorm, 2_f32 * dot(hnorm, hpnt)), hpnt);
-    let cos: f32 = dot(rhat, hview).max(0.0);
-    fr += (cpnt.0 as f32 * ks * cos.powf(constant::EXP)) as u8;
-    fg += (cpnt.1 as f32 * ks * cos.powf(constant::EXP)) as u8;
-    fb += (cpnt.2 as f32 * ks * cos.powf(constant::EXP)) as u8;
+    let (mut rs2, mut gs2, mut bs2): (f32, f32, f32) = (0.0, 0.0, 0.0);
+    for i in 0..pnts.len() {
+        let rhat: (f32, f32, f32) = diff(scale(hnorm, 2_f32 * dot(hnorm, hpnt[i])), hpnt[i]);
+        let cos: f32 = dot(rhat, hview).max(0.0);
+        rs2 += (cpnt[i].0 as f32 * cos.powf(constant::EXP));
+        gs2 += (cpnt[i].1 as f32 * cos.powf(constant::EXP));
+        bs2 += (cpnt[i].2 as f32 * cos.powf(constant::EXP));
+    }
+    fr += (rs2.min(255.0) * ks) as u8;
+    fg += (gs2.min(255.0) * ks) as u8;
+    fb += (bs2.min(255.0) * ks) as u8;
 
     // Returning pixel values
     Pixel::new_value(fr, fg, fb)
