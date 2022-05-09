@@ -56,10 +56,10 @@ pub const YVIEW: (f32, f32, f32) = (0.0, 1.0, 0.0);
 pub const XVIEW: (f32, f32, f32) = (1.0, 0.0, 0.0);
 
 // Common lighting divisions
-pub const AMB: (f32, f32, f32) = (1.00, 0.00, 0.00);
-pub const DIF: (f32, f32, f32) = (0.00, 1.00, 0.00);
-pub const SPC: (f32, f32, f32) = (0.00, 0.00, 1.00);
-pub const EQV: (f32, f32, f32) = (0.33, 0.33, 0.33);
+pub const AMB: (f32, f32, f32, f32, f32, f32, f32, f32, f32) = (1.00, 1.00, 1.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00);
+pub const DIF: (f32, f32, f32, f32, f32, f32, f32, f32, f32) = (0.00, 0.00, 0.00, 1.00, 1.00, 1.00, 0.00, 0.00, 0.00);
+pub const SPC: (f32, f32, f32, f32, f32, f32, f32, f32, f32) = (0.00, 0.00, 0.00, 1.00, 1.00, 1.00, 0.00, 0.00, 0.00);
+pub const EQV: (f32, f32, f32, f32, f32, f32, f32, f32, f32) = (0.33, 0.33, 0.33, 0.33, 0.33, 0.33, 0.33, 0.33, 0.33);
 
 // Specular lighting cosine power
 pub const EXP: f32 = 3_f32;

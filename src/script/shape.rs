@@ -97,7 +97,7 @@ pub fn sphere(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
 
     // Adding sphere to image
     let mut poly: Matrix = Matrix::new_matrix();
-    shape::add_sphere(&mut poly, (nums[0], nums[1], nums[2]), nums[3], 40);
+    shape::add_sphere(&mut poly, (nums[0], nums[1], nums[2]), nums[3], 100);
     poly.left_transform(cord);
     poly.draw_triangles_xy(
         img,
@@ -147,7 +147,7 @@ pub fn torus(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
 
     // Adding torus to image
     let mut poly: Matrix = Matrix::new_matrix();
-    shape::add_torus(&mut poly, (nums[0], nums[1], nums[2]), nums[3], nums[4], 40);
+    shape::add_torus(&mut poly, (nums[0], nums[1], nums[2]), nums[3], nums[4], 100);
     poly.left_transform(cord);
     poly.draw_triangles_xy(
         img,

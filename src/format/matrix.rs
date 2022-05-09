@@ -379,7 +379,7 @@ impl Matrix {
         amb: Pixel,
         pnts: &[(Pixel, f32, f32, f32)],
         view: (f32, f32, f32),
-        div: (f32, f32, f32),
+        div: (f32, f32, f32, f32, f32, f32, f32, f32, f32),
     ) {
         // Error checking
         if (self.row_num != 4) {
