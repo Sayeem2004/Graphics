@@ -1,5 +1,6 @@
 /target
 /image
+/temp
 *.ppm
 *.png
 .DS_Store

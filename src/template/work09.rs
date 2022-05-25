@@ -1,7 +1,7 @@
 // Imports
-use crate::algorithm::shape;
-use crate::format::{constant, file, image::Image, matrix::Matrix, pixel::Pixel};
-use crate::script::parse;
+use crate::prev::ver09::algorithm::shape;
+use crate::prev::ver09::format::{constant, file, image::Image, matrix::Matrix, pixel::Pixel};
+use crate::prev::ver09::script::parse;
 use std::{fs, process::Command};
 
 /// Function that creates the rotating slab gif
@@ -12,7 +12,7 @@ pub fn rotating_slab() {
     let mut names: Vec<String> = Vec::new();
 
     // Attempting to create image directory
-    fs::create_dir_all("image/tmp").expect("Unable to create image/tmp directory");
+    fs::create_dir_all("temp").expect("Unable to create temp directory");
     fs::create_dir_all("image/gif").expect("Unable to create image/gif directory");
 
     // Iterating through scenes
@@ -51,7 +51,7 @@ pub fn rotating_slab() {
 
         // Saving image
         let name = vec![
-            "image/tmp/rotating_slab".to_string(),
+            "temp/rotating_slab".to_string(),
             format!("{:0>#3}", i.to_string()),
             ".ppm".to_string(),
         ]
@@ -71,7 +71,7 @@ pub fn rotating_slab() {
         .arg("5")
         .arg("-loop")
         .arg("0")
-        .arg("image/tmp/rotating_slab*.ppm")
+        .arg("temp/rotating_slab*.ppm")
         .arg("image/gif/w09_rotating_slab.gif")
         .status()
         .expect("Convert command failed to run");

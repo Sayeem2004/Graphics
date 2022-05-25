@@ -6,13 +6,13 @@ use std::{fs, process::Command};
 /// Function that performs the 'display' command
 pub fn display(img: &Image) {
     // Attempting to create image directory
-    fs::create_dir_all("image/tmp").expect("Unable to create image/tmp directory");
+    fs::create_dir_all("temp").expect("Unable to create temp directory");
 
     // Saving image
     let mut rng = rand::thread_rng();
     let num: i32 = rng.gen_range(0..100);
     let name = vec![
-        "image/tmp/display".to_string(),
+        "temp/display".to_string(),
         num.to_string(),
         ".ppm".to_string(),
     ]
@@ -94,13 +94,13 @@ pub fn push(stack: &mut Vec<Matrix>, sz: &mut usize) {
 /// Function that performs the 'save' command
 pub fn save(arg: &str, img: &Image) {
     // Attempting to create image directory
-    fs::create_dir_all("image/tmp").expect("Unable to create image/tmp directory");
+    fs::create_dir_all("temp").expect("Unable to create temp directory");
 
     // Saving image
     let mut rng = rand::thread_rng();
     let num: i32 = rng.gen_range(0..100);
     let name = vec![
-        "image/tmp/save".to_string(),
+        "temp/save".to_string(),
         num.to_string(),
         ".ppm".to_string(),
     ]

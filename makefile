@@ -15,7 +15,7 @@ convert:
 # Cleaning up directories
 clean:
 	cargo clean
-	rm -rf image/ppm
+	rm -rf temp
 
 # Removing all images
 remove:

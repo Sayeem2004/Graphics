@@ -20,13 +20,13 @@ pub fn display(edge: &mut Matrix, poly: &mut Matrix, img: &mut Image) {
     poly.draw_triangles_xy(img, constant::WHITE_PIXEL, &constant::ZVIEW);
 
     // Attempting to create image directory
-    fs::create_dir_all("image/tmp").expect("Unable to create image/tmp directory");
+    fs::create_dir_all("temp").expect("Unable to create temp directory");
 
     // Saving image
     let mut rng = rand::thread_rng();
     let num: i32 = rng.gen_range(0..100);
     let name = vec![
-        "image/tmp/display".to_string(),
+        "temp/display".to_string(),
         num.to_string(),
         ".ppm".to_string(),
     ]
@@ -91,13 +91,13 @@ pub fn save(arg: &str, edge: &mut Matrix, poly: &mut Matrix, img: &mut Image) {
     poly.draw_triangles_xy(img, constant::WHITE_PIXEL, &constant::ZVIEW);
 
     // Attempting to create image directory
-    fs::create_dir_all("image/tmp").expect("Unable to create image/tmp directory");
+    fs::create_dir_all("temp").expect("Unable to create temp directory");
 
     // Saving image
     let mut rng = rand::thread_rng();
     let num: i32 = rng.gen_range(0..100);
     let name = vec![
-        "image/tmp/save".to_string(),
+        "temp/save".to_string(),
         num.to_string(),
         ".ppm".to_string(),
     ]

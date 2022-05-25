@@ -34,12 +34,11 @@ fn main() {
         stdin.read_line(&mut path).unwrap();
         path = path[0..path.len() - 1].to_string();
 
-        // Exiting forever loop
         if (path.eq("exit") || path.eq("quit")) {
+            // Exiting forever loop
             break;
-        }
-        // Parsing a script file and making an image
-        else {
+        } else {
+            // Parsing a script file and making an image
             script::parse::parse(&path, 750, 0);
         }
 

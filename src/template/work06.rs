@@ -306,7 +306,7 @@ fn purple_hollow() {
     edge.matrix_transform(&trans);
 
     // Attempting to create image directory
-    fs::create_dir_all("image/tmp").expect("Unable to create image/tmp directory");
+    fs::create_dir_all("temp").expect("Unable to create temp directory");
     fs::create_dir_all("image/gif").expect("Unable to create image/gif directory");
 
     // Making red sphere and red translation matrix
@@ -341,7 +341,7 @@ fn purple_hollow() {
 
         // Saving image
         let name = vec![
-            "image/tmp/purple0".to_string(),
+            "temp/purple0".to_string(),
             format!("{:0>#3}", i.to_string()),
             ".ppm".to_string(),
         ]
@@ -378,7 +378,7 @@ fn purple_hollow() {
 
         // Saving image
         let name = vec![
-            "image/tmp/purple0".to_string(),
+            "temp/purple0".to_string(),
             format!("{:0>#3}", q.to_string()),
             ".ppm".to_string(),
         ]
@@ -398,7 +398,7 @@ fn purple_hollow() {
         .arg("5")
         .arg("-loop")
         .arg("0")
-        .arg("image/tmp/purple*.ppm")
+        .arg("temp/purple*.ppm")
         .arg("image/gif/w06_purple_hollow.gif")
         .status()
         .expect("Convert command failed to run");
@@ -419,7 +419,7 @@ fn perspectives() {
     shape::add_sphere(&mut sphere, (375.0, 375.0, 0.0), 300.0, 100);
 
     // Attempting to create image directory
-    fs::create_dir_all("image/tmp").expect("Unable to create image/tmp directory");
+    fs::create_dir_all("temp").expect("Unable to create temp directory");
     fs::create_dir_all("image/gif").expect("Unable to create image/gif directory");
 
     // Iterating through perspectives
@@ -433,7 +433,7 @@ fn perspectives() {
 
         // Saving image
         let name = vec![
-            "image/tmp/perspective".to_string(),
+            "temp/perspective".to_string(),
             format!("{:0>#3}", (i as i32).to_string()),
             ".ppm".to_string(),
         ]
@@ -449,7 +449,7 @@ fn perspectives() {
         .arg("10")
         .arg("-loop")
         .arg("0")
-        .arg("image/tmp/perspective*.ppm")
+        .arg("temp/perspective*.ppm")
         .arg("image/gif/w06_perspectives.gif")
         .status()
         .expect("Convert command failed to run");

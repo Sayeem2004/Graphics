@@ -107,7 +107,7 @@ pub fn night_sky() {
     ];
 
     // Attempting to create image directory
-    fs::create_dir_all("image/tmp").expect("Unable to create image/tmp directory");
+    fs::create_dir_all("temp").expect("Unable to create temp directory");
     fs::create_dir_all("image/gif").expect("Unable to create image/gif directory");
 
     // Iterating through scenes
@@ -156,7 +156,7 @@ pub fn night_sky() {
 
         // Saving image
         let name = vec![
-            "image/tmp/night_sky".to_string(),
+            "temp/night_sky".to_string(),
             format!("{:0>#3}", i.to_string()),
             ".ppm".to_string(),
         ]
@@ -176,7 +176,7 @@ pub fn night_sky() {
         .arg("5")
         .arg("-loop")
         .arg("0")
-        .arg("image/tmp/night_sky*.ppm")
+        .arg("temp/night_sky*.ppm")
         .arg("image/gif/w08_night_sky.gif")
         .status()
         .expect("Convert command failed to run");
