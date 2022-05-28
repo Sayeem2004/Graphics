@@ -1,159 +1,163 @@
 // Imports
 use crate::algorithm::shape;
 use crate::format::{constant, image::Image, matrix::Matrix, pixel::Pixel};
+use crate::script::{
+    compile,
+    compile::{Operation, Symbol},
+};
+use std::collections::HashMap;
 
 /// Function that performs the 'box' command
-pub fn _box(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
-    // Splitting the argument string
-    let split = arg.split(' ');
-
-    // Checking if each argument is a number
-    for str in split {
-        let num = str.parse::<f32>();
-        match num {
-            Ok(_) => {
-                continue;
-            }
-            Err(_) => {
-                eprintln!(
-                    "A \'box\' argument found at line {} is not a number",
-                    ind + 1
-                );
-                return;
-            }
+pub fn _box(
+    op: &Operation,
+    symbols: &HashMap<String, Vec<Symbol>>,
+    cord: &Matrix,
+    img: &mut Image,
+) {
+    // Checking for lighting constants
+    let mut fnd: bool = true;
+    let mut name: String = String::new();
+    match op.constants {
+        None => {
+            fnd = false;
+        }
+        _ => {
+            name = op.constants.as_ref().unwrap().to_string();
         }
     }
 
-    // Converting to floats
-    let nums: Vec<f32> = arg
-        .split(' ')
-        .map(|x| x.parse::<f32>().unwrap())
-        .collect::<Vec<f32>>();
+    // Getting lighting constants if found and is correct
+    let constants: (f32, f32, f32, f32, f32, f32, f32, f32, f32) = if (fnd) {
+        compile::constants_to_tuple(symbols.get(&name).unwrap())
+    } else {
+        constant::EQV
+    };
 
-    // Checking if right number of floats is found
-    if (nums.len() != 6) {
-        eprintln!(
-            "\'box\' expected 6 numerical arguments, but {} were found",
-            nums.len()
-        );
-        return;
-    }
-
-    // Adding box to image
+    // Getting box coordinates and adding it to edge matrix
+    let args = op.args.as_ref().unwrap();
     let mut poly: Matrix = Matrix::new_matrix();
     shape::add_box(
         &mut poly,
-        (nums[0], nums[1], nums[2]),
-        nums[3],
-        nums[4],
-        nums[5],
+        (
+            *args[0].as_float().unwrap(),
+            *args[1].as_float().unwrap(),
+            *args[2].as_float().unwrap(),
+        ),
+        *args[3].as_float().unwrap(),
+        *args[4].as_float().unwrap(),
+        *args[5].as_float().unwrap(),
     );
+
+    // Adding box to image
     poly.left_transform(cord);
     poly.draw_triangles_xy(
         img,
         Pixel::new_scale(0.5),
         &[(Pixel::new_scale(1.0), 750.0, 750.0, 750.0)],
         constant::ZVIEW,
-        constant::EQV,
+        constants,
     );
 }
 
 /// Function that performs the 'sphere' command
-pub fn sphere(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
-    // Splitting the argument string
-    let split = arg.split(' ');
-
-    // Checking if each argument is a number
-    for str in split {
-        let num = str.parse::<f32>();
-        match num {
-            Ok(_) => {
-                continue;
-            }
-            Err(_) => {
-                eprintln!(
-                    "A \'sphere\' argument found at line {} is not a number",
-                    ind + 1
-                );
-                return;
-            }
+pub fn sphere(
+    op: &Operation,
+    symbols: &HashMap<String, Vec<Symbol>>,
+    cord: &Matrix,
+    img: &mut Image,
+) {
+    // Checking for lighting constants
+    let mut fnd: bool = true;
+    let mut name: String = String::new();
+    match op.constants {
+        None => {
+            fnd = false;
+        }
+        _ => {
+            name = op.constants.as_ref().unwrap().to_string();
         }
     }
 
-    // Converting to floats
-    let nums: Vec<f32> = arg
-        .split(' ')
-        .map(|x| x.parse::<f32>().unwrap())
-        .collect::<Vec<f32>>();
+    // Getting lighting constants if found and is correct
+    let constants: (f32, f32, f32, f32, f32, f32, f32, f32, f32) = if (fnd) {
+        compile::constants_to_tuple(symbols.get(&name).unwrap())
+    } else {
+        constant::EQV
+    };
 
-    // Checking if right number of floats is found
-    if (nums.len() != 4) {
-        eprintln!(
-            "\'sphere\' expected 4 numerical arguments, but {} were found",
-            nums.len()
-        );
-        return;
-    }
+    // Getting sphere coordinates and adding it to edge matrix
+    let args = op.args.as_ref().unwrap();
+    let mut poly: Matrix = Matrix::new_matrix();
+    shape::add_sphere(
+        &mut poly,
+        (
+            *args[0].as_float().unwrap(),
+            *args[1].as_float().unwrap(),
+            *args[2].as_float().unwrap(),
+        ),
+        *args[3].as_float().unwrap(),
+        100,
+    );
 
     // Adding sphere to image
-    let mut poly: Matrix = Matrix::new_matrix();
-    shape::add_sphere(&mut poly, (nums[0], nums[1], nums[2]), nums[3], 100);
     poly.left_transform(cord);
     poly.draw_triangles_xy(
         img,
         Pixel::new_scale(0.5),
         &[(Pixel::new_scale(1.0), 750.0, 750.0, 750.0)],
         constant::ZVIEW,
-        constant::EQV,
+        constants,
     );
 }
 
 /// Function that performs the 'torus' command
-pub fn torus(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
-    // Splitting the argument string
-    let split = arg.split(' ');
-
-    // Checking if each argument is a number
-    for str in split {
-        let num = str.parse::<f32>();
-        match num {
-            Ok(_) => {
-                continue;
-            }
-            Err(_) => {
-                eprintln!(
-                    "A \'torus\' argument found at line {} is not a number",
-                    ind + 1
-                );
-                return;
-            }
+pub fn torus(
+    op: &Operation,
+    symbols: &HashMap<String, Vec<Symbol>>,
+    cord: &Matrix,
+    img: &mut Image,
+) {
+    // Checking for lighting constants
+    let mut fnd: bool = true;
+    let mut name: String = String::new();
+    match op.constants {
+        None => {
+            fnd = false;
+        }
+        _ => {
+            name = op.constants.as_ref().unwrap().to_string();
         }
     }
 
-    // Converting to floats
-    let nums: Vec<f32> = arg
-        .split(' ')
-        .map(|x| x.parse::<f32>().unwrap())
-        .collect::<Vec<f32>>();
+    // Getting lighting constants if found and is correct
+    let constants: (f32, f32, f32, f32, f32, f32, f32, f32, f32) = if (fnd) {
+        compile::constants_to_tuple(symbols.get(&name).unwrap())
+    } else {
+        constant::EQV
+    };
 
-    // Checking if right number of floats is found
-    if (nums.len() != 5) {
-        eprintln!(
-            "\'torus\' expected 5 numerical arguments, but {} were found",
-            nums.len()
-        );
-        return;
-    }
+    // Getting torus coordinates and adding it to edge matrix
+    let args = op.args.as_ref().unwrap();
+    let mut poly: Matrix = Matrix::new_matrix();
+    shape::add_torus(
+        &mut poly,
+        (
+            *args[0].as_float().unwrap(),
+            *args[1].as_float().unwrap(),
+            *args[2].as_float().unwrap(),
+        ),
+        *args[3].as_float().unwrap(),
+        *args[4].as_float().unwrap(),
+        100,
+    );
 
     // Adding torus to image
-    let mut poly: Matrix = Matrix::new_matrix();
-    shape::add_torus(&mut poly, (nums[0], nums[1], nums[2]), nums[3], nums[4], 100);
     poly.left_transform(cord);
     poly.draw_triangles_xy(
         img,
-        Pixel::new_scale(0.5),
+        Pixel::new_scale(0.25),
         &[(Pixel::new_scale(1.0), 750.0, 750.0, 750.0)],
         constant::ZVIEW,
-        constant::EQV,
+        constants,
     );
 }

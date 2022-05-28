@@ -157,7 +157,7 @@ pub fn night_sky() {
         // Saving image
         let name = vec![
             "temp/night_sky".to_string(),
-            format!("{:0>#3}", i.to_string()),
+            format!("{:0>#3}", i),
             ".ppm".to_string(),
         ]
         .join("");

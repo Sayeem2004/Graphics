@@ -246,14 +246,14 @@ fn display(edges: &mut Matrix, img: &mut Image) {
     edges.draw_lines_xy(img, constant::WHITE_PIXEL);
 
     // Attempting to create image directory
-    fs::create_dir_all("image/tmp").expect("Unable to create image/tmp directory");
+    fs::create_dir_all("temp").expect("Unable to create temp directory");
 
     // Saving image
     let mut rng = rand::thread_rng();
-    let num: i32 = rng.gen_range(0..100);
+    let num: i32 = rng.gen_range(0..10000);
     let name = vec![
-        "image/tmp/display".to_string(),
-        num.to_string(),
+        "temp/display".to_string(),
+        format!("{:0>#4}", num),
         ".ppm".to_string(),
     ]
     .join("");
@@ -404,14 +404,14 @@ fn save(arg: &str, edges: &mut Matrix, img: &mut Image) {
     edges.draw_lines_xy(img, constant::WHITE_PIXEL);
 
     // Attempting to create image directory
-    fs::create_dir_all("image/tmp").expect("Unable to create image/tmp directory");
+    fs::create_dir_all("temp").expect("Unable to create temp directory");
 
     // Saving image
     let mut rng = rand::thread_rng();
-    let num: i32 = rng.gen_range(0..100);
+    let num: i32 = rng.gen_range(0..10000);
     let name = vec![
-        "image/tmp/save".to_string(),
-        num.to_string(),
+        "temp/save".to_string(),
+        format!("{:0>#4}", num),
         ".ppm".to_string(),
     ]
     .join("");

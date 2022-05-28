@@ -1,7 +1,8 @@
 // Imports
 use crate::format::{constant, file, image::Image, matrix::Matrix};
+use crate::script::compile::{Argument, Operation, Symbol};
 use rand::Rng;
-use std::{fs, process::Command};
+use std::{collections::HashMap, fs, process::Command};
 
 /// Function that returns the image to default black and clears the zbuffer
 pub fn clear(img: &mut Image) {
@@ -12,17 +13,33 @@ pub fn clear(img: &mut Image) {
     img.reset_buff();
 }
 
-/// Function that performs the 'display' command
-pub fn display(img: &Image) {
+/// Function that checks that a certain constant exists in the symbol table
+pub fn constants(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>) {
+    // Getting constants name
+    let name: &String = op.constants.as_ref().unwrap();
+
+    // Checking if it is inside the symbol table
+    if (!symbols.contains_key(name)) {
+        eprintln!("Constant {} not found in the symbol table", name);
+    }
+}
+
+/// Function that performs the 'display' operation
+pub fn display(img: &Image, mode: i32) {
+    // Error checking mode
+    if (mode != 0) {
+        return;
+    }
+
     // Attempting to create image directory
     fs::create_dir_all("temp").expect("Unable to create temp directory");
 
     // Saving image
     let mut rng = rand::thread_rng();
-    let num: i32 = rng.gen_range(0..100);
+    let num: i32 = rng.gen_range(0..10000);
     let name = vec![
         "temp/display".to_string(),
-        num.to_string(),
+        format!("{:0>#4}", num),
         ".ppm".to_string(),
     ]
     .join("");
@@ -35,51 +52,30 @@ pub fn display(img: &Image) {
     fs::remove_file(&name).expect("Unable to delete temporary display file");
 }
 
-/// Function that performs the 'line' command
-pub fn line(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
-    // Splitting the argument string
-    let split = arg.split(' ');
-
-    // Checking if each argument is a number
-    for str in split {
-        let num = str.parse::<f32>();
-        match num {
-            Ok(_) => {
-                continue;
-            }
-            Err(_) => {
-                eprintln!(
-                    "A \'line\' argument found at line {} is not a number",
-                    ind + 1
-                );
-                return;
-            }
-        }
-    }
-
-    // Converting to floats
-    let nums: Vec<f32> = arg
-        .split(' ')
-        .map(|x| x.parse::<f32>().unwrap())
-        .collect::<Vec<f32>>();
-
-    // Checking if right number of floats is found
-    if (nums.len() != 6) {
-        eprintln!(
-            "\'line\' expected 6 numerical arguments, but {} were found",
-            nums.len()
-        );
-        return;
-    }
-
-    // Adding edges to matrix and drawing on image
+/// Function that performs the 'line' operation
+pub fn line(op: &Operation, cord: &Matrix, img: &mut Image) {
+    // Getting edge matrix
+    let args: &Vec<Argument> = op.args.as_ref().unwrap();
     let mut edge: Matrix = Matrix::new_matrix();
-    edge.add_edge((nums[0], nums[1], nums[2]), (nums[3], nums[4], nums[5]));
+    edge.add_edge(
+        (
+            *args[0].as_float().unwrap(),
+            *args[1].as_float().unwrap(),
+            *args[2].as_float().unwrap(),
+        ),
+        (
+            *args[3].as_float().unwrap(),
+            *args[4].as_float().unwrap(),
+            *args[5].as_float().unwrap(),
+        ),
+    );
+
+    // Transforming matrix and drawing line
     edge.left_transform(cord);
     edge.draw_lines_xy(img, constant::WHITE_PIXEL);
 }
 
-/// Function that performs the 'pop' command
+/// Function that performs the 'pop' operation
 pub fn pop(stack: &mut Vec<Matrix>, sz: &mut usize) {
     // Removing top of stack
     stack.pop();
@@ -88,7 +84,7 @@ pub fn pop(stack: &mut Vec<Matrix>, sz: &mut usize) {
     *sz -= 1;
 }
 
-/// Function that performs the 'push' command
+/// Function that performs the 'push' operation
 pub fn push(stack: &mut Vec<Matrix>, sz: &mut usize) {
     // Making copy of top
     let copy: Matrix = stack[*sz - 1].clone();
@@ -100,28 +96,27 @@ pub fn push(stack: &mut Vec<Matrix>, sz: &mut usize) {
     *sz += 1;
 }
 
-/// Function that performs the 'save' command
-pub fn save(arg: &str, img: &Image) {
+/// Function that performs the 'save' operation
+pub fn save(op: &Operation, img: &Image) {
     // Attempting to create image directory
     fs::create_dir_all("temp").expect("Unable to create temp directory");
+    fs::create_dir_all("image/script").expect("Unable to create image/script directory");
 
     // Saving image
     let mut rng = rand::thread_rng();
-    let num: i32 = rng.gen_range(0..100);
+    let num: i32 = rng.gen_range(0..10000);
     let name = vec![
         "temp/save".to_string(),
-        num.to_string(),
+        format!("{:0>#4}", num),
         ".ppm".to_string(),
     ]
     .join("");
     file::create_ppm_ascii(&name, img, 1);
 
-    // Attempting to create image directory
-    fs::create_dir_all("image/script").expect("Unable to create image/script directory");
-
     // Getting image path
     let mut path = String::from("image/script/");
-    path.push_str(arg);
+    let add = op.args.as_ref().unwrap()[0].as_string().unwrap();
+    path.push_str(add);
 
     // Performing image magick convert command
     Command::new("convert")

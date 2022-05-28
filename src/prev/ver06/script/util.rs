@@ -24,10 +24,10 @@ pub fn display(edge: &mut Matrix, poly: &mut Matrix, img: &mut Image) {
 
     // Saving image
     let mut rng = rand::thread_rng();
-    let num: i32 = rng.gen_range(0..100);
+    let num: i32 = rng.gen_range(0..10000);
     let name = vec![
         "temp/display".to_string(),
-        num.to_string(),
+        format!("{:0>#4}", num),
         ".ppm".to_string(),
     ]
     .join("");
@@ -95,10 +95,10 @@ pub fn save(arg: &str, edge: &mut Matrix, poly: &mut Matrix, img: &mut Image) {
 
     // Saving image
     let mut rng = rand::thread_rng();
-    let num: i32 = rng.gen_range(0..100);
+    let num: i32 = rng.gen_range(0..10000);
     let name = vec![
         "temp/save".to_string(),
-        num.to_string(),
+        format!("{:0>#4}", num),
         ".ppm".to_string(),
     ]
     .join("");

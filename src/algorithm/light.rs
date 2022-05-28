@@ -7,7 +7,6 @@ pub fn dot(v1: (f32, f32, f32), v2: (f32, f32, f32)) -> f32 {
     (v1.0 * v2.0) + (v1.1 * v2.1) + (v1.2 * v2.2)
 }
 
-
 /// Function that returns the lighting of a certain polygon
 pub fn calculate(
     amb: Pixel,
@@ -19,7 +18,20 @@ pub fn calculate(
 ) -> Pixel {
     // Variable declarations
     let (mut fr, mut fg, mut fb): (u8, u8, u8) = (0, 0, 0);
-    let (kra, kga, kba, krd, kgd, kbd, krs, kgs, kbs): (f32, f32, f32, f32, f32, f32, f32, f32, f32) = scale9(div, 3.0 / (div.0 + div.1 + div.2 + div.3 + div.4 + div.5 + div.6 + div.7 + div.8));
+    let (kra, kga, kba, krd, kgd, kbd, krs, kgs, kbs): (
+        f32,
+        f32,
+        f32,
+        f32,
+        f32,
+        f32,
+        f32,
+        f32,
+        f32,
+    ) = scale9(
+        div,
+        3.0 / (div.0 + div.1 + div.2 + div.3 + div.4 + div.5 + div.6 + div.7 + div.8),
+    );
     let hnorm: (f32, f32, f32) = normalize(normal);
     let hview: (f32, f32, f32) = normalize(view);
     let mut cpnt: Vec<Pixel> = vec![Pixel::new(); pnts.len()];
@@ -78,8 +90,21 @@ pub fn diff(vec1: (f32, f32, f32), vec2: (f32, f32, f32)) -> (f32, f32, f32) {
 }
 
 /// Function that scales a vector by a value
-pub fn scale9(vec: (f32, f32, f32, f32, f32, f32, f32, f32, f32), scale: f32) -> (f32, f32, f32, f32, f32, f32, f32, f32, f32) {
-    (vec.0 * scale, vec.1 * scale, vec.2 * scale, vec.3 * scale, vec.4 * scale, vec.5 * scale, vec.6 * scale, vec.7 * scale, vec.8 * scale)
+pub fn scale9(
+    vec: (f32, f32, f32, f32, f32, f32, f32, f32, f32),
+    scale: f32,
+) -> (f32, f32, f32, f32, f32, f32, f32, f32, f32) {
+    (
+        vec.0 * scale,
+        vec.1 * scale,
+        vec.2 * scale,
+        vec.3 * scale,
+        vec.4 * scale,
+        vec.5 * scale,
+        vec.6 * scale,
+        vec.7 * scale,
+        vec.8 * scale,
+    )
 }
 
 /// Function that scales a vector by a value

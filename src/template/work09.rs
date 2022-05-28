@@ -52,7 +52,7 @@ pub fn rotating_slab() {
         // Saving image
         let name = vec![
             "temp/rotating_slab".to_string(),
-            format!("{:0>#3}", i.to_string()),
+            format!("{:0>#3}", i),
             ".ppm".to_string(),
         ]
         .join("");
@@ -204,13 +204,13 @@ pub fn create_work09_images(mode: i32) {
     fs::create_dir_all("image/ppm").expect("Unable to create image/ppm directory");
 
     // Creating face image test
-    parse::parse("data/w09/w09_face", 500, mode);
+    parse::parse("data/w09/w09_face", 750, mode);
 
     // Creating robot image test
-    parse::parse("data/w09/w09_robot", 500, mode);
+    parse::parse("data/w09/w09_robot", 750, mode);
 
     // Creating shapes image test
-    parse::parse("data/w09/w09_shapes", 500, mode);
+    parse::parse("data/w09/w09_shapes", 750, mode);
 
     // Creating rotating slab gif
     rotating_slab();

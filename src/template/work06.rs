@@ -341,8 +341,8 @@ fn purple_hollow() {
 
         // Saving image
         let name = vec![
-            "temp/purple0".to_string(),
-            format!("{:0>#3}", i.to_string()),
+            "temp/purple".to_string(),
+            format!("{:0>#3}", i),
             ".ppm".to_string(),
         ]
         .join("");
@@ -378,8 +378,8 @@ fn purple_hollow() {
 
         // Saving image
         let name = vec![
-            "temp/purple0".to_string(),
-            format!("{:0>#3}", q.to_string()),
+            "temp/purple".to_string(),
+            format!("{:0>#3}", q),
             ".ppm".to_string(),
         ]
         .join("");
@@ -434,7 +434,7 @@ fn perspectives() {
         // Saving image
         let name = vec![
             "temp/perspective".to_string(),
-            format!("{:0>#3}", (i as i32).to_string()),
+            format!("{:0>#3}", i as i32),
             ".ppm".to_string(),
         ]
         .join("");
@@ -463,9 +463,6 @@ fn perspectives() {
 
 /// Function that creates all images from work 06
 pub fn create_work06_images(mode: i32) {
-    // Attempting to create image directory
-    fs::create_dir_all("image/ppm").expect("Unable to create image/ppm directory");
-
     // Creating shapes image test
     parse::parse("data/w06/w06_script", 750, mode);
 

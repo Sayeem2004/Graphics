@@ -16,6 +16,8 @@ convert:
 clean:
 	cargo clean
 	rm -rf temp
+	rm -rf src/compiler/__pycache__
+	rm -rf src/compiler/ply/__pycache__
 
 # Removing all images
 remove:

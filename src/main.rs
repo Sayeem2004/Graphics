@@ -21,7 +21,8 @@ fn main() {
     // template::work06::create_work06_images(0);
     // template::work07::create_work07_images(0);
     // template::work08::create_work08_images(0);
-    template::work09::create_work09_images(0);
+    // template::work09::create_work09_images(0);
+    template::work10::create_work10_images(0);
 
     // Variable Declarations
     let mut path: String = String::new();
@@ -39,7 +40,7 @@ fn main() {
             break;
         } else {
             // Parsing a script file and making an image
-            script::parse::parse(&path, 750, 0);
+            script::compile::compile(&path, 750, 0);
         }
 
         // Resetting variable
