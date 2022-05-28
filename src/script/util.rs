@@ -1,8 +1,8 @@
 // Imports
-use crate::format::{constant, file, image::Image, matrix::Matrix};
-use crate::script::compile::{Argument, Operation, Symbol};
+use crate::format::{constant, image::Image, util};
+use crate::script::compile::Operation;
 use rand::Rng;
-use std::{collections::HashMap, fs, process::Command};
+use std::{fs, process::Command};
 
 /// Function that returns the image to default black and clears the zbuffer
 pub fn clear(img: &mut Image) {
@@ -11,17 +11,6 @@ pub fn clear(img: &mut Image) {
 
     // Resetting zbuffer
     img.reset_buff();
-}
-
-/// Function that checks that a certain constant exists in the symbol table
-pub fn constants(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>) {
-    // Getting constants name
-    let name: &String = op.constants.as_ref().unwrap();
-
-    // Checking if it is inside the symbol table
-    if (!symbols.contains_key(name)) {
-        eprintln!("Constant {} not found in the symbol table", name);
-    }
 }
 
 /// Function that performs the 'display' operation
@@ -43,57 +32,13 @@ pub fn display(img: &Image, mode: i32) {
         ".ppm".to_string(),
     ]
     .join("");
-    file::create_ppm_ascii(&name, img, 1);
+    util::create_ppm_ascii(&name, img, 1);
 
     // Displaying image
-    file::open_image(&name);
+    util::open_image(&name);
 
     // Removing temporary file
     fs::remove_file(&name).expect("Unable to delete temporary display file");
-}
-
-/// Function that performs the 'line' operation
-pub fn line(op: &Operation, cord: &Matrix, img: &mut Image) {
-    // Getting edge matrix
-    let args: &Vec<Argument> = op.args.as_ref().unwrap();
-    let mut edge: Matrix = Matrix::new_matrix();
-    edge.add_edge(
-        (
-            *args[0].as_float().unwrap(),
-            *args[1].as_float().unwrap(),
-            *args[2].as_float().unwrap(),
-        ),
-        (
-            *args[3].as_float().unwrap(),
-            *args[4].as_float().unwrap(),
-            *args[5].as_float().unwrap(),
-        ),
-    );
-
-    // Transforming matrix and drawing line
-    edge.left_transform(cord);
-    edge.draw_lines_xy(img, constant::WHITE_PIXEL);
-}
-
-/// Function that performs the 'pop' operation
-pub fn pop(stack: &mut Vec<Matrix>, sz: &mut usize) {
-    // Removing top of stack
-    stack.pop();
-
-    // Updating stack size
-    *sz -= 1;
-}
-
-/// Function that performs the 'push' operation
-pub fn push(stack: &mut Vec<Matrix>, sz: &mut usize) {
-    // Making copy of top
-    let copy: Matrix = stack[*sz - 1].clone();
-
-    // Adding copy to top of stack
-    stack.push(copy);
-
-    // Updating stack size
-    *sz += 1;
 }
 
 /// Function that performs the 'save' operation
@@ -111,7 +56,7 @@ pub fn save(op: &Operation, img: &Image) {
         ".ppm".to_string(),
     ]
     .join("");
-    file::create_ppm_ascii(&name, img, 1);
+    util::create_ppm_ascii(&name, img, 1);
 
     // Getting image path
     let mut path = String::from("image/script/");

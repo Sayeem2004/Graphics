@@ -30,19 +30,19 @@ pub fn add_circle(edge: &mut Matrix, c: (f32, f32, f32), r: f32, itr: u32) {
     }
 }
 
-/// Function that adds edges representing a hermite curve to a matrix of edges
-pub fn add_hermite(
+/// Function that adds edges representing a bezier curve to a matrix of edges
+pub fn add_bezier(
     edge: &mut Matrix,
     s: (f32, f32),
     e: (f32, f32),
-    sr: (f32, f32),
-    er: (f32, f32),
+    m1: (f32, f32),
+    m2: (f32, f32),
     itr: u32,
 ) {
     // Getting x coefficients
     let mut xmat: Matrix = Matrix::new_matrix();
-    xmat.add_col(&[s.0, e.0, sr.0, er.0]);
-    let xret: Matrix = Matrix::multiply_matrices(&constant::HERMITE, &xmat);
+    xmat.add_col(&[s.0, e.0, m1.0, m2.0]);
+    let xret: Matrix = Matrix::multiply_matrices(&constant::BEZIER, &xmat);
     let (ax, bx, cx, dx) = (
         xret.data[0][0],
         xret.data[0][1],
@@ -52,8 +52,8 @@ pub fn add_hermite(
 
     // Getting y coefficients
     let mut ymat: Matrix = Matrix::new_matrix();
-    ymat.add_col(&[s.1, e.1, sr.1, er.1]);
-    let yret: Matrix = Matrix::multiply_matrices(&constant::HERMITE, &ymat);
+    ymat.add_col(&[s.1, e.1, m1.1, m2.1]);
+    let yret: Matrix = Matrix::multiply_matrices(&constant::BEZIER, &ymat);
     let (ay, by, cy, dy) = (
         yret.data[0][0],
         yret.data[0][1],
@@ -81,19 +81,19 @@ pub fn add_hermite(
     }
 }
 
-/// Function that adds edges representing a bezier curve to a matrix of edges
-pub fn add_bezier(
+/// Function that adds edges representing a hermite curve to a matrix of edges
+pub fn add_hermite(
     edge: &mut Matrix,
     s: (f32, f32),
     e: (f32, f32),
-    m1: (f32, f32),
-    m2: (f32, f32),
+    sr: (f32, f32),
+    er: (f32, f32),
     itr: u32,
 ) {
     // Getting x coefficients
     let mut xmat: Matrix = Matrix::new_matrix();
-    xmat.add_col(&[s.0, e.0, m1.0, m2.0]);
-    let xret: Matrix = Matrix::multiply_matrices(&constant::BEZIER, &xmat);
+    xmat.add_col(&[s.0, e.0, sr.0, er.0]);
+    let xret: Matrix = Matrix::multiply_matrices(&constant::HERMITE, &xmat);
     let (ax, bx, cx, dx) = (
         xret.data[0][0],
         xret.data[0][1],
@@ -103,8 +103,8 @@ pub fn add_bezier(
 
     // Getting y coefficients
     let mut ymat: Matrix = Matrix::new_matrix();
-    ymat.add_col(&[s.1, e.1, m1.1, m2.1]);
-    let yret: Matrix = Matrix::multiply_matrices(&constant::BEZIER, &ymat);
+    ymat.add_col(&[s.1, e.1, sr.1, er.1]);
+    let yret: Matrix = Matrix::multiply_matrices(&constant::HERMITE, &ymat);
     let (ay, by, cy, dy) = (
         yret.data[0][0],
         yret.data[0][1],

@@ -45,7 +45,7 @@ save_knobs freddy
 tween 5 10 list1 list2
 push
 pop
-save somefile
+save w10_test.png
 generate_rayfiles
 shading wireframe
 shading phong

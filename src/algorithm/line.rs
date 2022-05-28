@@ -1,6 +1,57 @@
 // Imports
 use crate::format::{image::Image, matrix::Matrix, pixel::Pixel};
 
+/// Function that draws an arbitrary line by using the 4 octants above
+pub fn draw_line(s: (i32, i32, f32), e: (i32, i32, f32), img: &mut Image, pix: Pixel) {
+    // Quadrant 1, 2, 7, 8 cases
+    if (e.0 >= s.0) {
+        // Quadrant 1, 2
+        if (e.1 >= s.1) {
+            // Quadrant 2
+            if (e.1 - s.1 > e.0 - s.0) {
+                draw_oct2(img, pix, s, e);
+            }
+            // Quadrant 1
+            else {
+                draw_oct1(img, pix, s, e);
+            }
+        } else {
+            // Quadrant 7, 8
+            // Quadrant 7
+            if (s.1 - e.1 > e.0 - s.0) {
+                draw_oct7(img, pix, s, e);
+            }
+            // Quadrant 8
+            else {
+                draw_oct8(img, pix, s, e);
+            }
+        }
+    } else {
+        // Quadrant 3, 4, 5, 6 cases
+        // Quadrant 3, 4
+        if (e.1 >= s.1) {
+            // Quadrant 3
+            if (e.1 - s.1 > s.0 - e.0) {
+                draw_oct7(img, pix, e, s);
+            }
+            // Quadrant 4
+            else {
+                draw_oct8(img, pix, e, s);
+            }
+        } else {
+            // Quadrant 5, 6
+            // Quadrant 6
+            if (s.1 - e.1 > s.0 - e.0) {
+                draw_oct2(img, pix, e, s);
+            }
+            // Quadrant 5
+            else {
+                draw_oct1(img, pix, e, s);
+            }
+        }
+    }
+}
+
 /// Drawing a line in octant I
 fn draw_oct1(img: &mut Image, pix: Pixel, s: (i32, i32, f32), e: (i32, i32, f32)) {
     // Variable declarations
@@ -114,57 +165,6 @@ fn draw_oct8(img: &mut Image, pix: Pixel, s: (i32, i32, f32), e: (i32, i32, f32)
         z += dz;
         x += 1;
         d += a;
-    }
-}
-
-/// Function that draws an arbitrary line by using the 4 octants above
-pub fn draw_line(s: (i32, i32, f32), e: (i32, i32, f32), img: &mut Image, pix: Pixel) {
-    // Quadrant 1, 2, 7, 8 cases
-    if (e.0 >= s.0) {
-        // Quadrant 1, 2
-        if (e.1 >= s.1) {
-            // Quadrant 2
-            if (e.1 - s.1 > e.0 - s.0) {
-                draw_oct2(img, pix, s, e);
-            }
-            // Quadrant 1
-            else {
-                draw_oct1(img, pix, s, e);
-            }
-        } else {
-            // Quadrant 7, 8
-            // Quadrant 7
-            if (s.1 - e.1 > e.0 - s.0) {
-                draw_oct7(img, pix, s, e);
-            }
-            // Quadrant 8
-            else {
-                draw_oct8(img, pix, s, e);
-            }
-        }
-    } else {
-        // Quadrant 3, 4, 5, 6 cases
-        // Quadrant 3, 4
-        if (e.1 >= s.1) {
-            // Quadrant 3
-            if (e.1 - s.1 > s.0 - e.0) {
-                draw_oct7(img, pix, e, s);
-            }
-            // Quadrant 4
-            else {
-                draw_oct8(img, pix, e, s);
-            }
-        } else {
-            // Quadrant 5, 6
-            // Quadrant 6
-            if (s.1 - e.1 > s.0 - e.0) {
-                draw_oct2(img, pix, e, s);
-            }
-            // Quadrant 5
-            else {
-                draw_oct1(img, pix, e, s);
-            }
-        }
     }
 }
 

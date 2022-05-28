@@ -35,38 +35,6 @@ pub fn add_box(poly: &mut Matrix, c: (f32, f32, f32), w: f32, h: f32, d: f32) {
     poly.add_triangle((x2, y2, z2), (x7, y7, z7), (x4, y4, z4));
 }
 
-/// Function that generates the points in a sphere
-pub fn gen_sphere(c: (f32, f32, f32), r: f32, itr: u32) -> Matrix {
-    // Error checking
-    if (r < 0.0) {
-        eprintln!("Radius of sphere can not be negative, returning default value");
-        return Matrix::new_matrix();
-    }
-
-    // Variable declaration
-    let mut ret: Matrix = Matrix::new_matrix();
-
-    // Getting points on the surface
-    for i in 0..itr {
-        for q in 0..=itr {
-            // Angle variables
-            let phi: f32 = 2.0 * PI * (i as f32) / (itr as f32);
-            let theta: f32 = PI * (q as f32) / (itr as f32);
-
-            // Point coordinates
-            let nx: f32 = r * f32::cos(theta) + c.0;
-            let ny: f32 = r * f32::sin(theta) * f32::cos(phi) + c.1;
-            let nz: f32 = r * f32::sin(theta) * f32::sin(phi) + c.2;
-
-            // Saving points
-            ret.add_col(&[nx, ny, nz, 1.0]);
-        }
-    }
-
-    // Exiting function
-    ret
-}
-
 /// Function that adds triangles representing a sphere to a matrix of triangles
 pub fn add_sphere(poly: &mut Matrix, c: (f32, f32, f32), r: f32, itr: u32) {
     // Error checking
@@ -118,11 +86,11 @@ pub fn add_sphere(poly: &mut Matrix, c: (f32, f32, f32), r: f32, itr: u32) {
     }
 }
 
-/// Function that generates the points in a torus
-pub fn gen_torus(c: (f32, f32, f32), r1: f32, r2: f32, itr: u32) -> Matrix {
+/// Function that generates the points in a sphere
+pub fn gen_sphere(c: (f32, f32, f32), r: f32, itr: u32) -> Matrix {
     // Error checking
-    if (r1 < 0.0 || r2 < 0.0) {
-        eprintln!("Radii of the torus can not be negative, returning default value");
+    if (r < 0.0) {
+        eprintln!("Radius of sphere can not be negative, returning default value");
         return Matrix::new_matrix();
     }
 
@@ -134,12 +102,12 @@ pub fn gen_torus(c: (f32, f32, f32), r1: f32, r2: f32, itr: u32) -> Matrix {
         for q in 0..=itr {
             // Angle variables
             let phi: f32 = 2.0 * PI * (i as f32) / (itr as f32);
-            let theta: f32 = 2.0 * PI * (q as f32) / (itr as f32);
+            let theta: f32 = PI * (q as f32) / (itr as f32);
 
             // Point coordinates
-            let nx: f32 = f32::cos(phi) * (r1 * f32::cos(theta) + r2) + c.0;
-            let ny: f32 = r1 * f32::sin(theta) + c.1;
-            let nz: f32 = (-f32::sin(phi)) * (r1 * f32::cos(theta) + r2) + c.2;
+            let nx: f32 = r * f32::cos(theta) + c.0;
+            let ny: f32 = r * f32::sin(theta) * f32::cos(phi) + c.1;
+            let nz: f32 = r * f32::sin(theta) * f32::sin(phi) + c.2;
 
             // Saving points
             ret.add_col(&[nx, ny, nz, 1.0]);
@@ -227,4 +195,36 @@ pub fn normal(poly: &Matrix, ind: usize) -> (f32, f32, f32) {
         (v1.2 * v2.0) - (v1.0 * v2.2),
         (v1.0 * v2.1) - (v1.1 * v2.0),
     )
+}
+
+/// Function that generates the points in a torus
+pub fn gen_torus(c: (f32, f32, f32), r1: f32, r2: f32, itr: u32) -> Matrix {
+    // Error checking
+    if (r1 < 0.0 || r2 < 0.0) {
+        eprintln!("Radii of the torus can not be negative, returning default value");
+        return Matrix::new_matrix();
+    }
+
+    // Variable declaration
+    let mut ret: Matrix = Matrix::new_matrix();
+
+    // Getting points on the surface
+    for i in 0..itr {
+        for q in 0..=itr {
+            // Angle variables
+            let phi: f32 = 2.0 * PI * (i as f32) / (itr as f32);
+            let theta: f32 = 2.0 * PI * (q as f32) / (itr as f32);
+
+            // Point coordinates
+            let nx: f32 = f32::cos(phi) * (r1 * f32::cos(theta) + r2) + c.0;
+            let ny: f32 = r1 * f32::sin(theta) + c.1;
+            let nz: f32 = (-f32::sin(phi)) * (r1 * f32::cos(theta) + r2) + c.2;
+
+            // Saving points
+            ret.add_col(&[nx, ny, nz, 1.0]);
+        }
+    }
+
+    // Exiting function
+    ret
 }

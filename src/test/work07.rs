@@ -1,5 +1,5 @@
 // Imports
-use crate::format::file;
+use crate::format::util;
 use crate::template::work07;
 
 /// Testing out work07 stuff
@@ -9,8 +9,8 @@ fn test_work07() {
     work07::create_work07_images(1);
 
     // Making sure image files exist
-    assert!(file::file_exists("image/script/w07_robot.png"));
-    assert!(file::file_exists("image/ppm/w07_spiralchain.ppm"));
-    assert!(file::file_exists("image/ppm/w07_olympics.ppm"));
-    assert!(file::file_exists("image/script/w07_umbrella.png"));
+    assert!(util::file_exists("image/script/w07_robot.png"));
+    assert!(util::file_exists("image/ppm/w07_spiralchain.ppm"));
+    assert!(util::file_exists("image/ppm/w07_olympics.ppm"));
+    assert!(util::file_exists("image/script/w07_umbrella.png"));
 }

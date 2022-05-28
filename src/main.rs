@@ -8,9 +8,16 @@ mod script;
 use std::io;
 mod template;
 mod test;
+use std::fs;
 
 // Main function
 fn main() {
+    // Signal handling
+    ctrlc::set_handler(move || {
+        end_program();
+    })
+    .expect("Error setting Ctrl-C handler");
+
     // Running the current assignment
     // template::work00::create_work00_images(0);
     // template::work01::create_work01_images(0);
@@ -47,6 +54,17 @@ fn main() {
         path.clear();
     }
 
+    // Exiting program
+    end_program();
+}
+
+fn end_program() {
+    // Cleaning some things up
+    fs::remove_dir_all("temp").expect("Unable to remove temp directory");
+
     // Ending message
     println!("\nThanks for using this graphics engine made by Mohammad Khan\n");
+
+    // Terminating Program
+    std::process::exit(0);
 }

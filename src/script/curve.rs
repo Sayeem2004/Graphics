@@ -1,149 +1,86 @@
 // Imports
-use crate::prev::ver09::algorithm::curve;
-use crate::prev::ver09::format::{constant, image::Image, matrix::Matrix};
+use crate::algorithm::curve;
+use crate::format::{constant, image::Image, matrix::Matrix};
+use crate::script::compile::{Argument, Operation};
 
 /// Function that performs the 'bezier' command
-pub fn bezier(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
-    // Splitting the argument string
-    let split = arg.split(' ');
-
-    // Checking if each argument is a number
-    for str in split {
-        let num = str.parse::<f32>();
-        match num {
-            Ok(_) => {
-                continue;
-            }
-            Err(_) => {
-                eprintln!(
-                    "A \'bezier\' argument found at line {} is not a number",
-                    ind + 1
-                );
-                return;
-            }
-        }
-    }
-
-    // Converting to floats
-    let nums: Vec<f32> = arg
-        .split(' ')
-        .map(|x| x.parse::<f32>().unwrap())
-        .collect::<Vec<f32>>();
-
-    // Checking if right number of floats is found
-    if (nums.len() != 8) {
-        eprintln!(
-            "\'bezier\' expected 8 numerical arguments, but {} were found",
-            nums.len()
-        );
-        return;
-    }
-
-    // Adding bezier to image
+pub fn bezier(op: &Operation, cord: &Matrix, img: &mut Image) {
+    // Getting edge matrix
+    let args: &Vec<Argument> = op.args.as_ref().unwrap();
     let mut edge: Matrix = Matrix::new_matrix();
     curve::add_bezier(
         &mut edge,
-        (nums[0], nums[1]),
-        (nums[2], nums[3]),
-        (nums[4], nums[5]),
-        (nums[6], nums[7]),
+        (*args[0].as_float().unwrap(), *args[1].as_float().unwrap()),
+        (*args[2].as_float().unwrap(), *args[3].as_float().unwrap()),
+        (*args[4].as_float().unwrap(), *args[5].as_float().unwrap()),
+        (*args[6].as_float().unwrap(), *args[7].as_float().unwrap()),
         100,
     );
+
+    // Transforming matrix and adding bezier to image
     edge.left_transform(cord);
     edge.draw_lines_xy(img, constant::WHITE_PIXEL);
 }
 
 /// Function that performs the 'circle' command
-pub fn circle(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
-    // Splitting the argument string
-    let split = arg.split(' ');
-
-    // Checking if each argument is a number
-    for str in split {
-        let num = str.parse::<f32>();
-        match num {
-            Ok(_) => {
-                continue;
-            }
-            Err(_) => {
-                eprintln!(
-                    "A \'circle\' argument found at line {} is not a number",
-                    ind + 1
-                );
-                return;
-            }
-        }
-    }
-
-    // Converting to floats
-    let nums: Vec<f32> = arg
-        .split(' ')
-        .map(|x| x.parse::<f32>().unwrap())
-        .collect::<Vec<f32>>();
-
-    // Checking if right number of floats is found
-    if (nums.len() != 4) {
-        eprintln!(
-            "\'circle\' expected 4 numerical arguments, but {} were found",
-            nums.len()
-        );
-        return;
-    }
-
-    // Adding circle to image
+pub fn circle(op: &Operation, cord: &Matrix, img: &mut Image) {
+    // Getting edge matrix
+    let args: &Vec<Argument> = op.args.as_ref().unwrap();
     let mut edge: Matrix = Matrix::new_matrix();
-    curve::add_circle(&mut edge, (nums[0], nums[1], nums[2]), nums[3], 100);
+    curve::add_circle(
+        &mut edge,
+        (
+            *args[0].as_float().unwrap(),
+            *args[1].as_float().unwrap(),
+            *args[2].as_float().unwrap(),
+        ),
+        *args[3].as_float().unwrap(),
+        100,
+    );
+
+    // Transforming matrix and adding circle to image
     edge.left_transform(cord);
     edge.draw_lines_xy(img, constant::WHITE_PIXEL);
 }
 
 /// Function that performs the 'hermite' command
-pub fn hermite(arg: &str, ind: usize, cord: &Matrix, img: &mut Image) {
-    // Splitting the argument string
-    let split = arg.split(' ');
-
-    // Checking if each argument is a number
-    for str in split {
-        let num = str.parse::<f32>();
-        match num {
-            Ok(_) => {
-                continue;
-            }
-            Err(_) => {
-                eprintln!(
-                    "A \'hermite\' argument found at line {} is not a number",
-                    ind + 1
-                );
-                return;
-            }
-        }
-    }
-
-    // Converting to floats
-    let nums: Vec<f32> = arg
-        .split(' ')
-        .map(|x| x.parse::<f32>().unwrap())
-        .collect::<Vec<f32>>();
-
-    // Checking if right number of floats is found
-    if (nums.len() != 8) {
-        eprintln!(
-            "\'hermite\' expected 8 numerical arguments, but {} were found",
-            nums.len()
-        );
-        return;
-    }
-
-    // Adding hermite to image
+pub fn hermite(op: &Operation, cord: &Matrix, img: &mut Image) {
+    // Getting edge matrix
+    let args: &Vec<Argument> = op.args.as_ref().unwrap();
     let mut edge: Matrix = Matrix::new_matrix();
     curve::add_hermite(
         &mut edge,
-        (nums[0], nums[1]),
-        (nums[2], nums[3]),
-        (nums[4], nums[5]),
-        (nums[6], nums[7]),
+        (*args[0].as_float().unwrap(), *args[1].as_float().unwrap()),
+        (*args[2].as_float().unwrap(), *args[3].as_float().unwrap()),
+        (*args[4].as_float().unwrap(), *args[5].as_float().unwrap()),
+        (*args[6].as_float().unwrap(), *args[7].as_float().unwrap()),
         100,
     );
+
+    // Transforming matrix and adding hermite to image
+    edge.left_transform(cord);
+    edge.draw_lines_xy(img, constant::WHITE_PIXEL);
+}
+
+/// Function that performs the 'line' operation
+pub fn line(op: &Operation, cord: &Matrix, img: &mut Image) {
+    // Getting edge matrix
+    let args: &Vec<Argument> = op.args.as_ref().unwrap();
+    let mut edge: Matrix = Matrix::new_matrix();
+    edge.add_edge(
+        (
+            *args[0].as_float().unwrap(),
+            *args[1].as_float().unwrap(),
+            *args[2].as_float().unwrap(),
+        ),
+        (
+            *args[3].as_float().unwrap(),
+            *args[4].as_float().unwrap(),
+            *args[5].as_float().unwrap(),
+        ),
+    );
+
+    // Transforming matrix and drawing line
     edge.left_transform(cord);
     edge.draw_lines_xy(img, constant::WHITE_PIXEL);
 }

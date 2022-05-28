@@ -16,6 +16,27 @@ pub fn _move(op: &Operation, cord: &mut Matrix) {
     cord.right_transform(&trans);
 }
 
+/// Function that performs the 'pop' operation
+pub fn pop(stack: &mut Vec<Matrix>, sz: &mut usize) {
+    // Removing top of stack
+    stack.pop();
+
+    // Updating stack size
+    *sz -= 1;
+}
+
+/// Function that performs the 'push' operation
+pub fn push(stack: &mut Vec<Matrix>, sz: &mut usize) {
+    // Making copy of top
+    let copy: Matrix = stack[*sz - 1].clone();
+
+    // Adding copy to top of stack
+    stack.push(copy);
+
+    // Updating stack size
+    *sz += 1;
+}
+
 /// Function that performs the 'rotate' command
 pub fn rotate(op: &Operation, cord: &mut Matrix) {
     // Getting rotation matrix

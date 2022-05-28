@@ -38,7 +38,11 @@ tokens = (
     "DISPLAY",
     "SCREEN",
     "WEB",
-    "CO"
+    "CO",
+    "CLEAR",
+    "CIRCLE",
+    "BEZIER",
+    "HERMITE"
 )
 
 reserved = {
@@ -79,7 +83,11 @@ reserved = {
     "setknobs" : "SET_KNOBS",
     "focal" : "FOCAL",
     "display" : "DISPLAY",
-    "web" : "WEB"
+    "web" : "WEB",
+    "clear" : "CLEAR",
+    "circle" : "CIRCLE",
+    "bezier" : "BEZIER",
+    "hermite" : "HERMITE"
 }
 
 t_ignore = " \t"
@@ -162,6 +170,10 @@ def p_command_show(p):
     """command : DISPLAY"""
     commands.append({'op' : p[1], 'args' : None})
 
+def p_command_clear(p):
+    """command : CLEAR"""
+    commands.append({'op' : p[1], 'args' : None})
+
 def p_command_sphere(p):
     """command : SPHERE NUMBER NUMBER NUMBER NUMBER
                | SPHERE SYMBOL NUMBER NUMBER NUMBER NUMBER
@@ -239,6 +251,21 @@ def p_command_line(p):
         cmd['cs1'] = p[9]
     if len(p) == 11 and isinstance(p[10], str):
         cmd['cs1'] = p[10]
+    commands.append(cmd)
+
+def p_command_circle(p):
+    """command : CIRCLE NUMBER NUMBER NUMBER NUMBER"""
+    cmd = {'op' : p[1], 'args': p[2:6]}
+    commands.append(cmd)
+
+def p_command_bezier(p):
+    """command : BEZIER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER"""
+    cmd = {'op' : p[1], 'args': p[2:10]}
+    commands.append(cmd)
+
+def p_command_hermite(p):
+    """command : HERMITE NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER"""
+    cmd = {'op' : p[1], 'args': p[2:10]}
     commands.append(cmd)
 
 def p_command_move(p):
@@ -361,7 +388,6 @@ def p_save_coords(p):
     cmd = {'op':p[1], 'args':None, 'cs':p[2]}
     symbols[p[2]] = ['coord_sys', []]
     commands.append(cmd)
-
 
 def p_tween(p):
     "command : TWEEN NUMBER NUMBER SYMBOL SYMBOL"

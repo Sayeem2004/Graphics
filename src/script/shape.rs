@@ -2,8 +2,8 @@
 use crate::algorithm::shape;
 use crate::format::{constant, image::Image, matrix::Matrix, pixel::Pixel};
 use crate::script::{
-    compile,
     compile::{Operation, Symbol},
+    light,
 };
 use std::collections::HashMap;
 
@@ -28,7 +28,16 @@ pub fn _box(
 
     // Getting lighting constants if found and is correct
     let constants: (f32, f32, f32, f32, f32, f32, f32, f32, f32) = if (fnd) {
-        compile::constants_to_tuple(symbols.get(&name).unwrap())
+        match symbols.get(&name) {
+            None => {
+                eprintln!(
+                    "Symbol {} could not be found in symbol table, using default value",
+                    name
+                );
+                constant::EQV
+            }
+            Some(_) => light::constants_to_tuple(symbols.get(&name).unwrap()),
+        }
     } else {
         constant::EQV
     };
@@ -80,7 +89,16 @@ pub fn sphere(
 
     // Getting lighting constants if found and is correct
     let constants: (f32, f32, f32, f32, f32, f32, f32, f32, f32) = if (fnd) {
-        compile::constants_to_tuple(symbols.get(&name).unwrap())
+        match symbols.get(&name) {
+            None => {
+                eprintln!(
+                    "Symbol {} could not be found in symbol table, using default value",
+                    name
+                );
+                constant::EQV
+            }
+            Some(_) => light::constants_to_tuple(symbols.get(&name).unwrap()),
+        }
     } else {
         constant::EQV
     };
@@ -131,7 +149,16 @@ pub fn torus(
 
     // Getting lighting constants if found and is correct
     let constants: (f32, f32, f32, f32, f32, f32, f32, f32, f32) = if (fnd) {
-        compile::constants_to_tuple(symbols.get(&name).unwrap())
+        match symbols.get(&name) {
+            None => {
+                eprintln!(
+                    "Symbol {} could not be found in symbol table, using default value",
+                    name
+                );
+                constant::EQV
+            }
+            Some(_) => light::constants_to_tuple(symbols.get(&name).unwrap()),
+        }
     } else {
         constant::EQV
     };
@@ -155,7 +182,7 @@ pub fn torus(
     poly.left_transform(cord);
     poly.draw_triangles_xy(
         img,
-        Pixel::new_scale(0.25),
+        Pixel::new_scale(0.5),
         &[(Pixel::new_scale(1.0), 750.0, 750.0, 750.0)],
         constant::ZVIEW,
         constants,

@@ -1,5 +1,5 @@
 // Imports
-use crate::format::{constant, file};
+use crate::format::util;
 use crate::script::parse;
 use enum_as_inner::EnumAsInner;
 use serde::{Deserialize, Serialize};
@@ -62,7 +62,7 @@ pub enum Symbol {
 /// Function that compiles a given script file and outputs an image
 pub fn compile(path: &str, size: i32, mode: i32) {
     // Making sure the script file exists
-    if (!file::file_exists(path)) {
+    if (!util::file_exists(path)) {
         eprintln!(
             "Script file {} does not exist, ending compiling attempt",
             path
@@ -106,14 +106,14 @@ pub fn compile(path: &str, size: i32, mode: i32) {
     }
 
     // Error checking paths
-    if (!file::file_exists(operation_path)) {
+    if (!util::file_exists(operation_path)) {
         eprintln!(
             "operation file {} does not exist, ending compiling attempt",
             operation_path
         );
         return;
     }
-    if (!file::file_exists(symbol_path)) {
+    if (!util::file_exists(symbol_path)) {
         eprintln!(
             "Symbol file {} does not exist, ending compiling attempt",
             symbol_path
@@ -134,32 +134,6 @@ pub fn compile(path: &str, size: i32, mode: i32) {
     parse::parse(operations, symbols, size, mode);
 
     // // Deleting operation and symbol file
-    // fs::remove_file(operation_path).expect("Unable to delete temporary command file");
-    // fs::remove_file(symbol_path).expect("Unable to delete temporary symbol file");
-}
-
-/// Function that converts lighting constants struct into a tuple
-pub fn constants_to_tuple(
-    constants: &Vec<Symbol>,
-) -> (f32, f32, f32, f32, f32, f32, f32, f32, f32) {
-    // Error checking
-    let typ = constants[0].as_string().unwrap();
-    if (!typ.eq("constants")) {
-        eprintln!("Symbol table element type is not constants, returning default value");
-        return constant::EQV;
-    }
-
-    // Making and returning tuple of elements
-    let lighting: &Lighting = constants[1].as_lighting().unwrap();
-    (
-        lighting.red[0],
-        lighting.green[0],
-        lighting.blue[0],
-        lighting.red[1],
-        lighting.green[1],
-        lighting.blue[1],
-        lighting.red[2],
-        lighting.green[2],
-        lighting.blue[2],
-    )
+    fs::remove_file(operation_path).expect("Unable to delete temporary command file");
+    fs::remove_file(symbol_path).expect("Unable to delete temporary symbol file");
 }

@@ -15,7 +15,6 @@ convert:
 # Cleaning up directories
 clean:
 	cargo clean
-	rm -rf temp
 	rm -rf src/compiler/__pycache__
 	rm -rf src/compiler/ply/__pycache__
 

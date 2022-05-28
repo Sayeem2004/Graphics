@@ -1,7 +1,7 @@
 use crate::format::{image::Image, matrix::Matrix};
 use crate::script::{
     compile::{Operation, Symbol},
-    shape, transform, util,
+    curve, light, shape, transform, util,
 };
 use std::collections::HashMap;
 
@@ -26,7 +26,7 @@ pub fn parse(
         match operations[curr].op.as_ref().unwrap().as_str() {
             // Line command
             "line" => {
-                util::line(&operations[curr], &stack[stack.len() - 1], &mut img);
+                curve::line(&operations[curr], &stack[stack.len() - 1], &mut img);
                 curr += 1;
             }
 
@@ -36,6 +36,11 @@ pub fn parse(
                 curr += 1;
             }
 
+            // Clear command
+            "clear" => {
+                util::clear(&mut img);
+                curr += 1;
+            }
             // Scale command
             "scale" => {
                 transform::scale(&operations[curr], &mut stack[sz - 1]);
@@ -93,21 +98,121 @@ pub fn parse(
                 curr += 1;
             }
 
+            // Circle command
+            "circle" => {
+                curve::circle(&operations[curr], &stack[stack.len() - 1], &mut img);
+                curr += 1;
+            }
+
+            // Bezier command
+            "bezier" => {
+                curve::bezier(&operations[curr], &stack[stack.len() - 1], &mut img);
+                curr += 1;
+            }
+
+            // Hermite command
+            "hermite" => {
+                curve::hermite(&operations[curr], &stack[stack.len() - 1], &mut img);
+                curr += 1;
+            }
+
             // Push command
             "push" => {
-                util::push(&mut stack, &mut sz);
+                transform::push(&mut stack, &mut sz);
                 curr += 1;
             }
 
             // Pop command
             "pop" => {
-                util::pop(&mut stack, &mut sz);
+                transform::pop(&mut stack, &mut sz);
                 curr += 1;
             }
 
             // Constants command
             "constants" => {
-                util::constants(&operations[curr], &symbols);
+                light::constants(&operations[curr], &symbols);
+                curr += 1;
+            }
+
+            // Camera command
+            "camera" => {
+                eprintln!("The command \'camera\' is not implemented, no actions performed");
+                curr += 1;
+            }
+
+            // Light command
+            "light" => {
+                eprintln!("The command \'light\' is not implemented, no actions performed");
+                curr += 1;
+            }
+
+            // Mesh command
+            "mesh" => {
+                eprintln!("The command \'mesh\' is not implemented, no actions performed");
+                curr += 1;
+            }
+
+            // Set command
+            "set" => {
+                eprintln!("The command \'set\' is not implemented, no actions performed");
+                curr += 1;
+            }
+
+            // Basename command
+            "basename" => {
+                eprintln!("The command \'basename\' is not implemented, no actions performed");
+                curr += 1;
+            }
+
+            // Save knobs command
+            "save_knobs" => {
+                eprintln!("The command \'save_knobs\' is not implemented, no actions performed");
+                curr += 1;
+            }
+
+            // Tween command
+            "tween" => {
+                eprintln!("The command \'tween\' is not implemented, no actions performed");
+                curr += 1;
+            }
+
+            // Generate rayfiles command
+            "generate_rayfiles" => {
+                eprintln!(
+                    "The command \'generate_rayfiles\' is not implemented, no actions performed"
+                );
+                curr += 1;
+            }
+
+            // Shading command
+            "shading" => {
+                eprintln!("The command \'shading\' is not implemented, no actions performed");
+                curr += 1;
+            }
+
+            // Save coord system command
+            "save_coord_system" => {
+                eprintln!(
+                    "The command \'save_coord_system\' is not implemented, no actions performed"
+                );
+                curr += 1;
+            }
+
+            // Focal command
+            "focal" => {
+                eprintln!("The command \'focal\' is not implemented, no actions performed");
+                curr += 1;
+            }
+
+            // Set knobs command
+            "setknobs" => {
+                eprintln!("The command \'setknobs\' is not implemented, no actions performed");
+                curr += 1;
+            }
+
+            // Ambient command
+            "ambient" => {
+                eprintln!("The command \'ambient\' is not implemented, no actions performed");
                 curr += 1;
             }
 
