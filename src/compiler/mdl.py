@@ -42,7 +42,7 @@ tokens = (
     "CLEAR",
     "CIRCLE",
     "BEZIER",
-    "HERMITE"
+    "HERMITE",
 )
 
 reserved = {
@@ -158,7 +158,7 @@ def p_command_screen(p):
     """command : SCREEN NUMBER NUMBER
                  | SCREEN"""
     if len(p) == 2:
-        commands.append({'op' : p[1], 'width' : 500, 'height': 500})
+        commands.append({'op' : p[1], 'width' : 750, 'height': 750})
     else:
         commands.append({'op' : p[1], 'width' : p[2], 'height': p[3]})
 

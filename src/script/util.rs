@@ -1,8 +1,36 @@
 // Imports
+use crate::compiler::{Operation, Symbol};
 use crate::format::{constant, image::Image, util};
-use crate::script::compile::Operation;
+use crate::script::parse::ImageInfo;
 use rand::Rng;
-use std::{fs, process::Command};
+use std::{collections::HashMap, fs, process::Command};
+
+/// Function that performs the 'basename' command
+pub fn basename(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>, info: &mut ImageInfo) {
+    // Getting string argument
+    let name = (&op.args.as_ref().unwrap()[0]).as_string().unwrap();
+
+    // Checking if it is in symbol table
+    match symbols.get(name) {
+        // If name is not in symbol table just use the string input as basename
+        None => {
+            info.basename = Some((*name).clone());
+        }
+
+        // if name is in symbol table try to use the symbol value as the basename
+        Some(list) => {
+            if (list.len() <= 1) {
+                eprintln!(
+                    "Symbol {} has a descriptor but no value, using default value",
+                    *name
+                );
+                info.basename = Some((*name).clone());
+            } else {
+                info.basename = Some((*list[1].as_string().unwrap()).clone());
+            }
+        }
+    }
+}
 
 /// Function that returns the image to default black and clears the zbuffer
 pub fn clear(img: &mut Image) {
@@ -41,6 +69,20 @@ pub fn display(img: &Image, mode: i32) {
     fs::remove_file(&name).expect("Unable to delete temporary display file");
 }
 
+/// Function that performs the 'frames' operation
+pub fn frames(op: &Operation, info: &mut ImageInfo) {
+    // Error checking
+    let frames = *op.args.as_ref().unwrap()[0].as_float().unwrap() as i32;
+    if (frames < 1) {
+        eprintln!("Number of frames specified is less than 1, using default value");
+        info.num_frames = info.num_frames.max(frames);
+        return;
+    }
+
+    // Exiting function
+    info.num_frames = frames;
+}
+
 /// Function that performs the 'save' operation
 pub fn save(op: &Operation, img: &Image) {
     // Attempting to create image directory
@@ -73,4 +115,55 @@ pub fn save(op: &Operation, img: &Image) {
 
     // Removing temporary file
     fs::remove_file(&name).expect("Unable to delete temporary save file");
+}
+
+/// Function that performs the 'screen' operation
+pub fn screen(op: &Operation, info: &mut ImageInfo) {
+    // // Getting number arguments
+    let width: i32 = *op.width.as_ref().unwrap() as i32;
+    let height: i32 = *op.height.as_ref().unwrap() as i32;
+
+    // Exiting function
+    info.width = width;
+    info.height = height;
+}
+
+/// Function that performs the 'vary' command
+pub fn vary(op: &Operation, frames: &mut Vec<HashMap<String, f32>>) {
+    // Error checking knob
+    if (op.knob == None) {
+        eprintln!("Knob name is empty, no changes made");
+        return;
+    }
+    let knob = (*op.knob.as_ref().unwrap()).clone();
+
+    // Getting number arguments
+    let mut start_frame: i32 = *(&op.args.as_ref().unwrap()[0]).as_float().unwrap() as i32;
+    let mut end_frame: i32 = *(&op.args.as_ref().unwrap()[1]).as_float().unwrap() as i32;
+    let start_val: f32 = *(&op.args.as_ref().unwrap()[2]).as_float().unwrap();
+    let end_val: f32 = *(&op.args.as_ref().unwrap()[3]).as_float().unwrap();
+
+    // Error checking frame values
+    if (start_frame < 0) {
+        eprintln!("Start frame is negative, using default value");
+        start_frame = 0;
+    }
+    if (end_frame >= (frames.len()) as i32) {
+        eprintln!("End frame is greater than number of frames, using default value");
+        end_frame = (frames.len() - 1) as i32;
+    }
+
+    // Adding knob values to vector
+    let mut i = 0;
+    let mx = end_frame - start_frame;
+    while (i <= mx) {
+        // Adding value to vector
+        frames[(start_frame + i) as usize].insert(
+            knob.clone(),
+            start_val + (end_val - start_val) * (i as f32 / mx as f32),
+        );
+
+        // Iterating once
+        i += 1;
+    }
 }

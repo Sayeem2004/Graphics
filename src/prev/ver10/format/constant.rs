@@ -1,5 +1,5 @@
 // Imports
-use crate::format::{matrix::Matrix, pixel::Pixel};
+use crate::prev::ver10::format::{matrix::Matrix, pixel::Pixel};
 use lazy_static::lazy_static;
 
 /// Common color constants
@@ -67,38 +67,3 @@ pub const EQV: (f32, f32, f32, f32, f32, f32, f32, f32, f32) =
 
 // Specular lighting cosine power
 pub const EXP: f32 = 3_f32;
-
-// List of all possible script command
-pub const CMDS: [&str; 31] = [
-    "ambient",
-    "basename",
-    "bezier",
-    "box",
-    "camera",
-    "circle",
-    "clear",
-    "constants",
-    "display",
-    "focal",
-    "frames",
-    "generate_rayfiles",
-    "hermite",
-    "light",
-    "line",
-    "mesh",
-    "move",
-    "pop",
-    "push",
-    "rotate",
-    "save",
-    "save_coord_system",
-    "save_knobs",
-    "scale",
-    "set",
-    "setknobs",
-    "shading",
-    "sphere",
-    "torus",
-    "tween",
-    "vary",
-];

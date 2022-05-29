@@ -1,4 +1,5 @@
 // Module structure
+pub mod compile;
 pub mod curve;
 pub mod light;
 pub mod parse;

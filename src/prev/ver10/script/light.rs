@@ -1,6 +1,6 @@
 // Imports
-use crate::compiler::{Lighting, Operation, Symbol};
-use crate::format::constant;
+use crate::prev::ver10::format::constant;
+use crate::prev::ver10::script::compile::{Lighting, Operation, Symbol};
 use std::collections::HashMap;
 
 /// Function that checks that a certain constant exists in the symbol table
@@ -20,12 +20,6 @@ pub fn constants_to_tuple(constants: &[Symbol]) -> (f32, f32, f32, f32, f32, f32
     let typ = constants[0].as_string().unwrap();
     if (!typ.eq("constants")) {
         eprintln!("Symbol table element type is not constants, returning default value");
-        return constant::EQV;
-    }
-    if (constants.len() <= 1) {
-        eprintln!(
-            "Symbol table element does not have a lighting structure, returning default value"
-        );
         return constant::EQV;
     }
 

@@ -1,4 +1,5 @@
-use crate::script::compile;
+// Imports
+use crate::prev::ver10::script::compile;
 
 /// Function that creates all images from work 10
 pub fn create_work10_images(mode: i32) {

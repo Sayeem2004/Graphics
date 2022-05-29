@@ -2,6 +2,7 @@
 #![allow(unused_parens)]
 #![allow(dead_code)]
 mod algorithm;
+mod compiler;
 mod format;
 mod prev;
 mod script;
@@ -14,7 +15,7 @@ use std::fs;
 fn main() {
     // Signal handling
     ctrlc::set_handler(move || {
-        println!("");
+        println!();
         end_program();
     })
     .expect("Error setting Ctrl-C handler");
@@ -30,7 +31,8 @@ fn main() {
     // template::work07::create_work07_images(0);
     // template::work08::create_work08_images(0);
     // template::work09::create_work09_images(0);
-    template::work10::create_work10_images(0);
+    // template::work10::create_work10_images(0);
+    template::work11::create_work11_images(0);
 
     // Variable Declarations
     let mut path: String = String::new();
@@ -48,7 +50,7 @@ fn main() {
             break;
         } else {
             // Parsing a script file and making an image
-            script::compile::compile(&path, 750, 0);
+            compiler::compile(&path, 0);
         }
 
         // Resetting variable

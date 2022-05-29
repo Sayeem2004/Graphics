@@ -1,6 +1,6 @@
 // Imports
 use crate::format::util;
-use crate::script::parse;
+use crate::script::{parse, parse::ImageInfo};
 use enum_as_inner::EnumAsInner;
 use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, fs, process::Command};
@@ -21,6 +21,8 @@ pub struct Operation {
     pub cs: Option<String>,
     pub knob: Option<String>,
     pub op: Option<String>,
+    pub width: Option<f32>,
+    pub height: Option<f32>,
 }
 
 /// Struct to store camera constants
@@ -60,7 +62,7 @@ pub enum Symbol {
 }
 
 /// Function that compiles a given script file and outputs an image
-pub fn compile(path: &str, size: i32, mode: i32) {
+pub fn compile(path: &str, mode: i32) {
     // Making sure the script file exists
     if (!util::file_exists(path)) {
         eprintln!(
@@ -127,13 +129,42 @@ pub fn compile(path: &str, size: i32, mode: i32) {
     let symbol_string = fs::read_to_string(symbol_path).expect("Unable to read symbol json file");
 
     // Making operations list and symbol table from json string
-    let operations: Vec<Operation> = serde_json::from_str(&operation_string).unwrap();
-    let symbols: HashMap<String, Vec<Symbol>> = serde_json::from_str(&symbol_string).unwrap();
+    let mut operations: Vec<Operation> = serde_json::from_str(&operation_string).unwrap();
+    let mut symbols: HashMap<String, Vec<Symbol>> = serde_json::from_str(&symbol_string).unwrap();
 
-    // Sending operations list and symbol table to parser to complete image
-    parse::parse(operations, symbols, size, mode);
+    // // Sending operations list and symbol table to generate function to create output
+    generate(&mut operations, &mut symbols, mode);
 
-    // // Deleting operation and symbol file
+    // Deleting operation and symbol file
     fs::remove_file(operation_path).expect("Unable to delete temporary command file");
     fs::remove_file(symbol_path).expect("Unable to delete temporary symbol file");
+}
+
+pub fn generate(
+    operations: &mut Vec<Operation>,
+    symbols: &mut HashMap<String, Vec<Symbol>>,
+    mode: i32,
+) {
+    // Running initial parse and getting image/animate info
+    let mut info: &mut ImageInfo = &mut parse::initial_parse(operations, symbols);
+
+    // Checking to see if animation is needed or not
+    if (info.num_frames > 1) {
+        // Error checking basename
+        if (info.basename == None) {
+            eprintln!("No basename provided in script, using default value");
+            info.basename = Some(String::from("default"));
+        }
+
+        // Getting knob values from various frames
+        let frames: Vec<HashMap<String, f32>> = parse::vary_parse(operations, info);
+
+        // Sending things through animation parser
+        info.animate = true;
+        parse::animate_parse(operations, symbols, info, frames, mode);
+    } else {
+        // If no animation is needed just send it through regular parser
+        info.animate = false;
+        parse::draw_parse(operations, symbols, info, mode);
+    }
 }

@@ -1,7 +1,7 @@
 // Imports
-use crate::algorithm::curve;
-use crate::compiler::{Argument, Operation};
-use crate::format::{constant, image::Image, matrix::Matrix};
+use crate::prev::ver10::algorithm::curve;
+use crate::prev::ver10::format::{constant, image::Image, matrix::Matrix};
+use crate::prev::ver10::script::compile::{Argument, Operation};
 
 /// Function that performs the 'bezier' command
 pub fn bezier(op: &Operation, cord: &Matrix, img: &mut Image) {

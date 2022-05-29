@@ -1,8 +1,10 @@
 // Imports
-use crate::algorithm::shape;
-use crate::compiler::{Operation, Symbol};
-use crate::format::{constant, image::Image, matrix::Matrix, pixel::Pixel};
-use crate::script::light;
+use crate::prev::ver10::algorithm::shape;
+use crate::prev::ver10::format::{constant, image::Image, matrix::Matrix, pixel::Pixel};
+use crate::prev::ver10::script::{
+    compile::{Operation, Symbol},
+    light,
+};
 use std::collections::HashMap;
 
 /// Function that performs the 'box' command
