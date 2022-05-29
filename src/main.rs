@@ -14,6 +14,7 @@ use std::fs;
 fn main() {
     // Signal handling
     ctrlc::set_handler(move || {
+        println!("");
         end_program();
     })
     .expect("Error setting Ctrl-C handler");
@@ -60,7 +61,9 @@ fn main() {
 
 fn end_program() {
     // Cleaning some things up
-    fs::remove_dir_all("temp").expect("Unable to remove temp directory");
+    if (format::util::file_exists("temp")) {
+        fs::remove_dir_all("temp").expect("Unable to remove temp directory");
+    }
 
     // Ending message
     println!("\nThanks for using this graphics engine made by Mohammad Khan\n");

@@ -12,20 +12,7 @@ pub fn calculate(
 ) -> Pixel {
     // Variable declarations
     let (mut fr, mut fg, mut fb): (u32, u32, u32) = (0, 0, 0);
-    let (kra, kga, kba, krd, kgd, kbd, krs, kgs, kbs): (
-        f32,
-        f32,
-        f32,
-        f32,
-        f32,
-        f32,
-        f32,
-        f32,
-        f32,
-    ) = scale9(
-        div,
-        3.0 / (div.0 + div.1 + div.2 + div.3 + div.4 + div.5 + div.6 + div.7 + div.8),
-    );
+    let (kra, kga, kba, krd, kgd, kbd, krs, kgs, kbs) = div;
     let hnorm: (f32, f32, f32) = normalize(normal);
     let hview: (f32, f32, f32) = normalize(view);
     let mut cpnt: Vec<Pixel> = vec![Pixel::new(); pnts.len()];
@@ -95,22 +82,4 @@ pub fn normalize(vec: (f32, f32, f32)) -> (f32, f32, f32) {
 /// Function that scales a vector by a value
 pub fn scale3(vec: (f32, f32, f32), scale: f32) -> (f32, f32, f32) {
     (vec.0 * scale, vec.1 * scale, vec.2 * scale)
-}
-
-/// Function that scales a vector by a value
-pub fn scale9(
-    vec: (f32, f32, f32, f32, f32, f32, f32, f32, f32),
-    scale: f32,
-) -> (f32, f32, f32, f32, f32, f32, f32, f32, f32) {
-    (
-        vec.0 * scale,
-        vec.1 * scale,
-        vec.2 * scale,
-        vec.3 * scale,
-        vec.4 * scale,
-        vec.5 * scale,
-        vec.6 * scale,
-        vec.7 * scale,
-        vec.8 * scale,
-    )
 }

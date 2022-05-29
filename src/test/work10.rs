@@ -11,4 +11,7 @@ fn test_work10() {
     // Making sure image files exist
     assert!(util::file_exists("image/script/w10_face.png"));
     assert!(util::file_exists("image/script/w10_test.png"));
+    assert!(util::file_exists("image/script/w10_excalibur.png"));
+    assert!(util::file_exists("image/script/w10_trophy.png"));
+    assert!(util::file_exists("image/script/w10_W.png"));
 }

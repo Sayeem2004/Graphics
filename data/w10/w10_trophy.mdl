@@ -1,0 +1,80 @@
+// Granite base
+push
+move 250 200 0
+constants dull_grey 0.02 0.1 0.02 0.02 0.1 0.02 0.02 0.1 0.02
+box dull_grey 0 0 0 100 250 100
+
+// Trophy base
+push
+move 125 25 0
+constants shiny_gold 0.3 0.3 0.8 0.275 0.275 0.7 0.1 0.1 0.2
+torus shiny_gold 0 0 0 25 100
+torus shiny_gold 0 25 0 12 75
+torus shiny_gold 0 35 0 12 70
+torus shiny_gold 0 45 0 12 65
+torus shiny_gold 0 55 0 12 60
+torus shiny_gold 0 65 0 12 55
+torus shiny_gold 0 75 0 12 50
+torus shiny_gold 0 85 0 12 45
+torus shiny_gold 0 95 0 12 40
+torus shiny_gold 0 105 0 12 35
+torus shiny_gold 0 115 0 12 30
+torus shiny_gold 0 125 0 12 25
+
+// Trophy bowl
+push
+move 0 125 0
+torus shiny_gold 0 10 0 8 35
+torus shiny_gold 0 15 0 8 45
+torus shiny_gold 0 20 0 8 55
+torus shiny_gold 0 25 0 8 65
+torus shiny_gold 0 30 0 8 75
+torus shiny_gold 0 35 0 8 85
+torus shiny_gold 0 40 0 8 95
+torus shiny_gold 0 45 0 8 105
+torus shiny_gold 0 50 0 8 115
+torus shiny_gold 0 55 0 8 125
+torus shiny_gold 0 60 0 8 135
+torus shiny_gold 0 65 0 8 145
+torus shiny_gold 0 70 0 8 155
+torus shiny_gold 0 75 0 8 165
+torus shiny_gold 0 80 0 8 175
+torus shiny_gold 0 90 0 10 175
+torus shiny_gold 0 100 0 10 175
+torus shiny_gold 0 110 0 10 175
+torus shiny_gold 0 120 0 10 175
+torus shiny_gold 0 130 0 10 175
+torus shiny_gold 0 140 0 10 175
+torus shiny_gold 0 150 0 10 175
+torus shiny_gold 0 160 0 10 175
+torus shiny_gold 0 170 0 10 175
+torus shiny_gold 0 180 0 10 175
+torus shiny_gold 0 190 0 10 175
+torus shiny_gold 0 200 0 10 175
+torus shiny_gold 0 210 0 10 175
+torus shiny_gold 0 220 0 10 175
+torus shiny_gold 0 230 0 10 175
+torus shiny_gold 0 240 0 10 175
+torus shiny_gold 0 250 0 10 175
+torus shiny_gold 0 260 0 10 175
+torus shiny_gold 0 270 0 10 175
+torus shiny_gold 0 280 0 10 175
+torus shiny_gold 0 290 0 10 175
+torus shiny_gold 0 300 0 10 175
+
+// Left handle
+push
+move -170 190 0
+rotate x 90
+torus shiny_gold 0 0 0 10 110
+
+// Right handle
+pop
+push
+move 170 190 0
+rotate x 90
+torus shiny_gold 0 0 0 10 110
+
+// Ending
+display
+save w10_trophy.png

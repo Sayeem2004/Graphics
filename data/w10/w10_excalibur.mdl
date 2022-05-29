@@ -1,0 +1,56 @@
+// Creating stone
+constants dull_grey 0.05 0.3 0.05 0.05 0.3 0.05 0.05 0.3 0.05
+push
+move 375 100 0
+torus dull_grey 0 0 0 10 100
+torus dull_grey 0 5 0 10 98
+torus dull_grey -5 10 0 10 96
+torus dull_grey -3 15 0 10 92
+torus dull_grey 0 20 0 10 87
+torus dull_grey 4 25 0 10 82
+torus dull_grey 7 30 0 10 78
+torus dull_grey  3 35 0 10 74
+torus dull_grey 0 40 0 10 70
+torus dull_grey -3 45 0 10 67
+torus dull_grey 0 50 0 10 64
+torus dull_grey -2 55 0 10 60
+torus dull_grey 1 60 0 10 57
+torus dull_grey 3 65 0 10 54
+torus dull_grey 1 70 0 10 50
+torus dull_grey 4 75 0 10 48
+torus dull_grey 2 80 0 10 44
+torus dull_grey -1 85 0 10 41
+torus dull_grey -2 90 0 10 38
+torus dull_grey 0 95 0 10 36
+torus dull_grey 1 100 0 10 32
+
+// Blade
+constants shiny_silver 0.2 0.3 0.9 0.2 0.3 0.9 0.17 0.27 0.93
+move 0 375 0
+push
+rotate y 35
+box shiny_silver 0 0 0 300 20 20
+
+// Hilt
+constants shiny_gold 0.3 0.3 0.8 0.275 0.275 0.7 0.1 0.1 0.2
+pop
+move -5 20 0
+push
+rotate y 35
+box shiny_gold 0 0 0 20 100 100
+pop
+move -60 -10 0
+sphere shiny_gold 0 0 0 15
+move 130 0 0
+sphere shiny_gold 0 0 0 15
+move -65 80 15
+push
+rotate y 35
+box shiny_gold 0 0 0 90 20 20
+pop
+move 3 15 0
+sphere shiny_gold 0 0 0 20
+
+// Ending script
+display
+save w10_excalibur.png
