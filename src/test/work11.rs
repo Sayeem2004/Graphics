@@ -10,4 +10,7 @@ fn test_work11() {
 
     // Making sure image files exist
     assert!(util::file_exists("image/gif/w11_simple_50.gif"));
+    assert!(util::file_exists("image/gif/w11_spiral.gif"));
+    assert!(util::file_exists("image/gif/w11_wave.gif"));
+    assert!(util::file_exists("image/gif/w11_trophy.gif"));
 }

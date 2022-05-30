@@ -1,0 +1,47 @@
+// Setup
+screen 750 750
+frames 180
+basename w11_spiral
+vary rot 0 179 0 1
+
+// Drawing spheres (made from a sine wave)
+move 375 375 0
+rotate y 360 rot
+constants shiny_purple 0.3 0.2 0.8 0.3 0 0 0.3 0.2 0.8
+sphere shiny_purple 0 200 0 5
+sphere shiny_purple 10 196.96155 34.729637 5
+sphere shiny_purple 20 187.93852 68.40403 5
+sphere shiny_purple 30 173.20508 100 5
+sphere shiny_purple 40 153.2089 128.55753 5
+sphere shiny_purple 50 128.55751 153.2089 5
+sphere shiny_purple 60 99.99999 173.2051 5
+sphere shiny_purple 70 68.40401 187.93854 5
+sphere shiny_purple 80 34.72962 196.96156 5
+sphere shiny_purple 90 -0.000008742278 200 5
+sphere shiny_purple 100 -34.72966 196.96155 5
+sphere shiny_purple 110 -68.40402 187.93852 5
+sphere shiny_purple 120 -100.000015 173.20508 5
+sphere shiny_purple 130 -128.55753 153.2089 5
+sphere shiny_purple 140 -153.20892 128.5575 5
+sphere shiny_purple 150 -173.20508 100.000015 5
+sphere shiny_purple 160 -187.93854 68.404 5
+sphere shiny_purple 170 -196.96155 34.72966 5
+sphere shiny_purple 180 -200 -0.000017484555 5
+sphere shiny_purple 190 -196.96155 -34.72969 5
+sphere shiny_purple 200 -187.9385 -68.404076 5
+sphere shiny_purple 210 -173.20508 -99.99999 5
+sphere shiny_purple 220 -153.2089 -128.55751 5
+sphere shiny_purple 230 -128.55751 -153.20891 5
+sphere shiny_purple 240 -99.999985 -173.2051 5
+sphere shiny_purple 250 -68.404015 -187.93854 5
+sphere shiny_purple 260 -34.729626 -196.96156 5
+sphere shiny_purple 270 0.0000023849761 -200 5
+sphere shiny_purple 280 34.729725 -196.96153 5
+sphere shiny_purple 290 68.404106 -187.9385 5
+sphere shiny_purple 300 99.999985 -173.2051 5
+sphere shiny_purple 310 128.55751 -153.2089 5
+sphere shiny_purple 320 153.20892 -128.55748 5
+sphere shiny_purple 330 173.20511 -99.999954 5
+sphere shiny_purple 340 187.9385 -68.404076 5
+sphere shiny_purple 350 196.96156 -34.729595 5
+sphere shiny_purple 360 200 0.00003496911 5

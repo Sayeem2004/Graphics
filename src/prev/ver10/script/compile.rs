@@ -78,8 +78,12 @@ pub fn compile(path: &str, size: i32, mode: i32) {
         .expect("Transferring failed");
 
     // Removing generated python files
-    fs::remove_file("src/compiler/parse.out").expect("Unable to delete parse.out file");
-    fs::remove_file("src/compiler/parse.py").expect("Unable to delete parse.py file");
+    if (util::file_exists("src/compiler/parse.out")) {
+        fs::remove_file("src/compiler/parse.out").expect("Unable to delete parse.out file");
+    }
+    if (util::file_exists("src/compiler/parse.py")) {
+        fs::remove_file("src/compiler/parse.py").expect("Unable to delete parse.py file");
+    }
 
     // Checking output from command
     let stdout = String::from_utf8(output.stdout).unwrap();

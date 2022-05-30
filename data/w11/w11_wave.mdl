@@ -1,0 +1,155 @@
+// Setup
+basename w11_wave
+frames 190
+constants shiny_purple 0.3 0.2 0.8 0.3 0 0 0.3 0.2 0.8
+push
+move -25 375 0
+
+// Sphere 1
+move 50 0 0
+push
+move 0 250 0 knob1
+sphere shiny_purple 0 0 0 20
+vary knob1 0 9 0 1
+vary knob1 10 29 1 -1
+vary knob1 30 39 -1 0
+
+// Sphere 2
+pop
+move 50 0 0
+push
+move 0 250 0 knob2
+sphere shiny_purple 0 0 0 20
+vary knob2 10 19 0 1
+vary knob2 30 39 1 -1
+vary knob2 40 49 -1 0
+
+// Sphere 3
+pop
+move 50 0 0
+push
+move 0 250 0 knob3
+sphere shiny_purple 0 0 0 20
+vary knob3 20 29 0 1
+vary knob3 40 49 1 -1
+vary knob3 50 59 -1 0
+
+// Sphere 4
+pop
+move 50 0 0
+push
+move 0 250 0 knob4
+sphere shiny_purple 0 0 0 20
+vary knob4 30 39 0 1
+vary knob4 50 59 1 -1
+vary knob4 60 69 -1 0
+
+// Sphere 5
+pop
+move 50 0 0
+push
+move 0 250 0 knob5
+sphere shiny_purple 0 0 0 20
+vary knob5 40 49 0 1
+vary knob5 60 69 1 -1
+vary knob5 70 79 -1 0
+
+// Sphere 6
+pop
+move 50 0 0
+push
+move 0 250 0 knob6
+sphere shiny_purple 0 0 0 20
+vary knob6 50 59 0 1
+vary knob6 70 79 1 -1
+vary knob6 80 89 -1 0
+
+// Sphere 7
+pop
+move 50 0 0
+push
+move 0 250 0 knob7
+sphere shiny_purple 0 0 0 20
+vary knob7 60 69 0 1
+vary knob7 80 89 1 -1
+vary knob7 90 99 -1 0
+
+// Sphere 8
+pop
+move 50 0 0
+push
+move 0 250 0 knob8
+sphere shiny_purple 0 0 0 20
+vary knob8 70 79 0 1
+vary knob8 90 99 1 -1
+vary knob8 100 109 -1 0
+
+// Sphere 9
+pop
+move 50 0 0
+push
+move 0 250 0 knob9
+sphere shiny_purple 0 0 0 20
+vary knob9 80 89 0 1
+vary knob9 100 109 1 -1
+vary knob9 110 119 -1 0
+
+// Sphere 10
+pop
+move 50 0 0
+push
+move 0 250 0 knob10
+sphere shiny_purple 0 0 0 20
+vary knob10 90 99 0 1
+vary knob10 110 119 1 -1
+vary knob10 120 129 -1 0
+
+// Sphere 11
+pop
+move 50 0 0
+push
+move 0 250 0 knob11
+sphere shiny_purple 0 0 0 20
+vary knob11 100 109 0 1
+vary knob11 120 129 1 -1
+vary knob11 130 139 -1 0
+
+// Sphere 12
+pop
+move 50 0 0
+push
+move 0 250 0 knob12
+sphere shiny_purple 0 0 0 20
+vary knob12 110 119 0 1
+vary knob12 130 139 1 -1
+vary knob12 140 149 -1 0
+
+// Sphere 13
+pop
+move 50 0 0
+push
+move 0 250 0 knob13
+sphere shiny_purple 0 0 0 20
+vary knob13 120 129 0 1
+vary knob13 140 149 1 -1
+vary knob13 150 159 -1 0
+
+// Sphere 14
+pop
+move 50 0 0
+push
+move 0 250 0 knob14
+sphere shiny_purple 0 0 0 20
+vary knob14 130 139 0 1
+vary knob14 150 159 1 -1
+vary knob14 160 169 -1 0
+
+// Sphere 15
+pop
+move 50 0 0
+push
+move 0 250 0 knob15
+sphere shiny_purple 0 0 0 20
+vary knob15 140 149 0 1
+vary knob15 160 169 1 -1
+vary knob15 170 179 -1 0
