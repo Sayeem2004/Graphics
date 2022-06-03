@@ -68,7 +68,7 @@ pub fn rotating_slab() {
     println!("Converting night_sky images to w09_rotating_slab.gif...");
     Command::new("convert")
         .arg("-delay")
-        .arg("5")
+        .arg("1.7")
         .arg("-loop")
         .arg("0")
         .arg("temp/rotating_slab*.ppm")

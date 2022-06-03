@@ -395,7 +395,7 @@ fn purple_hollow() {
     println!("Converting purple images to w06_purple_hollow.gif...");
     Command::new("convert")
         .arg("-delay")
-        .arg("5")
+        .arg("1.7")
         .arg("-loop")
         .arg("0")
         .arg("temp/purple*.ppm")
@@ -446,7 +446,7 @@ fn perspectives() {
     println!("Converting perspective images to w06_perspectives.gif...");
     Command::new("convert")
         .arg("-delay")
-        .arg("10")
+        .arg("1.7")
         .arg("-loop")
         .arg("0")
         .arg("temp/perspective*.ppm")

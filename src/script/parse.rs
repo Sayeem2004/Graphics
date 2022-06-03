@@ -141,7 +141,7 @@ pub fn animate_parse(
     println!("Converting {0} images to {0}.gif...", basename);
     Command::new("convert")
         .arg("-delay")
-        .arg("5")
+        .arg("1.7")
         .arg("-loop")
         .arg("0")
         .arg(format!("temp/{}*.ppm", basename))

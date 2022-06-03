@@ -173,7 +173,7 @@ pub fn night_sky() {
     println!("Converting night_sky images to w08_night_sky.gif...");
     Command::new("convert")
         .arg("-delay")
-        .arg("5")
+        .arg("1.7")
         .arg("-loop")
         .arg("0")
         .arg("temp/night_sky*.ppm")
