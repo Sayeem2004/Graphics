@@ -5,7 +5,12 @@ use crate::format::{constant, image::Image, matrix::Matrix};
 use std::collections::HashMap;
 
 /// Function that performs the 'bezier' command
-pub fn bezier(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>, cord: &Matrix, img: &mut Image) {
+pub fn bezier(
+    op: &Operation,
+    symbols: &HashMap<String, Vec<Symbol>>,
+    cord: &Matrix,
+    img: &mut Image,
+) {
     // Checking for coordinate system
     let mut fnd: bool = true;
     let mut name: String = String::new();
@@ -30,7 +35,10 @@ pub fn bezier(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>, cord: &Mat
             }
             Some(list) => {
                 if (!list[0].as_string().unwrap().eq("cs")) {
-                    eprintln!("Symbol value {} is not a coordinate system, using default value", name);
+                    eprintln!(
+                        "Symbol value {} is not a coordinate system, using default value",
+                        name
+                    );
                     cord
                 } else {
                     list[1].as_matrix().unwrap()
@@ -59,7 +67,12 @@ pub fn bezier(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>, cord: &Mat
 }
 
 /// Function that performs the 'circle' command
-pub fn circle(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>,cord: &Matrix, img: &mut Image) {
+pub fn circle(
+    op: &Operation,
+    symbols: &HashMap<String, Vec<Symbol>>,
+    cord: &Matrix,
+    img: &mut Image,
+) {
     // Checking for coordinate system
     let mut fnd: bool = true;
     let mut name: String = String::new();
@@ -84,7 +97,10 @@ pub fn circle(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>,cord: &Matr
             }
             Some(list) => {
                 if (!list[0].as_string().unwrap().eq("cs")) {
-                    eprintln!("Symbol value {} is not a coordinate system, using default value", name);
+                    eprintln!(
+                        "Symbol value {} is not a coordinate system, using default value",
+                        name
+                    );
                     cord
                 } else {
                     list[1].as_matrix().unwrap()
@@ -115,7 +131,12 @@ pub fn circle(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>,cord: &Matr
 }
 
 /// Function that performs the 'hermite' command
-pub fn hermite(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>,cord: &Matrix, img: &mut Image) {
+pub fn hermite(
+    op: &Operation,
+    symbols: &HashMap<String, Vec<Symbol>>,
+    cord: &Matrix,
+    img: &mut Image,
+) {
     // Checking for coordinate system
     let mut fnd: bool = true;
     let mut name: String = String::new();
@@ -140,7 +161,10 @@ pub fn hermite(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>,cord: &Mat
             }
             Some(list) => {
                 if (!list[0].as_string().unwrap().eq("cs")) {
-                    eprintln!("Symbol value {} is not a coordinate system, using default value", name);
+                    eprintln!(
+                        "Symbol value {} is not a coordinate system, using default value",
+                        name
+                    );
                     cord
                 } else {
                     list[1].as_matrix().unwrap()
@@ -169,7 +193,12 @@ pub fn hermite(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>,cord: &Mat
 }
 
 /// Function that performs the 'line' operation
-pub fn line(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>,cord: &Matrix, img: &mut Image) {
+pub fn line(
+    op: &Operation,
+    symbols: &HashMap<String, Vec<Symbol>>,
+    cord: &Matrix,
+    img: &mut Image,
+) {
     // Checking for first coordinate system
     let mut fnd1: bool = true;
     let mut name1: String = String::new();
@@ -194,7 +223,10 @@ pub fn line(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>,cord: &Matrix
             }
             Some(list) => {
                 if (!list[0].as_string().unwrap().eq("cs")) {
-                    eprintln!("Symbol value {} is not a coordinate system, using default value", name1);
+                    eprintln!(
+                        "Symbol value {} is not a coordinate system, using default value",
+                        name1
+                    );
                     cord
                 } else {
                     list[1].as_matrix().unwrap()
@@ -204,7 +236,6 @@ pub fn line(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>,cord: &Matrix
     } else {
         cord
     };
-
 
     // Checking for second coordinate system
     let mut fnd2: bool = true;
@@ -230,7 +261,10 @@ pub fn line(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>,cord: &Matrix
             }
             Some(list) => {
                 if (!list[0].as_string().unwrap().eq("cs")) {
-                    eprintln!("Symbol value {} is not a coordinate system, using default value", name2);
+                    eprintln!(
+                        "Symbol value {} is not a coordinate system, using default value",
+                        name2
+                    );
                     cord
                 } else {
                     list[1].as_matrix().unwrap()
@@ -257,7 +291,6 @@ pub fn line(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>,cord: &Matrix
         *args[5].as_float().unwrap(),
     ));
     mat2.left_transform(cs1);
-
 
     // Getting edge matrix and drawing line
     let mut edge: Matrix = Matrix::new_matrix();

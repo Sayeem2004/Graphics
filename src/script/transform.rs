@@ -135,19 +135,21 @@ pub fn savecs(op: &Operation, symbols: &mut HashMap<String, Vec<Symbol>>, cord: 
         }
         Some(list) => {
             if (!list[0].as_string().unwrap().eq("cs")) {
-                eprintln!("Symbol value {} is not a coordinate system, no changes made", name);
+                eprintln!(
+                    "Symbol value {} is not a coordinate system, no changes made",
+                    name
+                );
             } else {
                 symbols.insert(
                     name,
                     vec![
                         Symbol::String(String::from("cs")),
                         Symbol::Matrix((*cord).clone()),
-                    ]
+                    ],
                 );
             }
         }
     }
-
 }
 
 /// Function that performs the 'scale' command

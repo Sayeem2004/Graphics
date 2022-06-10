@@ -55,20 +55,31 @@ pub const ZVIEW: (f32, f32, f32) = (0.0, 0.0, 1.0);
 pub const YVIEW: (f32, f32, f32) = (0.0, 1.0, 0.0);
 pub const XVIEW: (f32, f32, f32) = (1.0, 0.0, 0.0);
 
-// Common lighting divisions
-pub const AMB: (f32, f32, f32, f32, f32, f32, f32, f32, f32) =
+/// Common lighting divisions
+pub const AMBDIV: (f32, f32, f32, f32, f32, f32, f32, f32, f32) =
     (1.00, 1.00, 1.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00);
-pub const DIF: (f32, f32, f32, f32, f32, f32, f32, f32, f32) =
+pub const DIFDIV: (f32, f32, f32, f32, f32, f32, f32, f32, f32) =
     (0.00, 0.00, 0.00, 1.00, 1.00, 1.00, 0.00, 0.00, 0.00);
-pub const SPC: (f32, f32, f32, f32, f32, f32, f32, f32, f32) =
+pub const SPCDIV: (f32, f32, f32, f32, f32, f32, f32, f32, f32) =
     (0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 1.00, 1.00);
-pub const EQV: (f32, f32, f32, f32, f32, f32, f32, f32, f32) =
+pub const EQVDIV: (f32, f32, f32, f32, f32, f32, f32, f32, f32) =
     (0.33, 0.33, 0.33, 0.33, 0.33, 0.33, 0.33, 0.33, 0.33);
 
 // Specular lighting cosine power
 pub const EXP: f32 = 3_f32;
 
-// List of all possible script command
+lazy_static! {
+    /// Default ambient light value
+    pub static ref AMB: Pixel = Pixel::new_scale(0.5);
+
+    /// Default point light source
+    pub static ref PNT: (Pixel, f32, f32, f32) = (Pixel::new_scale(1.0), 750.0, 750.0, 750.0);
+
+    /// Default list of point light sources
+    pub static ref PNTS: Vec<(Pixel, f32, f32, f32)> = vec![(Pixel::new_scale(1.0), 750.0, 750.0, 750.0)];
+}
+
+/// List of all possible script commands
 pub const CMDS: [&str; 31] = [
     "ambient",
     "basename",
@@ -91,7 +102,7 @@ pub const CMDS: [&str; 31] = [
     "push",
     "rotate",
     "save",
-    "save_coord_system",
+    "savecs",
     "save_knobs",
     "scale",
     "set",

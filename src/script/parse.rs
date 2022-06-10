@@ -10,6 +10,7 @@ pub struct ImageInfo {
     pub basename: Option<String>,
     pub curr_frame: i32,
     pub animate: bool,
+    pub points: Vec<String>,
 }
 
 /// Function that performs and initial parse and obtains information about script
@@ -29,15 +30,22 @@ pub fn initial_parse(
         basename: None,
         curr_frame: 0,
         animate: false,
+        points: Vec::new(),
     };
 
-    // Creating coordinate stack
+    // Creating coordinate stack and list of point sources
     let mut stack: Vec<Matrix> = vec![Matrix::new_transformation()];
     let mut sz: usize = stack.len();
 
     // Looping through all operations
     while (curr < mx) {
         match operations[curr].op.as_ref().unwrap().as_str() {
+            // Ambient command
+            "ambient" => {
+                light::ambient(symbols);
+                curr += 1;
+            }
+
             // Basename command
             "basename" => {
                 util::basename(&operations[curr], symbols, &mut info);
@@ -53,6 +61,12 @@ pub fn initial_parse(
             // Frames command
             "frames" => {
                 util::frames(&operations[curr], &mut info);
+                curr += 1;
+            }
+
+            // Light command
+            "light" => {
+                light::light(&operations[curr], symbols, &mut info);
                 curr += 1;
             }
 
@@ -206,7 +220,7 @@ pub fn animate_parse(
 /// Function that parses an operations list and a symbol table and draws an image.
 pub fn draw_parse(
     operations: &Vec<Operation>,
-    symbols: &HashMap<String, Vec<Symbol>>,
+    symbols: &mut HashMap<String, Vec<Symbol>>,
     info: &ImageInfo,
     mode: i32,
 ) {
@@ -214,7 +228,7 @@ pub fn draw_parse(
     let mx: usize = operations.len();
     let mut curr: usize = 0;
 
-    // Creating coordinate stack and image struct
+    // Creating coordinate stack, image struct, and source list
     let mut stack: Vec<Matrix> = vec![Matrix::new_transformation()];
     let mut sz: usize = stack.len();
     let mut img: Image = Image::new_dimension(info.width, info.height);
@@ -224,7 +238,12 @@ pub fn draw_parse(
         match operations[curr].op.as_ref().unwrap().as_str() {
             // Bezier command
             "bezier" => {
-                curve::bezier(&operations[curr], symbols, &stack[stack.len() - 1], &mut img);
+                curve::bezier(
+                    &operations[curr],
+                    symbols,
+                    &stack[stack.len() - 1],
+                    &mut img,
+                );
                 curr += 1;
             }
 
@@ -234,6 +253,7 @@ pub fn draw_parse(
                     &operations[curr],
                     symbols,
                     &stack[stack.len() - 1],
+                    info,
                     &mut img,
                 );
                 curr += 1;
@@ -241,7 +261,12 @@ pub fn draw_parse(
 
             // Circle command
             "circle" => {
-                curve::circle(&operations[curr], symbols, &stack[stack.len() - 1], &mut img);
+                curve::circle(
+                    &operations[curr],
+                    symbols,
+                    &stack[stack.len() - 1],
+                    &mut img,
+                );
                 curr += 1;
             }
 
@@ -259,13 +284,23 @@ pub fn draw_parse(
 
             // Hermite command
             "hermite" => {
-                curve::hermite(&operations[curr], symbols, &stack[stack.len() - 1], &mut img);
+                curve::hermite(
+                    &operations[curr],
+                    symbols,
+                    &stack[stack.len() - 1],
+                    &mut img,
+                );
                 curr += 1;
             }
 
             // Line command
             "line" => {
-                curve::line(&operations[curr], symbols, &stack[stack.len() - 1], &mut img);
+                curve::line(
+                    &operations[curr],
+                    symbols,
+                    &stack[stack.len() - 1],
+                    &mut img,
+                );
                 curr += 1;
             }
 
@@ -311,6 +346,7 @@ pub fn draw_parse(
                     &operations[curr],
                     symbols,
                     &stack[stack.len() - 1],
+                    info,
                     &mut img,
                 );
                 curr += 1;
@@ -322,6 +358,7 @@ pub fn draw_parse(
                     &operations[curr],
                     symbols,
                     &stack[stack.len() - 1],
+                    info,
                     &mut img,
                 );
                 curr += 1;

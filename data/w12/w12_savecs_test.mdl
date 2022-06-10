@@ -1,3 +1,4 @@
+screen 750 750
 constants shiny_gold 0.3 0.3 0.8 0.275 0.275 0.7 0.1 0.1 0.2
 push
 move 375 375 0

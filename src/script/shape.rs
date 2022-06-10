@@ -2,7 +2,7 @@
 use crate::algorithm::shape;
 use crate::compiler::{Operation, Symbol};
 use crate::format::{constant, image::Image, matrix::Matrix, pixel::Pixel};
-use crate::script::light;
+use crate::script::{light, parse::ImageInfo};
 use std::collections::HashMap;
 
 /// Function that performs the 'box' command
@@ -10,6 +10,7 @@ pub fn _box(
     op: &Operation,
     symbols: &HashMap<String, Vec<Symbol>>,
     cord: &Matrix,
+    info: &ImageInfo,
     img: &mut Image,
 ) {
     // Checking for lighting constants
@@ -32,12 +33,12 @@ pub fn _box(
                     "Symbol {} could not be found in symbol table, using default value",
                     name1
                 );
-                constant::EQV
+                constant::EQVDIV
             }
             Some(list) => light::constants_to_tuple(list),
         }
     } else {
-        constant::EQV
+        constant::EQVDIV
     };
 
     // Checking for coordinate system
@@ -64,7 +65,10 @@ pub fn _box(
             }
             Some(list) => {
                 if (!list[0].as_string().unwrap().eq("cs")) {
-                    eprintln!("Symbol value {} is not a coordinate system, using default value", name2);
+                    eprintln!(
+                        "Symbol value {} is not a coordinate system, using default value",
+                        name2
+                    );
                     cord
                 } else {
                     list[1].as_matrix().unwrap()
@@ -73,6 +77,29 @@ pub fn _box(
         }
     } else {
         cord
+    };
+
+    // Getting ambient light if found and is correct
+    let ambient: Pixel = match symbols.get("ambient") {
+        None => *constant::AMB,
+        Some(list) => {
+            if (!list[0].as_string().unwrap().eq("ambient")) {
+                eprintln!("Symbol value ambient is not an ambient light, using default value");
+                *constant::AMB
+            } else {
+                let r = *list[1].as_float().unwrap();
+                let g = *list[2].as_float().unwrap();
+                let b = *list[3].as_float().unwrap();
+                Pixel::new_value(r.min(255.0) as u8, g.min(255.0) as u8, b.min(255.0) as u8)
+            }
+        }
+    };
+
+    // Getting point light sources if they exist
+    let pnts: Vec<(Pixel, f32, f32, f32)> = if (info.points.is_empty()) {
+        (*constant::PNTS).clone()
+    } else {
+        light::names_to_sources(info, symbols)
     };
 
     // Getting box coordinates and adding it to edge matrix
@@ -92,13 +119,7 @@ pub fn _box(
 
     // Adding box to image
     poly.left_transform(cs);
-    poly.draw_triangles_xy(
-        img,
-        Pixel::new_scale(0.5),
-        &[(Pixel::new_scale(1.0), 750.0, 750.0, 750.0)],
-        constant::ZVIEW,
-        constants,
-    );
+    poly.draw_triangles_xy(img, ambient, &pnts, constant::ZVIEW, constants);
 }
 
 /// Function that performs the 'sphere' command
@@ -106,6 +127,7 @@ pub fn sphere(
     op: &Operation,
     symbols: &HashMap<String, Vec<Symbol>>,
     cord: &Matrix,
+    info: &ImageInfo,
     img: &mut Image,
 ) {
     // Checking for lighting constants
@@ -128,12 +150,12 @@ pub fn sphere(
                     "Symbol {} could not be found in symbol table, using default value",
                     name1
                 );
-                constant::EQV
+                constant::EQVDIV
             }
             Some(list) => light::constants_to_tuple(list),
         }
     } else {
-        constant::EQV
+        constant::EQVDIV
     };
 
     // Checking for coordinate system
@@ -160,7 +182,10 @@ pub fn sphere(
             }
             Some(list) => {
                 if (!list[0].as_string().unwrap().eq("cs")) {
-                    eprintln!("Symbol value {} is not a coordinate system, using default value", name2);
+                    eprintln!(
+                        "Symbol value {} is not a coordinate system, using default value",
+                        name2
+                    );
                     cord
                 } else {
                     list[1].as_matrix().unwrap()
@@ -169,6 +194,29 @@ pub fn sphere(
         }
     } else {
         cord
+    };
+
+    // Getting ambient light if found and is correct
+    let ambient: Pixel = match symbols.get("ambient") {
+        None => *constant::AMB,
+        Some(list) => {
+            if (!list[0].as_string().unwrap().eq("ambient")) {
+                eprintln!("Symbol value ambient is not an ambient light, using default value");
+                *constant::AMB
+            } else {
+                let r = *list[1].as_float().unwrap();
+                let g = *list[2].as_float().unwrap();
+                let b = *list[3].as_float().unwrap();
+                Pixel::new_value(r.min(255.0) as u8, g.min(255.0) as u8, b.min(255.0) as u8)
+            }
+        }
+    };
+
+    // Getting point light sources if they exist
+    let pnts: Vec<(Pixel, f32, f32, f32)> = if (info.points.is_empty()) {
+        (*constant::PNTS).clone()
+    } else {
+        light::names_to_sources(info, symbols)
     };
 
     // Getting sphere coordinates and adding it to edge matrix
@@ -187,13 +235,7 @@ pub fn sphere(
 
     // Adding sphere to image
     poly.left_transform(cs);
-    poly.draw_triangles_xy(
-        img,
-        Pixel::new_scale(0.5),
-        &[(Pixel::new_scale(1.0), 750.0, 750.0, 750.0)],
-        constant::ZVIEW,
-        constants,
-    );
+    poly.draw_triangles_xy(img, ambient, &pnts, constant::ZVIEW, constants);
 }
 
 /// Function that performs the 'torus' command
@@ -201,6 +243,7 @@ pub fn torus(
     op: &Operation,
     symbols: &HashMap<String, Vec<Symbol>>,
     cord: &Matrix,
+    info: &ImageInfo,
     img: &mut Image,
 ) {
     // Checking for lighting constants
@@ -223,12 +266,12 @@ pub fn torus(
                     "Symbol {} could not be found in symbol table, using default value",
                     name1
                 );
-                constant::EQV
+                constant::EQVDIV
             }
             Some(list) => light::constants_to_tuple(list),
         }
     } else {
-        constant::EQV
+        constant::EQVDIV
     };
 
     // Checking for coordinate system
@@ -255,7 +298,10 @@ pub fn torus(
             }
             Some(list) => {
                 if (!list[0].as_string().unwrap().eq("cs")) {
-                    eprintln!("Symbol value {} is not a coordinate system, using default value", name2);
+                    eprintln!(
+                        "Symbol value {} is not a coordinate system, using default value",
+                        name2
+                    );
                     cord
                 } else {
                     list[1].as_matrix().unwrap()
@@ -264,6 +310,33 @@ pub fn torus(
         }
     } else {
         cord
+    };
+
+    // Getting ambient light if found and is correct
+    let ambient: Pixel = match symbols.get("ambient") {
+        None => *constant::AMB,
+        Some(list) => {
+            if (!list[0].as_string().unwrap().eq("ambient")) {
+                eprintln!("Symbol value ambient is not an ambient light, using default value");
+                *constant::AMB
+            } else {
+                let r = *list[1].as_float().unwrap();
+                let g = *list[2].as_float().unwrap();
+                let b = *list[3].as_float().unwrap();
+                Pixel::new_value(
+                    r.min(255.0).max(0.0) as u8,
+                    g.min(255.0).max(0.0) as u8,
+                    b.min(255.0).max(0.0) as u8,
+                )
+            }
+        }
+    };
+
+    // Getting point light sources if they exist
+    let pnts: Vec<(Pixel, f32, f32, f32)> = if (info.points.is_empty()) {
+        (*constant::PNTS).clone()
+    } else {
+        light::names_to_sources(info, symbols)
     };
 
     // Getting torus coordinates and adding it to edge matrix
@@ -283,11 +356,5 @@ pub fn torus(
 
     // Adding torus to image
     poly.left_transform(cs);
-    poly.draw_triangles_xy(
-        img,
-        Pixel::new_scale(0.5),
-        &[(Pixel::new_scale(1.0), 750.0, 750.0, 750.0)],
-        constant::ZVIEW,
-        constants,
-    );
+    poly.draw_triangles_xy(img, ambient, &pnts, constant::ZVIEW, constants);
 }

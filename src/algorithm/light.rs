@@ -23,33 +23,33 @@ pub fn calculate(
     }
 
     // Ambient lighting
-    fr += (amb.0 as f32 * kra).min(255.0) as u32;
-    fg += (amb.1 as f32 * kga).min(255.0) as u32;
-    fb += (amb.2 as f32 * kba).min(255.0) as u32;
+    fr += (amb.0 as f32 * kra).min(255.0).max(0.0) as u32;
+    fg += (amb.1 as f32 * kga).min(255.0).max(0.0) as u32;
+    fb += (amb.2 as f32 * kba).min(255.0).max(0.0) as u32;
 
     // Diffuse lighting
     let (mut rs1, mut gs1, mut bs1): (f32, f32, f32) = (0.0, 0.0, 0.0);
     for i in 0..pnts.len() {
-        rs1 += (cpnt[i].0 as f32 * dot(hnorm, hpnt[i]));
-        gs1 += (cpnt[i].1 as f32 * dot(hnorm, hpnt[i]));
-        bs1 += (cpnt[i].2 as f32 * dot(hnorm, hpnt[i]));
+        rs1 += (cpnt[i].0 as f32 * dot(hnorm, hpnt[i])).max(0.0);
+        gs1 += (cpnt[i].1 as f32 * dot(hnorm, hpnt[i])).max(0.0);
+        bs1 += (cpnt[i].2 as f32 * dot(hnorm, hpnt[i])).max(0.0);
     }
-    fr += (rs1 * krd).min(255.0) as u32;
-    fg += (gs1 * kgd).min(255.0) as u32;
-    fb += (bs1 * kbd).min(255.0) as u32;
+    fr += (rs1 * krd).min(255.0).max(0.0) as u32;
+    fg += (gs1 * kgd).min(255.0).max(0.0) as u32;
+    fb += (bs1 * kbd).min(255.0).max(0.0) as u32;
 
     // Specular lighting
     let (mut rs2, mut gs2, mut bs2): (f32, f32, f32) = (0.0, 0.0, 0.0);
     for i in 0..pnts.len() {
         let rhat: (f32, f32, f32) = diff(scale3(hnorm, 2_f32 * dot(hnorm, hpnt[i])), hpnt[i]);
         let cos: f32 = dot(rhat, hview).max(0.0);
-        rs2 += (cpnt[i].0 as f32 * cos.powf(constant::EXP));
-        gs2 += (cpnt[i].1 as f32 * cos.powf(constant::EXP));
-        bs2 += (cpnt[i].2 as f32 * cos.powf(constant::EXP));
+        rs2 += (cpnt[i].0 as f32 * cos.powf(constant::EXP)).max(0.0);
+        gs2 += (cpnt[i].1 as f32 * cos.powf(constant::EXP)).max(0.0);
+        bs2 += (cpnt[i].2 as f32 * cos.powf(constant::EXP)).max(0.0);
     }
-    fr += (rs2 * krs).min(255.0) as u32;
-    fg += (gs2 * kgs).min(255.0) as u32;
-    fb += (bs2 * kbs).min(255.0) as u32;
+    fr += (rs2 * krs).min(255.0).max(0.0) as u32;
+    fg += (gs2 * kgs).min(255.0).max(0.0) as u32;
+    fb += (bs2 * kbs).min(255.0).max(0.0) as u32;
 
     // Returning pixel values
     fr = fr.min(255);

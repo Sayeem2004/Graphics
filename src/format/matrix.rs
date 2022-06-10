@@ -1,9 +1,9 @@
 // Imports
 use crate::algorithm::{light, line, shape};
 use crate::format::{image::Image, pixel::Pixel};
+use serde::{Deserialize, Serialize};
 use std::f32::consts::PI;
 use std::fmt;
-use serde::{Deserialize, Serialize};
 
 /// Matrix struct
 #[derive(Clone, Serialize, Deserialize, Debug)]

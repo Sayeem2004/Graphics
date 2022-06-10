@@ -1,5 +1,5 @@
 // Imports
-use crate::format::{util, matrix::Matrix};
+use crate::format::{matrix::Matrix, util};
 use crate::script::{parse, parse::ImageInfo};
 use enum_as_inner::EnumAsInner;
 use serde::{Deserialize, Serialize};
@@ -24,6 +24,7 @@ pub struct Operation {
     pub op: Option<String>,
     pub width: Option<f32>,
     pub height: Option<f32>,
+    pub light: Option<String>,
 }
 
 /// Struct to store camera constants
@@ -45,8 +46,8 @@ pub struct Lighting {
 /// Struct to store light source
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Source {
-    pub location: Vec<f32>,
     pub color: Vec<f32>,
+    pub location: Vec<f32>,
 }
 
 /// Enum to store possible symbol values
