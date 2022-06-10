@@ -1,0 +1,31 @@
+constants shiny_gold 0.3 0.3 0.8 0.275 0.275 0.7 0.1 0.1 0.2
+push
+move 375 375 0
+savecs first
+push
+rotate x 90
+savecs second
+pop
+pop
+push
+scale 0.5 0.5 0.5
+savecs third
+pop
+sphere shiny_gold 0 0 0 250 first
+display
+clear
+torus shiny_gold 0 0 0 50 250 second
+display
+clear
+box -125 125 -125 250 250 250 first
+display
+clear
+bezier 0 0 375 375 375 375 750 750 third
+display
+clear
+hermite 0 0 750 750 375 375 375 375 third
+display
+clear
+line 0 0 0 750 750 750 third
+display
+save w12_savecs_test.png

@@ -3,9 +3,10 @@ use crate::algorithm::{light, line, shape};
 use crate::format::{image::Image, pixel::Pixel};
 use std::f32::consts::PI;
 use std::fmt;
+use serde::{Deserialize, Serialize};
 
 /// Matrix struct
-#[derive(Clone)]
+#[derive(Clone, Serialize, Deserialize, Debug)]
 pub struct Matrix {
     pub row_num: i32,
     pub col_num: i32,
@@ -162,6 +163,13 @@ impl Matrix {
     /// Function that copies all edges from another matrix to the current one
     pub fn copy(&mut self, mat: &Matrix) {
         self.clear();
+        for col in &mat.data {
+            self.add_col(col);
+        }
+    }
+
+    /// Function that appends all edges from another matrix to the current one
+    pub fn append(&mut self, mat: &Matrix) {
         for col in &mat.data {
             self.add_col(col);
         }

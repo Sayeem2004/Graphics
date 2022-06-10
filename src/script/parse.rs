@@ -15,7 +15,7 @@ pub struct ImageInfo {
 /// Function that performs and initial parse and obtains information about script
 pub fn initial_parse(
     operations: &Vec<Operation>,
-    symbols: &HashMap<String, Vec<Symbol>>,
+    symbols: &mut HashMap<String, Vec<Symbol>>,
 ) -> ImageInfo {
     // Indexing variables
     let mx: usize = operations.len();
@@ -31,9 +31,19 @@ pub fn initial_parse(
         animate: false,
     };
 
+    // Creating coordinate stack
+    let mut stack: Vec<Matrix> = vec![Matrix::new_transformation()];
+    let mut sz: usize = stack.len();
+
     // Looping through all operations
     while (curr < mx) {
         match operations[curr].op.as_ref().unwrap().as_str() {
+            // Basename command
+            "basename" => {
+                util::basename(&operations[curr], symbols, &mut info);
+                curr += 1;
+            }
+
             // Constants command
             "constants" => {
                 light::constants(&operations[curr], symbols);
@@ -46,9 +56,39 @@ pub fn initial_parse(
                 curr += 1;
             }
 
-            // Basename command
-            "basename" => {
-                util::basename(&operations[curr], symbols, &mut info);
+            // Move command
+            "move" => {
+                transform::_move(&operations[curr], symbols, &mut stack[sz - 1]);
+                curr += 1;
+            }
+
+            // Pop command
+            "pop" => {
+                transform::pop(&mut stack, &mut sz);
+                curr += 1;
+            }
+
+            // Push command
+            "push" => {
+                transform::push(&mut stack, &mut sz);
+                curr += 1;
+            }
+
+            // Rotate command
+            "rotate" => {
+                transform::rotate(&operations[curr], symbols, &mut stack[sz - 1]);
+                curr += 1;
+            }
+
+            // Savecs command
+            "savecs" => {
+                transform::savecs(&operations[curr], symbols, &mut stack[sz - 1]);
+                curr += 1;
+            }
+
+            // Scale command
+            "scale" => {
+                transform::scale(&operations[curr], symbols, &mut stack[sz - 1]);
                 curr += 1;
             }
 
@@ -182,15 +222,26 @@ pub fn draw_parse(
     // Looping through all operations
     while (curr < mx) {
         match operations[curr].op.as_ref().unwrap().as_str() {
-            // Line command
-            "line" => {
-                curve::line(&operations[curr], &stack[stack.len() - 1], &mut img);
+            // Bezier command
+            "bezier" => {
+                curve::bezier(&operations[curr], symbols, &stack[stack.len() - 1], &mut img);
                 curr += 1;
             }
 
-            // Display command
-            "display" => {
-                util::display(&img, mode);
+            // Box command
+            "box" => {
+                shape::_box(
+                    &operations[curr],
+                    symbols,
+                    &stack[stack.len() - 1],
+                    &mut img,
+                );
+                curr += 1;
+            }
+
+            // Circle command
+            "circle" => {
+                curve::circle(&operations[curr], symbols, &stack[stack.len() - 1], &mut img);
                 curr += 1;
             }
 
@@ -200,15 +251,39 @@ pub fn draw_parse(
                 curr += 1;
             }
 
-            // Scale command
-            "scale" => {
-                transform::scale(&operations[curr], symbols, &mut stack[sz - 1]);
+            // Display command
+            "display" => {
+                util::display(&img, mode);
+                curr += 1;
+            }
+
+            // Hermite command
+            "hermite" => {
+                curve::hermite(&operations[curr], symbols, &stack[stack.len() - 1], &mut img);
+                curr += 1;
+            }
+
+            // Line command
+            "line" => {
+                curve::line(&operations[curr], symbols, &stack[stack.len() - 1], &mut img);
                 curr += 1;
             }
 
             // Move command
             "move" => {
                 transform::_move(&operations[curr], symbols, &mut stack[sz - 1]);
+                curr += 1;
+            }
+
+            // Pop command
+            "pop" => {
+                transform::pop(&mut stack, &mut sz);
+                curr += 1;
+            }
+
+            // Push command
+            "push" => {
+                transform::push(&mut stack, &mut sz);
                 curr += 1;
             }
 
@@ -224,14 +299,9 @@ pub fn draw_parse(
                 curr += 1;
             }
 
-            // Box command
-            "box" => {
-                shape::_box(
-                    &operations[curr],
-                    symbols,
-                    &stack[stack.len() - 1],
-                    &mut img,
-                );
+            // Scale command
+            "scale" => {
+                transform::scale(&operations[curr], symbols, &mut stack[sz - 1]);
                 curr += 1;
             }
 
@@ -254,36 +324,6 @@ pub fn draw_parse(
                     &stack[stack.len() - 1],
                     &mut img,
                 );
-                curr += 1;
-            }
-
-            // Circle command
-            "circle" => {
-                curve::circle(&operations[curr], &stack[stack.len() - 1], &mut img);
-                curr += 1;
-            }
-
-            // Bezier command
-            "bezier" => {
-                curve::bezier(&operations[curr], &stack[stack.len() - 1], &mut img);
-                curr += 1;
-            }
-
-            // Hermite command
-            "hermite" => {
-                curve::hermite(&operations[curr], &stack[stack.len() - 1], &mut img);
-                curr += 1;
-            }
-
-            // Push command
-            "push" => {
-                transform::push(&mut stack, &mut sz);
-                curr += 1;
-            }
-
-            // Pop command
-            "pop" => {
-                transform::pop(&mut stack, &mut sz);
                 curr += 1;
             }
 

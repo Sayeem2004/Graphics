@@ -9,7 +9,7 @@ fn test_work11() {
     work11::create_work11_images(1);
 
     // Making sure image files exist
-    assert!(util::file_exists("image/gif/w11_simple_50.gif"));
+    assert!(util::file_exists("image/gif/w11_simple_300.gif"));
     assert!(util::file_exists("image/gif/w11_spiral.gif"));
     assert!(util::file_exists("image/gif/w11_wave.gif"));
     assert!(util::file_exists("image/gif/w11_trophy.gif"));

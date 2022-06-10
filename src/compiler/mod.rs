@@ -1,5 +1,5 @@
 // Imports
-use crate::format::util;
+use crate::format::{util, matrix::Matrix};
 use crate::script::{parse, parse::ImageInfo};
 use enum_as_inner::EnumAsInner;
 use serde::{Deserialize, Serialize};
@@ -18,7 +18,8 @@ pub enum Argument {
 pub struct Operation {
     pub args: Option<Vec<Argument>>,
     pub constants: Option<String>,
-    pub cs: Option<String>,
+    pub cs0: Option<String>,
+    pub cs1: Option<String>,
     pub knob: Option<String>,
     pub op: Option<String>,
     pub width: Option<f32>,
@@ -53,6 +54,7 @@ pub struct Source {
 #[serde(untagged)]
 pub enum Symbol {
     Camera(Camera),
+    Matrix(Matrix),
     Float(f32),
     Int(i32),
     Lighting(Lighting),

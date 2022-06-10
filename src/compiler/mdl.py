@@ -1,3 +1,5 @@
+# pylint: disable=global-statement, missing-module-docstring, invalid-name, missing-function-docstring, line-too-long, superfluous-parens
+from copy import deepcopy
 from ply import lex, yacc
 
 tokens = (
@@ -9,7 +11,7 @@ tokens = (
     "COMMENT",
     "LIGHT",
     "CONSTANTS",
-    "SAVE_COORDS",
+    "SAVECS",
     "CAMERA",
     "AMBIENT",
     "TORUS",
@@ -52,7 +54,7 @@ reserved = {
     "screen" : "SCREEN",
     "light" : "LIGHT",
     "constants" : "CONSTANTS",
-    "save_coord_system" : "SAVE_COORDS",
+    "savecs" : "SAVECS",
     "camera" : "CAMERA",
     "ambient" : "AMBIENT",
     "torus" : "TORUS",
@@ -129,11 +131,13 @@ symbols = {}
 def p_input(p):
     """input :
             | command input"""
-    pass
+    if (p):
+        pass
 
 def p_command_comment(p):
     'command : COMMENT'
-    pass
+    if (p):
+        pass
 
 def p_SYMBOL(p):
     """SYMBOL : XYZ
@@ -179,15 +183,15 @@ def p_command_sphere(p):
                | SPHERE SYMBOL NUMBER NUMBER NUMBER NUMBER
                | SPHERE NUMBER NUMBER NUMBER NUMBER SYMBOL
                | SPHERE SYMBOL NUMBER NUMBER NUMBER NUMBER SYMBOL"""
-    cmd = {'op' : p[1], 'constants' : None, 'cs' : None, 'args':[]}
+    cmd = {'op' : p[1], 'constants' : None, 'cs0' : None, 'args':[]}
     arg_start = 2
     if isinstance(p[2], str):
         cmd['constants'] = p[2]
         arg_start = 3
     if len(p) == 7 and isinstance(p[6], str):
-        cmd['cs'] = p[6]
+        cmd['cs0'] = p[6]
     if len(p) == 8 and isinstance(p[7], str):
-        cmd['cs'] = p[7]
+        cmd['cs0'] = p[7]
     cmd['args'] = p[arg_start:arg_start+4]
     commands.append(cmd)
 
@@ -196,15 +200,15 @@ def p_command_torus(p):
                | TORUS NUMBER NUMBER NUMBER NUMBER NUMBER SYMBOL
                | TORUS SYMBOL NUMBER NUMBER NUMBER NUMBER NUMBER
                | TORUS SYMBOL NUMBER NUMBER NUMBER NUMBER NUMBER SYMBOL"""
-    cmd = {'op' : p[1], 'constants' : None, 'cs' : None, 'args':[]}
+    cmd = {'op' : p[1], 'constants' : None, 'cs0' : None, 'args':[]}
     arg_start = 2
     if isinstance(p[2], str):
         cmd['constants'] = p[2]
         arg_start = 3
     if len(p) == 8 and isinstance(p[7], str):
-        cmd['cs'] = p[7]
+        cmd['cs0'] = p[7]
     if len(p) == 9 and isinstance(p[8], str):
-        cmd['cs'] = p[8]
+        cmd['cs0'] = p[8]
     cmd['args'] = p[arg_start:arg_start+5]
     commands.append(cmd)
 
@@ -213,15 +217,15 @@ def p_command_box(p):
                | BOX NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER SYMBOL
                | BOX SYMBOL NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER
                | BOX SYMBOL NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER SYMBOL"""
-    cmd = {'op' : p[1], 'constants' : None, 'cs' : None, 'args':[]}
+    cmd = {'op' : p[1], 'constants' : None, 'cs0' : None, 'args':[]}
     arg_start = 2
     if isinstance(p[2], str):
         cmd['constants'] = p[2]
         arg_start = 3
     if len(p) == 9 and isinstance(p[8], str):
-        cmd['cs'] = p[8]
+        cmd['cs0'] = p[8]
     if len(p) == 10 and isinstance(p[9], str):
-        cmd['cs'] = p[9]
+        cmd['cs0'] = p[9]
     cmd['args'] = p[arg_start:arg_start+6]
     commands.append(cmd)
 
@@ -254,18 +258,27 @@ def p_command_line(p):
     commands.append(cmd)
 
 def p_command_circle(p):
-    """command : CIRCLE NUMBER NUMBER NUMBER NUMBER"""
+    """command : CIRCLE NUMBER NUMBER NUMBER NUMBER
+               | CIRCLE NUMBER NUMBER NUMBER NUMBER SYMBOL"""
     cmd = {'op' : p[1], 'args': p[2:6]}
+    if len(p) == 7 and isinstance(p[6], str):
+        cmd['cs0'] = p[6]
     commands.append(cmd)
 
 def p_command_bezier(p):
-    """command : BEZIER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER"""
+    """command : BEZIER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER
+               | BEZIER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER SYMBOL"""
     cmd = {'op' : p[1], 'args': p[2:10]}
+    if len(p) == 11 and isinstance(p[10], str):
+        cmd['cs0'] = p[10]
     commands.append(cmd)
 
 def p_command_hermite(p):
-    """command : HERMITE NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER"""
+    """command : HERMITE NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER
+               | HERMITE NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER SYMBOL"""
     cmd = {'op' : p[1], 'args': p[2:10]}
+    if len(p) == 11 and isinstance(p[10], str):
+        cmd['cs0'] = p[10]
     commands.append(cmd)
 
 def p_command_move(p):
@@ -361,20 +374,20 @@ def p_command_generate_rayfiles(p):
     commands.append({'op':p[1], 'args':None})
 
 def p_command_mesh(p):
-    """command : MESH CO TEXT
-               | MESH SYMBOL CO TEXT
-               | MESH CO TEXT SYMBOL
-               | MESH SYMBOL CO TEXT SYMBOL"""
-    cmd = {'op':p[1], 'args' : [], 'cs':None, 'constants':None}
+    """command : MESH CO TEXT TEXT
+               | MESH SYMBOL CO TEXT TEXT
+               | MESH CO TEXT TEXT SYMBOL
+               | MESH SYMBOL CO TEXT TEXT SYMBOL"""
+    cmd = {'op': p[1], 'args': [], 'cs0': None, 'constants': None}
     arg_start = 2
     if isinstance(p[2], str):
         cmd['constants'] = p[2]
         arg_start += 1
-    cmd['args'].append(p[arg_start])
+    cmd['args'].append(p[arg_start+1] + p[arg_start+2])
     if len(p) == 4 and isinstance(p[3], str):
-        cmd['cs'] = p[3]
+        cmd['cs0'] = p[3]
     if len(p) == 5 and isinstance(p[4], str):
-        cmd['cs'] = p[4]
+        cmd['cs0'] = p[4]
     commands.append(cmd)
 
 def p_save_knobs(p):
@@ -383,10 +396,10 @@ def p_save_knobs(p):
     symbols[p[2]] = ['knob_list', []]
     commands.append(cmd)
 
-def p_save_coords(p):
-    "command : SAVE_COORDS SYMBOL"
-    cmd = {'op':p[1], 'args':None, 'cs':p[2]}
-    symbols[p[2]] = ['coord_sys', []]
+def p_savecs(p):
+    "command : SAVECS SYMBOL"
+    cmd = {'op':p[1], 'args':None, 'cs0':p[2]}
+    symbols[p[2]] = ['cs', []]
     commands.append(cmd)
 
 def p_tween(p):
@@ -411,9 +424,6 @@ def p_error(p):
 
 yacc.yacc()
 
-
-from copy import deepcopy
-
 def parseFile(filename):
     """
     This function returns a tuple containing a list of opcodes
@@ -423,15 +433,15 @@ def parseFile(filename):
     Every symbol is a tuple of the form (type, name).
     """
     global commands
-    global symbols
     commands = []
+    global symbols
     symbols = {}
     try:
-        f = open(filename, "r")
-        for line in f.readlines():
-            line = line.strip()
-            yacc.parse(line)
-        f.close()
+        with open(filename, "r") as f:
+            for line in f.readlines():
+                line = line.strip()
+                yacc.parse(line)
+            f.close()
         result = (commands[:], deepcopy(symbols))
         commands = []
         symbols = {}

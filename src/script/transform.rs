@@ -120,6 +120,36 @@ pub fn rotate(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>, cord: &mut
     cord.right_transform(&trans);
 }
 
+/// Function that performs the 'savecs' command
+pub fn savecs(op: &Operation, symbols: &mut HashMap<String, Vec<Symbol>>, cord: &mut Matrix) {
+    // Getting coordinate system name
+    let name: String = (*op.cs0.as_ref().unwrap()).clone();
+
+    // Updating symbol table entry
+    match symbols.get(&name) {
+        None => {
+            eprintln!(
+                "Symbol {} could not be found in symbol table, no changes made",
+                name
+            );
+        }
+        Some(list) => {
+            if (!list[0].as_string().unwrap().eq("cs")) {
+                eprintln!("Symbol value {} is not a coordinate system, no changes made", name);
+            } else {
+                symbols.insert(
+                    name,
+                    vec![
+                        Symbol::String(String::from("cs")),
+                        Symbol::Matrix((*cord).clone()),
+                    ]
+                );
+            }
+        }
+    }
+
+}
+
 /// Function that performs the 'scale' command
 pub fn scale(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>, cord: &mut Matrix) {
     // Getting number arguments

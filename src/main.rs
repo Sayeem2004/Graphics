@@ -32,7 +32,8 @@ fn main() {
     // template::work08::create_work08_images(0);
     // template::work09::create_work09_images(0);
     // template::work10::create_work10_images(0);
-    template::work11::create_work11_images(0);
+    // template::work11::create_work11_images(0);
+    template::work12::create_work12_images(0);
 
     // Variable Declarations
     let mut path: String = String::new();
