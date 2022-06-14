@@ -1,8 +1,13 @@
+// Setting things up
 screen 750 750
+
+// Lighting stuff
 ambient 50 50 50
 light first 255 255 255 0 0 750
 light second 255 255 255 750 750 750
 light third 255 255 255 375 375 750
+
+// Drawing sphere to show lights
 sphere 375 375 375 200
 display
 save w12_lighting_test.mdl

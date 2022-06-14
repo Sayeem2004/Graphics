@@ -340,6 +340,18 @@ pub fn draw_parse(
                 curr += 1;
             }
 
+            // Set command
+            "set" => {
+                util::set(&operations[curr], symbols);
+                curr += 1;
+            }
+
+            // Setknobs command
+            "setknobs" => {
+                util::setknobs(&operations[curr], symbols);
+                curr += 1;
+            }
+
             // Sphere command
             "sphere" => {
                 shape::sphere(

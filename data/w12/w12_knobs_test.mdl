@@ -1,0 +1,33 @@
+// Setting things up
+screen 750 750
+
+// Using set
+set knob1 0.5
+set knob2 0.5
+set knob3 0.5
+set knob4 0.5
+set knob5 0.5
+push
+move 750 750 750 knob1
+rotate x 360 knob2
+rotate y 360 knob3
+rotate z 360 knob4
+scale 2 2 2 knob5
+sphere 0 0 0 100
+display
+
+// Using setknobs
+clear
+pop
+setknobs 0.75
+push
+move 750 750 750 knob1
+rotate x 360 knob2
+rotate y 360 knob3
+rotate z 360 knob4
+scale 2 2 2 knob5
+sphere 0 0 0 100
+display
+
+// Ending stuff
+save w12_knobs_test.mdl

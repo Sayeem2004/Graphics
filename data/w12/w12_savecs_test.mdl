@@ -1,5 +1,8 @@
+// Setting things up
 screen 750 750
 constants shiny_gold 0.3 0.3 0.8 0.275 0.275 0.7 0.1 0.1 0.2
+
+// Saving coordinates systems
 push
 move 375 375 0
 savecs first
@@ -12,6 +15,8 @@ push
 scale 0.5 0.5 0.5
 savecs third
 pop
+
+// Drawing different shapes to test coordinate systems
 sphere shiny_gold 0 0 0 250 first
 display
 clear

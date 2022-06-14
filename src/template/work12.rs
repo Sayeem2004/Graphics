@@ -8,4 +8,7 @@ pub fn create_work12_images(mode: i32) {
 
     // Creating lighting test image
     compiler::compile("data/w12/w12_lighting_test.mdl", mode);
+
+    // Creating knobs test image
+    compiler::compile("data/w12/w12_knobs_test.mdl", mode);
 }

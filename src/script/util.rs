@@ -117,9 +117,52 @@ pub fn save(op: &Operation, img: &Image) {
     fs::remove_file(&name).expect("Unable to delete temporary save file");
 }
 
+/// Function that performs the 'set' command
+pub fn set(op: &Operation, symbols: &mut HashMap<String, Vec<Symbol>>) {
+    // Variable declarations
+    let knob = (*op.knob.as_ref().unwrap()).clone();
+    let val = *(&op.args.as_ref().unwrap()[0]).as_float().unwrap();
+
+    // Error checking symbol table
+    match symbols.get_mut(&knob) {
+        None => {
+            // Creating knob if symbol table value doesnt exist
+            symbols.insert(
+                knob,
+                vec![Symbol::String(String::from("knob")), Symbol::Float(val)],
+            );
+        }
+        Some(list) => {
+            if (!list[0].as_string().unwrap().eq("knob")) {
+                // If symbol table value exists but is not a knob
+                eprintln!("Symbol value {} is not a knob, no changes made", knob);
+            } else {
+                // Updating symbol table if it exists and is a knob
+                list[1] = Symbol::Float(val);
+            }
+        }
+    }
+}
+
+/// Function that performs the 'setknobs' command
+pub fn setknobs(op: &Operation, symbols: &mut HashMap<String, Vec<Symbol>>) {
+    // Variable declarations
+    let val = *(&op.args.as_ref().unwrap()[0]).as_float().unwrap();
+
+    // Iterating through symbol table
+    for (_, list) in symbols.iter_mut() {
+        // Checking to see if symbol is not a knob
+        if (!list[0].as_string().unwrap().eq("knob")) {
+            continue;
+        } else {
+            list[1] = Symbol::Float(val);
+        }
+    }
+}
+
 /// Function that performs the 'screen' operation
 pub fn screen(op: &Operation, info: &mut ImageInfo) {
-    // // Getting number arguments
+    // Getting number arguments
     let width: i32 = *op.width.as_ref().unwrap() as i32;
     let height: i32 = *op.height.as_ref().unwrap() as i32;
 
