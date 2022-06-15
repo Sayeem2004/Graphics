@@ -1,10 +1,10 @@
 # Making and running program
-all:
+all: install
 	cargo build --release
 	cargo run --release
 
 # Running previous assignments
-test:
+test: install
 	cargo test --release
 
 # Converting ppm images to png
@@ -25,3 +25,7 @@ remove:
 # Opening documentation
 doc:
 	cargo doc --open
+
+# Installing python requirements
+install:
+	pip install -r data/requirements.txt

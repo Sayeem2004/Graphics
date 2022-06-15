@@ -7,6 +7,7 @@ mod format;
 mod prev;
 mod script;
 use std::io;
+use std::io::Stdin;
 mod template;
 mod test;
 use std::fs;
@@ -37,7 +38,7 @@ fn main() {
 
     // Variable Declarations
     let mut path: String = String::new();
-    let stdin = io::stdin();
+    let stdin: Stdin = io::stdin();
 
     // Forever loop
     loop {

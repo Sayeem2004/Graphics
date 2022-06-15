@@ -1,6 +1,6 @@
 // Imports
 use crate::algorithm::shape;
-use crate::compiler::{Operation, Symbol, Argument};
+use crate::compiler::{Argument, Operation, Symbol};
 use crate::format::{constant, image::Image, matrix::Matrix, pixel::Pixel};
 use crate::script::light;
 use std::collections::HashMap;

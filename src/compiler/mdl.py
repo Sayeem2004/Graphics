@@ -31,10 +31,9 @@ tokens = (
     "PUSH",
     "POP",
     "SAVE",
-    "GENERATE_RAYFILES",
     "SHADING",
-    "SHADING_TYPE",
-    "SET_KNOBS",
+    "SHADINGTYPE",
+    "SETKNOBS",
     "FOCAL",
     "DISPLAY",
     "SCREEN",
@@ -45,6 +44,7 @@ tokens = (
     "HERMITE",
     "MOVELIGHT",
     "ALTERLIGHT",
+    "TERRAIN",
 )
 
 reserved = {
@@ -74,14 +74,13 @@ reserved = {
     "push" : "PUSH",
     "pop" : "POP",
     "save" : "SAVE",
-    "generate_rayfiles" : "GENERATE_RAYFILES",
     "shading" : "SHADING",
-    "phong" : "SHADING_TYPE",
-    "flat" : "SHADING_TYPE",
-    "gouraud" : "SHADING_TYPE",
-    "raytrace" : "SHADING_TYPE",
-    "wireframe" : "SHADING_TYPE",
-    "setknobs" : "SET_KNOBS",
+    "phong" : "SHADINGTYPE",
+    "flat" : "SHADINGTYPE",
+    "gouraud" : "SHADINGTYPE",
+    "raytrace" : "SHADINGTYPE",
+    "wireframe" : "SHADINGTYPE",
+    "setknobs" : "SETKNOBS",
     "focal" : "FOCAL",
     "display" : "DISPLAY",
     "clear" : "CLEAR",
@@ -90,6 +89,7 @@ reserved = {
     "hermite" : "HERMITE",
     "movelight" : "MOVELIGHT",
     "alterlight" : "ALTERLIGHT",
+    "terrain" : "TERRAIN",
 }
 
 t_ignore = " \t"
@@ -326,7 +326,7 @@ def p_command_vary(p):
 
 def p_command_knobs(p):
     """command : SET SYMBOL NUMBER
-               | SET_KNOBS NUMBER"""
+               | SETKNOBS NUMBER"""
     cmd = {'op' : p[1], 'args' : [], 'knob' : None}
     if p[1] == 'set':
         cmd['knob'] = p[2]
@@ -376,9 +376,9 @@ def p_command_alterlight(p):
     commands.append(cmd)
 
 def p_command_shading(p):
-    "command : SHADING SHADING_TYPE"
-    symbols['shading'] = ['shade_type', p[2]]
-    cmd = {'op':p[1], 'args' : None, 'shade_type' : p[2] }
+    "command : SHADING SHADINGTYPE"
+    symbols['shading'] = ['shadetype', p[2]]
+    cmd = {'op': p[1], 'args' : None, 'shadetype' : p[2]}
     commands.append(cmd)
 
 def p_command_camera(p):
@@ -423,6 +423,10 @@ def p_tween(p):
 def p_focal(p):
     "command : FOCAL NUMBER"
     commands.append({'op':p[1], 'args':[p[2]]})
+
+def p_terrain(p):
+    "command : TERRAIN NUMBER NUMBER"
+    commands.append({'op' : p[1], 'args' : p[2:]})
 
 def p_error(p):
     print('SYNTAX ERROR: ' + str(p))

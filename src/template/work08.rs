@@ -2,7 +2,7 @@
 use crate::prev::ver08::algorithm::{line, shape};
 use crate::prev::ver08::format::{constant, file, image::Image, matrix::Matrix, pixel::Pixel};
 use crate::prev::ver08::script::parse;
-use rand::{Rng, rngs::ThreadRng};
+use rand::{rngs::ThreadRng, Rng};
 use std::{f32::consts::PI, fs, process::Command};
 
 /// Function that creates the gradient sphere image

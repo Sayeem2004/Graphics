@@ -139,7 +139,11 @@ pub fn initial_parse(
 }
 
 /// Function that sets up knob values for all frames
-pub fn vary_parse(operations: &Vec<Operation>, info: &ImageInfo, symbols: &HashMap<String, Vec<Symbol>>) -> Vec<HashMap<String, f32>> {
+pub fn vary_parse(
+    operations: &Vec<Operation>,
+    info: &ImageInfo,
+    symbols: &HashMap<String, Vec<Symbol>>,
+) -> Vec<HashMap<String, f32>> {
     // Indexing variables
     let mx: usize = operations.len();
     let mut curr: usize = 0;
@@ -224,7 +228,7 @@ pub fn animate_parse(
 
     // Removing temporary images
     for i in 0..frames.len() {
-        let name : String = vec![
+        let name: String = vec![
             "temp/".to_string(),
             basename.clone(),
             format!("{:0>#3}", i),
@@ -386,6 +390,12 @@ pub fn draw_parse(
                     &lights,
                     &mut img,
                 );
+                curr += 1;
+            }
+
+            // Terrain command
+            "terrain" => {
+                transform::terrain(&operations[curr], &mut img);
                 curr += 1;
             }
 

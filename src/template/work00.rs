@@ -1,6 +1,6 @@
 // Imports
 use crate::prev::ver05::format::{constant, file, image::Image, pixel::Pixel};
-use rand::{Rng, rngs::ThreadRng};
+use rand::{rngs::ThreadRng, Rng};
 use std::{cmp::Ordering, fs};
 
 /// Converts an image into the number spiral gradient

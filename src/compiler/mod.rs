@@ -3,7 +3,12 @@ use crate::format::{matrix::Matrix, util};
 use crate::script::{parse, parse::ImageInfo};
 use enum_as_inner::EnumAsInner;
 use serde::{Deserialize, Serialize};
-use std::{collections::HashMap, fs, process::{Command, Output}, str::Split};
+use std::{
+    collections::HashMap,
+    fs,
+    process::{Command, Output},
+    str::Split,
+};
 
 /// Enum to store both strings and floats
 #[derive(Serialize, Deserialize, Debug, EnumAsInner)]
@@ -105,7 +110,8 @@ pub fn compile(path: &str, mode: i32) {
     }
 
     // Getting operation and symbol paths from stdout
-    let split: Split<char> = stdout[stdout.find("Python: Parsing succeeded").unwrap()..].split('\n');
+    let split: Split<char> =
+        stdout[stdout.find("Python: Parsing succeeded").unwrap()..].split('\n');
     let mut operation_path: &str = "";
     let mut symbol_path: &str = "";
     for (cnt, str) in (0_i32..).zip(split) {
@@ -136,13 +142,14 @@ pub fn compile(path: &str, mode: i32) {
     // Opening files and getting json strings
     let operation_string: String =
         fs::read_to_string(operation_path).expect("Unable to read operation json file");
-    let symbol_string: String = fs::read_to_string(symbol_path).expect("Unable to read symbol json file");
+    let symbol_string: String =
+        fs::read_to_string(symbol_path).expect("Unable to read symbol json file");
 
     // Making operations list and symbol table from json string
     let mut operations: Vec<Operation> = serde_json::from_str(&operation_string).unwrap();
     let mut symbols: HashMap<String, Vec<Symbol>> = serde_json::from_str(&symbol_string).unwrap();
 
-    // // Sending operations list and symbol table to generate function to create output
+    // Sending operations list and symbol table to generate function to create output
     generate(&mut operations, &mut symbols, mode);
 
     // Deleting operation and symbol file

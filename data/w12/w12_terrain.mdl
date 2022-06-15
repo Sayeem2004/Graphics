@@ -1,0 +1,4 @@
+screen 500 500
+terrain 12 50
+display
+save w12_terrain.png

@@ -1,6 +1,7 @@
 // Imports
+use crate::algorithm::topo;
 use crate::compiler::{Argument, Operation, Symbol};
-use crate::format::matrix::Matrix;
+use crate::format::{image::Image, matrix::Matrix};
 use std::collections::HashMap;
 
 /// Function that performs the 'move' command
@@ -199,4 +200,31 @@ pub fn scale(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>, cord: &mut 
     // Getting dilation matrix and performing dilation
     let trans: Matrix = Matrix::dilate(x, y, z);
     cord.right_transform(&trans);
+}
+
+/// Function that performs the terrain command
+pub fn terrain(op: &Operation, img: &mut Image) {
+    // Variable declarations
+    let size: i32 = img.width.min(img.height);
+    let mut freq: f32 = *op.args.as_ref().unwrap()[0].as_float().unwrap();
+    let mut water: f32 = *op.args.as_ref().unwrap()[1].as_float().unwrap();
+
+    // Error checking variables
+    if (freq < 0.0) {
+        eprintln!(
+            "Frequency value {} is not > 0 using default value of 1",
+            freq
+        );
+        freq = freq.max(1.0);
+    }
+    if (!(0.0..=100.0).contains(&water)) {
+        eprintln!(
+            "Water value {} is not within 0-100, using default value of 50",
+            water
+        );
+        water = water.max(50.0);
+    }
+
+    // Running create_random_terrain command
+    topo::create_random_terrain(size, freq, water, img);
 }

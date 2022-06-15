@@ -10,6 +10,7 @@ fn test_work12() {
 
     // Making sure image files exist
     assert!(util::file_exists("image/script/w12_savecs_test.png"));
-    assert!(util::file_exists("image/script/w12_lighting_test.png"));
-    assert!(util::file_exists("image/script/w12_knobs_test.png"));
+    assert!(util::file_exists("image/gif/w12_lighting_test.gif"));
+    assert!(util::file_exists("image/gif/w12_knobs_test.gif"));
+    assert!(util::file_exists("image/script/w12_terrain.png"));
 }

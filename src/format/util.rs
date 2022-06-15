@@ -72,7 +72,7 @@ pub fn read_lines(path: &str) -> Vec<String> {
     }
 
     // Getting data from the file
-    let data:String = fs::read_to_string(path).expect("Unable to read data");
+    let data: String = fs::read_to_string(path).expect("Unable to read data");
     let mut lines: Vec<String> = data.split('\n').map(|s| s.to_owned()).collect();
 
     // Exiting function

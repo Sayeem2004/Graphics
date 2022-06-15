@@ -2,7 +2,7 @@
 use crate::compiler::{Operation, Symbol};
 use crate::format::{constant, image::Image, util};
 use crate::script::parse::ImageInfo;
-use rand::{Rng, rngs::ThreadRng};
+use rand::{rngs::ThreadRng, Rng};
 use std::{collections::HashMap, fs, process::Command};
 
 /// Function that performs the 'basename' command
@@ -127,7 +127,10 @@ pub fn saveknobs(op: &Operation, symbols: &mut HashMap<String, Vec<Symbol>>) {
     for (name, list) in symbols.iter() {
         // Checking to see if symbol is a knob and adding to it the stored dictionary
         if (list[0].as_string().unwrap().eq("knob")) {
-            dict.push(Symbol::Dictionary((*name).clone(), *list[1].as_float().unwrap()));
+            dict.push(Symbol::Dictionary(
+                (*name).clone(),
+                *list[1].as_float().unwrap(),
+            ));
         }
     }
 
@@ -190,7 +193,11 @@ pub fn screen(op: &Operation, info: &mut ImageInfo) {
 }
 
 /// Function that performs the 'tween' command
-pub fn tween(op: &Operation, frames: &mut Vec<HashMap<String, f32>>, symbols: &HashMap<String, Vec<Symbol>>) {
+pub fn tween(
+    op: &Operation,
+    frames: &mut [HashMap<String, f32>],
+    symbols: &HashMap<String, Vec<Symbol>>,
+) {
     // Variable declarations
     let start: i32 = *(&op.args.as_ref().unwrap()[0]).as_float().unwrap() as i32;
     let end: i32 = *(&op.args.as_ref().unwrap()[1]).as_float().unwrap() as i32;
@@ -200,7 +207,10 @@ pub fn tween(op: &Operation, frames: &mut Vec<HashMap<String, f32>>, symbols: &H
     // Error checking the knob lists
     let knoblist1: Vec<Symbol> = match symbols.get(&name1) {
         None => {
-            eprintln!("Symbol {} is not found in the symbol table, using default value", name1);
+            eprintln!(
+                "Symbol {} is not found in the symbol table, using default value",
+                name1
+            );
             Vec::new()
         }
         Some(list) => {
@@ -215,7 +225,10 @@ pub fn tween(op: &Operation, frames: &mut Vec<HashMap<String, f32>>, symbols: &H
     };
     let knoblist2: Vec<Symbol> = match symbols.get(&name2) {
         None => {
-            eprintln!("Symbol {} is not found in the symbol table, using default value", name2);
+            eprintln!(
+                "Symbol {} is not found in the symbol table, using default value",
+                name2
+            );
             Vec::new()
         }
         Some(list) => {
@@ -241,7 +254,7 @@ pub fn tween(op: &Operation, frames: &mut Vec<HashMap<String, f32>>, symbols: &H
                 list.push((
                     knob1,
                     (*sym1.as_dictionary().unwrap().1),
-                    (*sym2.as_dictionary().unwrap().1)
+                    (*sym2.as_dictionary().unwrap().1),
                 ));
             }
         }
@@ -249,7 +262,7 @@ pub fn tween(op: &Operation, frames: &mut Vec<HashMap<String, f32>>, symbols: &H
 
     // Adding knob values from compiled list to frames list
     for val in list.iter() {
-        for frame in 0..end-start+1 {
+        for frame in 0..end - start + 1 {
             let num: f32 = val.1 + (val.2 - val.1) * (frame as f32) / ((end - start) as f32);
             frames[frame as usize].insert(val.0.clone(), num);
         }

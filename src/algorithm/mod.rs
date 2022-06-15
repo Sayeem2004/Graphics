@@ -3,3 +3,4 @@ pub mod curve;
 pub mod light;
 pub mod line;
 pub mod shape;
+pub mod topo;

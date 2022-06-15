@@ -233,7 +233,7 @@ pub fn movelight(op: &Operation, symbols: &mut HashMap<String, Vec<Symbol>>) {
 
 /// Function that converts from a list of light names to a list of light values and positions
 pub fn names_to_sources(
-    lights: &Vec<String>,
+    lights: &[String],
     symbols: &HashMap<String, Vec<Symbol>>,
 ) -> Vec<(Pixel, f32, f32, f32)> {
     // Variable declarations

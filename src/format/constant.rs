@@ -80,7 +80,7 @@ lazy_static! {
 }
 
 /// List of all possible script commands
-pub const CMDS: [&str; 32] = [
+pub const CMDS: [&str; 33] = [
     "alterlight",
     "ambient",
     "basename",
@@ -110,6 +110,7 @@ pub const CMDS: [&str; 32] = [
     "setknobs",
     "shading",
     "sphere",
+    "terrain",
     "torus",
     "tween",
     "vary",
