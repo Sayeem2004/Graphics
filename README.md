@@ -65,12 +65,13 @@ Installing necessary python requirements: `make install`
   - Takes in the above arguments and saves all the current knobs into a knoblist specified by name, and this knoblist is then inserted into the symbol table for future use. Implemented as described by the instructions in MDL.spec and the assignment page.
 
 - `set` name val
-  - Takes in the above arguments and saves all
+  - Takes in the above arguments and sets the value of the knob specified by name (if it exists) to val.Implemented as described by the instructions in MDL.spec and the assignment page.
 
-- `tween` will be implemented as described in the assignment page.
+- `setknobs` val
+  - Takes in the above argument and sets the value of all knobs currently in the symbol table to val. Implemented as described by the instructions in MDL.spec and the assignment page.
 
-- `shading` will include flat, gouraud, and phong shading.
+- `terrain` freq water
+  - Takes in the above arguments which represent the mountainousness of the data generated (recommended 1 <= freq <= 25, but all freq >= 0 is allowed) and the percentage of data generated covered by water (recommended around 50, but all 100 >= water >= 0 is allowed). These arguments are then imported to a python file which uses perlin noise generation to create a vector of altitudes. These altitudes are then used in combination with a gradient function to color the image and make it look (hopefully somewhat) like a topographic map. Note that each pixel in the image is assigned an altitude, so to prevent too much wait time please limit the screen size to less than 500x500
 
-- `terrain` will generate an image in the form of a topographic map (with the appropriate gradient shading to make it look like a topographic map) from a randomly generated terrain using methods like perlin noise terrain generation, and possiblly other ones, if found. Will take in numeric inputs related to the terrain generation method.
-
-- `gmt` will generate an image in the form of a topographic map (with the appropriate gradient shading) from data taken from the pygmt global elevation dataset. Note that I will not be using the library specific drawing functions, and instead will be implementing my own drawing function. I will only be using the library for getting and parsing elevation data.
+- `tween` name1 name2
+  - Takes in the above arguments and searches the symbol table for two knoblists specified by name1 and name2 respectively. It then iterates through these knoblists and sees if they contain any common knobs, if they do these knobs are then interpolated and inserted into a frames vector for future use in animation. Implemented as described by the instructions in MDL.spec and the assignment page.
