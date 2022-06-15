@@ -50,16 +50,25 @@ Installing necessary python requirements: `make install`
 
 ## Details
 
-- `alterlight` name dr dg db knob
+- `alterlight` name dr dg db [knob]
   - Takes in the above arguments and shifts the rgb values of the light specified by name (if it exists) by the values dr, dg, db, respectively. A knob can be attached to the command for animation purposes as well. This command works similarly to other transformation commands but for lights instead of coordinate systems.
 
 - `ambient` r g b
   - Takes in the above arguments and sets the ambient light of the image to the rgb value of r, g, b respectively. Implemented as described by the instructions in MDL.spec.
 
+- `bezier` x1 y1 x2 y2 x3 y3 x4 y4 [cs]
+  - Takes in the above arguments and creates the bezier curve described by the four points x1,y1 through x4,y4. It also takes an optional coordinate system which will modify all the points in the bezier curve after they are calculated. The curve is drawn directly on the xy plane, without any lighting calculations.
+
+- `circle` x y z r [cs]
+  - Takes in the above arguments and creates the circle described by the center of xyz and with radius r. It also takes an optional coordinate system which will modify all the points on the circle after they are calculated. The circle is drawn directly on the xy plane, without any lighting calculations.
+
+- `hermite` x1 y1 x2 y2 rx1 ry1 rx2 ry2 [cs]
+  - Takes in the above arguments and creates the hermite curve described by the two points and rates of change in the arguments list. It also takes an optional coordinate system which will modify all the points in the hermite curve after they is calculated. The curve is drawn directly on the xy plane, without any lighting calculations.
+
 - `light` name r g b x y z
   - Takes in the above arguments and adds a light specified by name to the symbol table and another vector in the program which is then iterated through when performing lighting calculations. Follows the instructions described in the assignment page and MDL.spec.
 
-- `movelight` name dx dy dz knob
+- `movelight` name dx dy dz [knob]
   - Takes in the above arguments and shifts the xyz coordinates of the light specified by name (if it exists) by the values dx, dy, dz respectively. A knob can be attached to the command for animation purposes as well. This command works almost exactly as the move command but for lights instead of coordinate systems.
 
 - `savecs` name
