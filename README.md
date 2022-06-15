@@ -6,11 +6,12 @@
 
 ## Requirements
 
-Rust and Cargo which can be downloaded from here https://www.rust-lang.org/tools/install
+Rust and Cargo which can be downloaded from here <https://www.rust-lang.org/tools/install>
 
-Make which can be downloaded from http://ftp.gnu.org/gnu/make/
+Make which can be downloaded from <http://ftp.gnu.org/gnu/make/>
 
-Python and Pip which can be downloaded from here https://pip.pypa.io/en/stable/installation/
+Python and Pip which can be downloaded from here <https://pip.pypa.io/en/stable/installation/>
+
 ## Compilation Instructions
 
 Cloning the repo: `git clone git@github.com:Sayeem2004/Graphics.git`
