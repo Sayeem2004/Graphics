@@ -43,8 +43,8 @@ fn tesseract(side: f32) {
 
     // Connecting lines
     for i in 0..edge1.col_num {
-        let pt1 = &edge1.data[i as usize];
-        let pt2 = &edge2.data[i as usize];
+        let pt1: &Vec<f32> = &edge1.data[i as usize];
+        let pt2: &Vec<f32> = &edge2.data[i as usize];
         edge3.add_edge(pt1[0], pt1[1], pt1[2], pt2[0], pt2[1], pt2[2]);
     }
 

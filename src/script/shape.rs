@@ -1,8 +1,8 @@
 // Imports
 use crate::algorithm::shape;
-use crate::compiler::{Operation, Symbol};
+use crate::compiler::{Operation, Symbol, Argument};
 use crate::format::{constant, image::Image, matrix::Matrix, pixel::Pixel};
-use crate::script::{light, parse::ImageInfo};
+use crate::script::light;
 use std::collections::HashMap;
 
 /// Function that performs the 'box' command
@@ -10,7 +10,7 @@ pub fn _box(
     op: &Operation,
     symbols: &HashMap<String, Vec<Symbol>>,
     cord: &Matrix,
-    info: &ImageInfo,
+    lights: &Vec<String>,
     img: &mut Image,
 ) {
     // Checking for lighting constants
@@ -87,23 +87,23 @@ pub fn _box(
                 eprintln!("Symbol value ambient is not an ambient light, using default value");
                 *constant::AMB
             } else {
-                let r = *list[1].as_float().unwrap();
-                let g = *list[2].as_float().unwrap();
-                let b = *list[3].as_float().unwrap();
+                let r: f32 = *list[1].as_float().unwrap();
+                let g: f32 = *list[2].as_float().unwrap();
+                let b: f32 = *list[3].as_float().unwrap();
                 Pixel::new_value(r.min(255.0) as u8, g.min(255.0) as u8, b.min(255.0) as u8)
             }
         }
     };
 
     // Getting point light sources if they exist
-    let pnts: Vec<(Pixel, f32, f32, f32)> = if (info.points.is_empty()) {
+    let pnts: Vec<(Pixel, f32, f32, f32)> = if (lights.is_empty()) {
         (*constant::PNTS).clone()
     } else {
-        light::names_to_sources(info, symbols)
+        light::names_to_sources(lights, symbols)
     };
 
     // Getting box coordinates and adding it to edge matrix
-    let args = op.args.as_ref().unwrap();
+    let args: &Vec<Argument> = op.args.as_ref().unwrap();
     let mut poly: Matrix = Matrix::new_matrix();
     shape::add_box(
         &mut poly,
@@ -127,7 +127,7 @@ pub fn sphere(
     op: &Operation,
     symbols: &HashMap<String, Vec<Symbol>>,
     cord: &Matrix,
-    info: &ImageInfo,
+    lights: &Vec<String>,
     img: &mut Image,
 ) {
     // Checking for lighting constants
@@ -204,23 +204,23 @@ pub fn sphere(
                 eprintln!("Symbol value ambient is not an ambient light, using default value");
                 *constant::AMB
             } else {
-                let r = *list[1].as_float().unwrap();
-                let g = *list[2].as_float().unwrap();
-                let b = *list[3].as_float().unwrap();
+                let r: f32 = *list[1].as_float().unwrap();
+                let g: f32 = *list[2].as_float().unwrap();
+                let b: f32 = *list[3].as_float().unwrap();
                 Pixel::new_value(r.min(255.0) as u8, g.min(255.0) as u8, b.min(255.0) as u8)
             }
         }
     };
 
     // Getting point light sources if they exist
-    let pnts: Vec<(Pixel, f32, f32, f32)> = if (info.points.is_empty()) {
+    let pnts: Vec<(Pixel, f32, f32, f32)> = if (lights.is_empty()) {
         (*constant::PNTS).clone()
     } else {
-        light::names_to_sources(info, symbols)
+        light::names_to_sources(lights, symbols)
     };
 
     // Getting sphere coordinates and adding it to edge matrix
-    let args = op.args.as_ref().unwrap();
+    let args: &Vec<Argument> = op.args.as_ref().unwrap();
     let mut poly: Matrix = Matrix::new_matrix();
     shape::add_sphere(
         &mut poly,
@@ -230,7 +230,7 @@ pub fn sphere(
             *args[2].as_float().unwrap(),
         ),
         *args[3].as_float().unwrap(),
-        100,
+        250,
     );
 
     // Adding sphere to image
@@ -243,7 +243,7 @@ pub fn torus(
     op: &Operation,
     symbols: &HashMap<String, Vec<Symbol>>,
     cord: &Matrix,
-    info: &ImageInfo,
+    lights: &Vec<String>,
     img: &mut Image,
 ) {
     // Checking for lighting constants
@@ -320,9 +320,9 @@ pub fn torus(
                 eprintln!("Symbol value ambient is not an ambient light, using default value");
                 *constant::AMB
             } else {
-                let r = *list[1].as_float().unwrap();
-                let g = *list[2].as_float().unwrap();
-                let b = *list[3].as_float().unwrap();
+                let r: f32 = *list[1].as_float().unwrap();
+                let g: f32 = *list[2].as_float().unwrap();
+                let b: f32 = *list[3].as_float().unwrap();
                 Pixel::new_value(
                     r.min(255.0).max(0.0) as u8,
                     g.min(255.0).max(0.0) as u8,
@@ -333,14 +333,14 @@ pub fn torus(
     };
 
     // Getting point light sources if they exist
-    let pnts: Vec<(Pixel, f32, f32, f32)> = if (info.points.is_empty()) {
+    let pnts: Vec<(Pixel, f32, f32, f32)> = if (lights.is_empty()) {
         (*constant::PNTS).clone()
     } else {
-        light::names_to_sources(info, symbols)
+        light::names_to_sources(lights, symbols)
     };
 
     // Getting torus coordinates and adding it to edge matrix
-    let args = op.args.as_ref().unwrap();
+    let args: &Vec<Argument> = op.args.as_ref().unwrap();
     let mut poly: Matrix = Matrix::new_matrix();
     shape::add_torus(
         &mut poly,
@@ -351,7 +351,7 @@ pub fn torus(
         ),
         *args[3].as_float().unwrap(),
         *args[4].as_float().unwrap(),
-        100,
+        250,
     );
 
     // Adding torus to image

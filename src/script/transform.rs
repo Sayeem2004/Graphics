@@ -7,9 +7,9 @@ use std::collections::HashMap;
 pub fn _move(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>, cord: &mut Matrix) {
     // Getting number arguments
     let args: &Vec<Argument> = op.args.as_ref().unwrap();
-    let mut x = *args[0].as_float().unwrap();
-    let mut y = *args[1].as_float().unwrap();
-    let mut z = *args[2].as_float().unwrap();
+    let mut x: f32 = *args[0].as_float().unwrap();
+    let mut y: f32 = *args[1].as_float().unwrap();
+    let mut z: f32 = *args[2].as_float().unwrap();
 
     // Checking for knob
     let mut fnd: bool = true;
@@ -38,7 +38,7 @@ pub fn _move(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>, cord: &mut 
                     eprintln!("Symbol value {} is not a knob, no changes made", knob);
                     (x, y, z)
                 } else {
-                    let scale = *list[1].as_float().unwrap();
+                    let scale: f32 = *list[1].as_float().unwrap();
                     (x * scale, y * scale, z * scale)
                 }
             }
@@ -77,7 +77,7 @@ pub fn push(stack: &mut Vec<Matrix>, sz: &mut usize) {
 pub fn rotate(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>, cord: &mut Matrix) {
     // Getting number arguments
     let args: &Vec<Argument> = op.args.as_ref().unwrap();
-    let mut ang = *args[1].as_float().unwrap();
+    let mut ang: f32 = *args[1].as_float().unwrap();
 
     // Checking for knob
     let mut fnd: bool = true;
@@ -106,7 +106,7 @@ pub fn rotate(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>, cord: &mut
                     eprintln!("Symbol value {} is not a knob, no changes made", knob);
                     ang
                 } else {
-                    let scale = *list[1].as_float().unwrap();
+                    let scale: f32 = *list[1].as_float().unwrap();
                     ang * scale
                 }
             }
@@ -156,9 +156,9 @@ pub fn savecs(op: &Operation, symbols: &mut HashMap<String, Vec<Symbol>>, cord: 
 pub fn scale(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>, cord: &mut Matrix) {
     // Getting number arguments
     let args: &Vec<Argument> = op.args.as_ref().unwrap();
-    let mut x = *args[0].as_float().unwrap();
-    let mut y = *args[1].as_float().unwrap();
-    let mut z = *args[2].as_float().unwrap();
+    let mut x: f32 = *args[0].as_float().unwrap();
+    let mut y: f32 = *args[1].as_float().unwrap();
+    let mut z: f32 = *args[2].as_float().unwrap();
 
     // Checking for knob
     let mut fnd: bool = true;
@@ -187,7 +187,7 @@ pub fn scale(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>, cord: &mut 
                     eprintln!("Symbol value {} is not a knob, no changes made", knob);
                     (x, y, z)
                 } else {
-                    let scale = *list[1].as_float().unwrap();
+                    let scale: f32 = *list[1].as_float().unwrap();
                     (x * scale, y * scale, z * scale)
                 }
             }

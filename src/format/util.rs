@@ -2,15 +2,15 @@
 use crate::format::{image::Image, matrix::Matrix};
 use std::io::{BufWriter, Write};
 use std::process::Command;
-use std::{cmp, fs};
+use std::{cmp, fs, fs::File, str::Split};
 
 /// Function for creating a ppm ascii file
 pub fn create_ppm_ascii(path: &str, img: &Image, mode: i32) {
     // Attempting to create file
-    let file = fs::File::create(path).expect("Unable to create file");
+    let file: File = File::create(path).expect("Unable to create file");
 
     // Attempting to create writer
-    let mut writer = BufWriter::new(file);
+    let mut writer: BufWriter<File> = BufWriter::new(file);
 
     // Writing information
     writer
@@ -37,11 +37,11 @@ pub fn read_lines_csv(path: &str) -> Matrix {
     }
 
     // Getting data from csv file and splitting it
-    let data = fs::read_to_string(path).expect("Unable to read data");
-    let lines = data.split('\n');
+    let data: String = fs::read_to_string(path).expect("Unable to read data");
+    let lines: Split<char> = data.split('\n');
 
     // Creating edge matrix
-    let mut mat = Matrix::new_matrix();
+    let mut mat: Matrix = Matrix::new_matrix();
 
     // Iterating through data and adding to matrix
     for line in lines {
@@ -49,7 +49,7 @@ pub fn read_lines_csv(path: &str) -> Matrix {
         if (line.is_empty()) {
             continue;
         }
-        let strip = &line[1..line.len() - 1];
+        let strip: &str = &line[1..line.len() - 1];
         let nums: Vec<f32> = strip
             .split(", ")
             .map(|x| x.parse::<f32>().unwrap())
@@ -72,7 +72,7 @@ pub fn read_lines(path: &str) -> Vec<String> {
     }
 
     // Getting data from the file
-    let data = fs::read_to_string(path).expect("Unable to read data");
+    let data:String = fs::read_to_string(path).expect("Unable to read data");
     let mut lines: Vec<String> = data.split('\n').map(|s| s.to_owned()).collect();
 
     // Exiting function
@@ -123,14 +123,14 @@ pub fn trim_csv(path: &str, scale: i32) {
     println!("After: {}", ret.col_num);
 
     // Attempting to create file and writer
-    let file = fs::File::create("data/compressed.csv").expect("Unable to create file");
-    let mut writer = BufWriter::new(file);
+    let file: File = fs::File::create("data/compressed.csv").expect("Unable to create file");
+    let mut writer: BufWriter<File> = BufWriter::new(file);
     let mut curr: usize = 0;
 
     // Iterating through values and writing data
     while (curr < ret.col_num as usize) {
         // Joining numbers
-        let nums = vec![
+        let nums: String = vec![
             ret.data[curr][0].to_string(),
             ret.data[curr][1].to_string(),
             ret.data[cmp::min(curr + 1, (ret.col_num - 1) as usize)][0].to_string(),
@@ -170,12 +170,12 @@ pub fn convert_script(path: &str, size: i32) {
     }
 
     // Getting data from csv file and splitting it
-    let data = fs::read_to_string(path).expect("Unable to read data");
-    let lines = data.split('\n');
+    let data: String = fs::read_to_string(path).expect("Unable to read data");
+    let lines: Split<char> = data.split('\n');
 
     // Attempting to create script file and writer
-    let file = fs::File::create("data/script").expect("Unable to create file");
-    let mut writer = BufWriter::new(file);
+    let file: File = fs::File::create("data/script").expect("Unable to create file");
+    let mut writer: BufWriter<File> = BufWriter::new(file);
 
     // Iterating through data and adding to file
     for line in lines {
@@ -183,7 +183,7 @@ pub fn convert_script(path: &str, size: i32) {
         if (line.is_empty()) {
             continue;
         }
-        let strip = &line[1..line.len() - 1];
+        let strip: &str = &line[1..line.len() - 1];
         let nums: Vec<f32> = strip
             .split(", ")
             .map(|x| x.parse::<f32>().unwrap())

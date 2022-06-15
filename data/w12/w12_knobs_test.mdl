@@ -1,33 +1,24 @@
 // Setting things up
 screen 750 750
+constants shiny_gold 0.3 0.3 0.8 0.275 0.275 0.7 0.1 0.1 0.2
+basename w12_knobs_test
+frames 360
+light 255 255 255 375 375 375
 
-// Using set
-set knob1 0.5
-set knob2 0.5
-set knob3 0.5
-set knob4 0.5
-set knob5 0.5
+// Performing initial knob stuff
 push
-move 750 750 750 knob1
+move 750 750 0 knob1
 rotate x 360 knob2
-rotate y 360 knob3
-rotate z 360 knob4
-scale 2 2 2 knob5
-sphere 0 0 0 100
-display
+rotate y 360 knob2
+rotate z 360 knob2
+setknobs 0
+saveknobs knoblist1
 
-// Using setknobs
-clear
-pop
-setknobs 0.75
-push
-move 750 750 750 knob1
-rotate x 360 knob2
-rotate y 360 knob3
-rotate z 360 knob4
-scale 2 2 2 knob5
-sphere 0 0 0 100
-display
+// Performing later knob stuff
+set knob1 1
+set knob2 2
+saveknobs knoblist2
 
 // Ending stuff
-save w12_knobs_test.mdl
+box shiny_gold 0 0 0 100 100 100
+tween 0 359 knoblist1 knoblist2

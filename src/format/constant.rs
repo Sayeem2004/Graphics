@@ -80,7 +80,8 @@ lazy_static! {
 }
 
 /// List of all possible script commands
-pub const CMDS: [&str; 31] = [
+pub const CMDS: [&str; 32] = [
+    "alterlight",
     "ambient",
     "basename",
     "bezier",
@@ -92,18 +93,18 @@ pub const CMDS: [&str; 31] = [
     "display",
     "focal",
     "frames",
-    "generate_rayfiles",
     "hermite",
     "light",
     "line",
     "mesh",
     "move",
+    "movelight",
     "pop",
     "push",
     "rotate",
     "save",
     "savecs",
-    "save_knobs",
+    "saveknobs",
     "scale",
     "set",
     "setknobs",

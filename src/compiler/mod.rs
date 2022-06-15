@@ -3,7 +3,7 @@ use crate::format::{matrix::Matrix, util};
 use crate::script::{parse, parse::ImageInfo};
 use enum_as_inner::EnumAsInner;
 use serde::{Deserialize, Serialize};
-use std::{collections::HashMap, fs, process::Command};
+use std::{collections::HashMap, fs, process::{Command, Output}, str::Split};
 
 /// Enum to store both strings and floats
 #[derive(Serialize, Deserialize, Debug, EnumAsInner)]
@@ -25,17 +25,19 @@ pub struct Operation {
     pub width: Option<f32>,
     pub height: Option<f32>,
     pub light: Option<String>,
+    pub knoblist0: Option<String>,
+    pub knoblist1: Option<String>,
 }
 
 /// Struct to store camera constants
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Camera {
     pub eye: Vec<f32>,
     pub aim: Vec<f32>,
 }
 
 /// Struct to store lighting constants
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Lighting {
     pub red: Vec<f32>,
     pub blue: Vec<f32>,
@@ -44,14 +46,14 @@ pub struct Lighting {
 }
 
 /// Struct to store light source
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Source {
     pub color: Vec<f32>,
     pub location: Vec<f32>,
 }
 
 /// Enum to store possible symbol values
-#[derive(Serialize, Deserialize, Debug, EnumAsInner)]
+#[derive(Serialize, Deserialize, Debug, EnumAsInner, Clone)]
 #[serde(untagged)]
 pub enum Symbol {
     Camera(Camera),
@@ -62,6 +64,7 @@ pub enum Symbol {
     Source(Source),
     String(String),
     Vec(Vec<f32>),
+    Dictionary(String, f32),
 }
 
 /// Function that compiles a given script file and outputs an image
@@ -76,7 +79,7 @@ pub fn compile(path: &str, mode: i32) {
     }
 
     // Running python compiler on script
-    let output = Command::new("python")
+    let output: Output = Command::new("python")
         .arg("src/compiler/script.py")
         .arg(path)
         .output()
@@ -91,7 +94,7 @@ pub fn compile(path: &str, mode: i32) {
     }
 
     // Checking output from command
-    let stdout = String::from_utf8(output.stdout).unwrap();
+    let stdout: String = String::from_utf8(output.stdout).unwrap();
     if (!stdout.contains("Python: Parsing succeeded")) {
         eprintln!(
             "Script file {} failed to compile, ending compiling attempt\n{}",
@@ -102,7 +105,7 @@ pub fn compile(path: &str, mode: i32) {
     }
 
     // Getting operation and symbol paths from stdout
-    let split = stdout[stdout.find("Python: Parsing succeeded").unwrap()..].split('\n');
+    let split: Split<char> = stdout[stdout.find("Python: Parsing succeeded").unwrap()..].split('\n');
     let mut operation_path: &str = "";
     let mut symbol_path: &str = "";
     for (cnt, str) in (0_i32..).zip(split) {
@@ -131,9 +134,9 @@ pub fn compile(path: &str, mode: i32) {
     }
 
     // Opening files and getting json strings
-    let operation_string =
+    let operation_string: String =
         fs::read_to_string(operation_path).expect("Unable to read operation json file");
-    let symbol_string = fs::read_to_string(symbol_path).expect("Unable to read symbol json file");
+    let symbol_string: String = fs::read_to_string(symbol_path).expect("Unable to read symbol json file");
 
     // Making operations list and symbol table from json string
     let mut operations: Vec<Operation> = serde_json::from_str(&operation_string).unwrap();
@@ -164,7 +167,7 @@ pub fn generate(
         }
 
         // Getting knob values from various frames
-        let frames: Vec<HashMap<String, f32>> = parse::vary_parse(operations, info);
+        let frames: Vec<HashMap<String, f32>> = parse::vary_parse(operations, info, symbols);
 
         // Sending things through animation parser
         info.animate = true;

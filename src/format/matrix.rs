@@ -399,13 +399,13 @@ impl Matrix {
         for i in 0..self.col_num {
             if (i % 3 == 2) {
                 // Backface culling
-                let normal = shape::normal(self, i as usize);
+                let normal: (f32, f32, f32) = shape::normal(self, i as usize);
                 if (light::dot(normal, view) <= 0.0) {
                     continue;
                 }
 
                 // Getting lighting value
-                let surf = (
+                let surf: (f32, f32, f32) = (
                     self.data[(i - 2) as usize][0],
                     self.data[(i - 2) as usize][1],
                     self.data[(i - 2) as usize][2],

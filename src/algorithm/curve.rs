@@ -43,7 +43,7 @@ pub fn add_bezier(
     let mut xmat: Matrix = Matrix::new_matrix();
     xmat.add_col(&[s.0, e.0, m1.0, m2.0]);
     let xret: Matrix = Matrix::multiply_matrices(&constant::BEZIER, &xmat);
-    let (ax, bx, cx, dx) = (
+    let (ax, bx, cx, dx): (f32, f32, f32, f32) = (
         xret.data[0][0],
         xret.data[0][1],
         xret.data[0][2],
@@ -54,7 +54,7 @@ pub fn add_bezier(
     let mut ymat: Matrix = Matrix::new_matrix();
     ymat.add_col(&[s.1, e.1, m1.1, m2.1]);
     let yret: Matrix = Matrix::multiply_matrices(&constant::BEZIER, &ymat);
-    let (ay, by, cy, dy) = (
+    let (ay, by, cy, dy): (f32, f32, f32, f32) = (
         yret.data[0][0],
         yret.data[0][1],
         yret.data[0][2],
@@ -94,7 +94,7 @@ pub fn add_hermite(
     let mut xmat: Matrix = Matrix::new_matrix();
     xmat.add_col(&[s.0, e.0, sr.0, er.0]);
     let xret: Matrix = Matrix::multiply_matrices(&constant::HERMITE, &xmat);
-    let (ax, bx, cx, dx) = (
+    let (ax, bx, cx, dx): (f32, f32, f32, f32) = (
         xret.data[0][0],
         xret.data[0][1],
         xret.data[0][2],
@@ -105,7 +105,7 @@ pub fn add_hermite(
     let mut ymat: Matrix = Matrix::new_matrix();
     ymat.add_col(&[s.1, e.1, sr.1, er.1]);
     let yret: Matrix = Matrix::multiply_matrices(&constant::HERMITE, &ymat);
-    let (ay, by, cy, dy) = (
+    let (ay, by, cy, dy): (f32, f32, f32, f32) = (
         yret.data[0][0],
         yret.data[0][1],
         yret.data[0][2],

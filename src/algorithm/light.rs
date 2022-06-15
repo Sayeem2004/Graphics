@@ -12,7 +12,7 @@ pub fn calculate(
 ) -> Pixel {
     // Variable declarations
     let (mut fr, mut fg, mut fb): (u32, u32, u32) = (0, 0, 0);
-    let (kra, kga, kba, krd, kgd, kbd, krs, kgs, kbs) = div;
+    let (kra, kga, kba, krd, kgd, kbd, krs, kgs, kbs): (f32, f32, f32, f32, f32, f32, f32, f32, f32) = div;
     let hnorm: (f32, f32, f32) = normalize(normal);
     let hview: (f32, f32, f32) = normalize(view);
     let mut cpnt: Vec<Pixel> = vec![Pixel::new(); pnts.len()];

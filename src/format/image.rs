@@ -170,10 +170,10 @@ impl Image {
         // Within size range
         if (y >= 0 && y < self.height && x >= 0 && x < self.width) {
             // Making visited vector
-            let mut vis = vec![vec![0; self.width as usize]; self.height as usize];
+            let mut vis: Vec<Vec<i32>> = vec![vec![0; self.width as usize]; self.height as usize];
 
             // Creating queue and adding first element
-            let mut queue = VecDeque::<(i32, i32)>::new();
+            let mut queue: VecDeque<(i32, i32)> = VecDeque::<(i32, i32)>::new();
             vis[y as usize][x as usize] = 1;
             queue.push_back((x, y));
 
@@ -185,8 +185,8 @@ impl Image {
 
                 for i in 0..4 {
                     // New points
-                    let nx = (point.0) + constant::DX[i as usize];
-                    let ny = (point.1) + constant::DY[i as usize];
+                    let nx: i32 = (point.0) + constant::DX[i as usize];
+                    let ny: i32 = (point.1) + constant::DY[i as usize];
 
                     // Within bounds
                     if (nx >= 0
@@ -216,10 +216,10 @@ impl Image {
         // Within size range
         if (row >= 0 && row < self.height && col >= 0 && col < self.width) {
             // Making visited vector
-            let mut vis = vec![vec![0; self.width as usize]; self.height as usize];
+            let mut vis: Vec<Vec<i32>> = vec![vec![0; self.width as usize]; self.height as usize];
 
             // Creating queue and adding first element
-            let mut queue = VecDeque::<(i32, i32)>::new();
+            let mut queue: VecDeque<(i32, i32)> = VecDeque::<(i32, i32)>::new();
             vis[row as usize][col as usize] = 1;
             queue.push_back((row, col));
 
@@ -231,8 +231,8 @@ impl Image {
 
                 for i in 0..4 {
                     // New points
-                    let nrow = (point.0) + constant::DX[i as usize];
-                    let ncol = (point.1) + constant::DY[i as usize];
+                    let nrow: i32 = (point.0) + constant::DX[i as usize];
+                    let ncol: i32 = (point.1) + constant::DY[i as usize];
 
                     // Within bounds
                     if (ncol >= 0

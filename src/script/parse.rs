@@ -64,12 +64,6 @@ pub fn initial_parse(
                 curr += 1;
             }
 
-            // Light command
-            "light" => {
-                light::light(&operations[curr], symbols, &mut info);
-                curr += 1;
-            }
-
             // Move command
             "move" => {
                 transform::_move(&operations[curr], symbols, &mut stack[sz - 1]);
@@ -100,6 +94,12 @@ pub fn initial_parse(
                 curr += 1;
             }
 
+            // Saveknobs command
+            "saveknobs" => {
+                util::saveknobs(&operations[curr], symbols);
+                curr += 1;
+            }
+
             // Scale command
             "scale" => {
                 transform::scale(&operations[curr], symbols, &mut stack[sz - 1]);
@@ -109,6 +109,18 @@ pub fn initial_parse(
             // Screen command
             "screen" => {
                 util::screen(&operations[curr], &mut info);
+                curr += 1;
+            }
+
+            // Set command
+            "set" => {
+                util::set(&operations[curr], symbols);
+                curr += 1;
+            }
+
+            // Setknobs command
+            "setknobs" => {
+                util::setknobs(&operations[curr], symbols);
                 curr += 1;
             }
 
@@ -127,7 +139,7 @@ pub fn initial_parse(
 }
 
 /// Function that sets up knob values for all frames
-pub fn vary_parse(operations: &Vec<Operation>, info: &ImageInfo) -> Vec<HashMap<String, f32>> {
+pub fn vary_parse(operations: &Vec<Operation>, info: &ImageInfo, symbols: &HashMap<String, Vec<Symbol>>) -> Vec<HashMap<String, f32>> {
     // Indexing variables
     let mx: usize = operations.len();
     let mut curr: usize = 0;
@@ -138,6 +150,12 @@ pub fn vary_parse(operations: &Vec<Operation>, info: &ImageInfo) -> Vec<HashMap<
     // Looping through all operations
     while (curr < mx) {
         match operations[curr].op.as_ref().unwrap().as_str() {
+            // Tween command
+            "tween" => {
+                util::tween(&operations[curr], &mut frames, symbols);
+                curr += 1;
+            }
+
             // Vary command
             "vary" => {
                 util::vary(&operations[curr], &mut frames);
@@ -191,7 +209,7 @@ pub fn animate_parse(
     }
 
     // Compiling into a gif using image magick
-    let basename = (*info.basename.as_ref().unwrap()).clone();
+    let basename: String = (*info.basename.as_ref().unwrap()).clone();
     println!("Converting {0} images to {0}.gif...", basename);
     Command::new("convert")
         .arg("-delay")
@@ -206,7 +224,7 @@ pub fn animate_parse(
 
     // Removing temporary images
     for i in 0..frames.len() {
-        let name = vec![
+        let name : String = vec![
             "temp/".to_string(),
             basename.clone(),
             format!("{:0>#3}", i),
@@ -232,10 +250,17 @@ pub fn draw_parse(
     let mut stack: Vec<Matrix> = vec![Matrix::new_transformation()];
     let mut sz: usize = stack.len();
     let mut img: Image = Image::new_dimension(info.width, info.height);
+    let mut lights: Vec<String> = Vec::new();
 
     // Looping through all operations
     while (curr < mx) {
         match operations[curr].op.as_ref().unwrap().as_str() {
+            // Movelight command
+            "alterlight" => {
+                light::alterlight(&operations[curr], symbols);
+                curr += 1;
+            }
+
             // Bezier command
             "bezier" => {
                 curve::bezier(
@@ -253,7 +278,7 @@ pub fn draw_parse(
                     &operations[curr],
                     symbols,
                     &stack[stack.len() - 1],
-                    info,
+                    &lights,
                     &mut img,
                 );
                 curr += 1;
@@ -293,6 +318,12 @@ pub fn draw_parse(
                 curr += 1;
             }
 
+            // Light command
+            "light" => {
+                light::light(&operations[curr], symbols, &mut lights);
+                curr += 1;
+            }
+
             // Line command
             "line" => {
                 curve::line(
@@ -307,6 +338,12 @@ pub fn draw_parse(
             // Move command
             "move" => {
                 transform::_move(&operations[curr], symbols, &mut stack[sz - 1]);
+                curr += 1;
+            }
+
+            // Movelight command
+            "movelight" => {
+                light::movelight(&operations[curr], symbols);
                 curr += 1;
             }
 
@@ -340,25 +377,13 @@ pub fn draw_parse(
                 curr += 1;
             }
 
-            // Set command
-            "set" => {
-                util::set(&operations[curr], symbols);
-                curr += 1;
-            }
-
-            // Setknobs command
-            "setknobs" => {
-                util::setknobs(&operations[curr], symbols);
-                curr += 1;
-            }
-
             // Sphere command
             "sphere" => {
                 shape::sphere(
                     &operations[curr],
                     symbols,
                     &stack[stack.len() - 1],
-                    info,
+                    &lights,
                     &mut img,
                 );
                 curr += 1;
@@ -370,7 +395,7 @@ pub fn draw_parse(
                     &operations[curr],
                     symbols,
                     &stack[stack.len() - 1],
-                    info,
+                    &lights,
                     &mut img,
                 );
                 curr += 1;
@@ -385,7 +410,7 @@ pub fn draw_parse(
 
     // Saving frame if animate is true
     if (info.animate) {
-        let name = vec![
+        let name: String = vec![
             "temp/".to_string(),
             (*info.basename.as_ref().unwrap()).clone(),
             format!("{:0>#3}", info.curr_frame),

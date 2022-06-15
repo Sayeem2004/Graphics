@@ -1,13 +1,51 @@
 // Setting things up
 screen 750 750
+frames 375
+basename w12_lighting_test
+ambient 64 64 64
 
-// Lighting stuff
-ambient 50 50 50
-light first 255 255 255 0 0 750
-light second 255 255 255 750 750 750
-light third 255 255 255 375 375 750
+// Making lights
+light r1 0 0 0 000 750 750
+light r2 0 0 0 000 500 750
+light r3 0 0 0 000 250 750
+light r4 0 0 0 000 000 750
+light g1 0 0 0 750 750 750
+light g2 0 0 0 500 750 750
+light g3 0 0 0 250 750 750
+light g4 0 0 0 000 750 750
+light b1 0 0 0 750 750 750
+light b2 0 0 0 750 500 750
+light b3 0 0 0 750 250 750
+light b4 0 0 0 750 000 750
 
-// Drawing sphere to show lights
-sphere 375 375 375 200
-display
-save w12_lighting_test.mdl
+// Moving lights
+movelight r1 750 0 0 knob1
+movelight r2 750 0 0 knob1
+movelight r3 750 0 0 knob1
+movelight r4 750 0 0 knob1
+movelight g1 0 -750 0 knob1
+movelight g2 0 -750 0 knob1
+movelight g3 0 -750 0 knob1
+movelight g4 0 -750 0 knob1
+movelight b1 -750 0 0 knob1
+movelight b2 -750 0 0 knob1
+movelight b3 -750 0 0 knob1
+movelight b4 -750 0 0 knob1
+
+// Altering lights
+alterlight r1 255 0 0 knob1
+alterlight r2 255 0 0 knob1
+alterlight r3 255 0 0 knob1
+alterlight r4 255 0 0 knob1
+alterlight g1 0 255 0 knob1
+alterlight g2 0 255 0 knob1
+alterlight g3 0 255 0 knob1
+alterlight g4 0 255 0 knob1
+alterlight b1 0 0 255 knob1
+alterlight b2 0 0 255 knob1
+alterlight b3 0 0 255 knob1
+alterlight b4 0 0 255 knob1
+
+// Final touches
+sphere 375 375 375 250
+vary knob1 0 374 0 1

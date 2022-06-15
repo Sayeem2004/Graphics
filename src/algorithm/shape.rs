@@ -11,14 +11,14 @@ pub fn add_box(poly: &mut Matrix, c: (f32, f32, f32), w: f32, h: f32, d: f32) {
     }
 
     // Defining vertices
-    let (x0, y0, z0) = (c.0 + 0.0, c.1 - 0.0, c.2 - 0.0);
-    let (x1, y1, z1) = (c.0 + w, c.1 - 0.0, c.2 - 0.0);
-    let (x2, y2, z2) = (c.0 + 0.0, c.1 - h, c.2 - 0.0);
-    let (x3, y3, z3) = (c.0 + 0.0, c.1 - 0.0, c.2 - d);
-    let (x4, y4, z4) = (c.0 + w, c.1 - h, c.2 - 0.0);
-    let (x5, y5, z5) = (c.0 + w, c.1 - 0.0, c.2 - d);
-    let (x6, y6, z6) = (c.0 + 0.0, c.1 - h, c.2 - d);
-    let (x7, y7, z7) = (c.0 + w, c.1 - h, c.2 - d);
+    let (x0, y0, z0): (f32, f32, f32) = (c.0 + 0.0, c.1 - 0.0, c.2 - 0.0);
+    let (x1, y1, z1): (f32, f32, f32) = (c.0 + w, c.1 - 0.0, c.2 - 0.0);
+    let (x2, y2, z2): (f32, f32, f32) = (c.0 + 0.0, c.1 - h, c.2 - 0.0);
+    let (x3, y3, z3): (f32, f32, f32) = (c.0 + 0.0, c.1 - 0.0, c.2 - d);
+    let (x4, y4, z4): (f32, f32, f32) = (c.0 + w, c.1 - h, c.2 - 0.0);
+    let (x5, y5, z5): (f32, f32, f32) = (c.0 + w, c.1 - 0.0, c.2 - d);
+    let (x6, y6, z6): (f32, f32, f32) = (c.0 + 0.0, c.1 - h, c.2 - d);
+    let (x7, y7, z7): (f32, f32, f32) = (c.0 + w, c.1 - h, c.2 - d);
 
     // Adding triangles to matrix
     poly.add_triangle((x0, y0, z0), (x2, y2, z2), (x4, y4, z4));

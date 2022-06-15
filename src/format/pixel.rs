@@ -2,7 +2,7 @@
 use std::fmt;
 
 /// Pixel struct
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug)]
 pub struct Pixel(pub u8, pub u8, pub u8);
 
 // Implementing constructors

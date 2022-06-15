@@ -2,13 +2,13 @@
 use crate::compiler::{Operation, Symbol};
 use crate::format::{constant, image::Image, util};
 use crate::script::parse::ImageInfo;
-use rand::Rng;
+use rand::{Rng, rngs::ThreadRng};
 use std::{collections::HashMap, fs, process::Command};
 
 /// Function that performs the 'basename' command
 pub fn basename(op: &Operation, symbols: &HashMap<String, Vec<Symbol>>, info: &mut ImageInfo) {
     // Getting string argument
-    let name = (&op.args.as_ref().unwrap()[0]).as_string().unwrap();
+    let name: &String = (&op.args.as_ref().unwrap()[0]).as_string().unwrap();
 
     // Checking if it is in symbol table
     match symbols.get(name) {
@@ -52,9 +52,9 @@ pub fn display(img: &Image, mode: i32) {
     fs::create_dir_all("temp").expect("Unable to create temp directory");
 
     // Saving image
-    let mut rng = rand::thread_rng();
+    let mut rng: ThreadRng = rand::thread_rng();
     let num: i32 = rng.gen_range(0..10000);
-    let name = vec![
+    let name: String = vec![
         "temp/display".to_string(),
         format!("{:0>#4}", num),
         ".ppm".to_string(),
@@ -72,7 +72,7 @@ pub fn display(img: &Image, mode: i32) {
 /// Function that performs the 'frames' operation
 pub fn frames(op: &Operation, info: &mut ImageInfo) {
     // Error checking
-    let frames = *op.args.as_ref().unwrap()[0].as_float().unwrap() as i32;
+    let frames: i32 = *op.args.as_ref().unwrap()[0].as_float().unwrap() as i32;
     if (frames < 1) {
         eprintln!("Number of frames specified is less than 1, using default value");
         info.num_frames = info.num_frames.max(frames);
@@ -90,9 +90,9 @@ pub fn save(op: &Operation, img: &Image) {
     fs::create_dir_all("image/script").expect("Unable to create image/script directory");
 
     // Saving image
-    let mut rng = rand::thread_rng();
+    let mut rng: ThreadRng = rand::thread_rng();
     let num: i32 = rng.gen_range(0..10000);
-    let name = vec![
+    let name: String = vec![
         "temp/save".to_string(),
         format!("{:0>#4}", num),
         ".ppm".to_string(),
@@ -101,8 +101,8 @@ pub fn save(op: &Operation, img: &Image) {
     util::create_ppm_ascii(&name, img, 1);
 
     // Getting image path
-    let mut path = String::from("image/script/");
-    let add = op.args.as_ref().unwrap()[0].as_string().unwrap();
+    let mut path: String = String::from("image/script/");
+    let add: &String = op.args.as_ref().unwrap()[0].as_string().unwrap();
     path.push_str(add);
 
     // Performing image magick convert command
@@ -117,11 +117,29 @@ pub fn save(op: &Operation, img: &Image) {
     fs::remove_file(&name).expect("Unable to delete temporary save file");
 }
 
+/// Function that performs the 'saveknobs' command
+pub fn saveknobs(op: &Operation, symbols: &mut HashMap<String, Vec<Symbol>>) {
+    // Variable declarations
+    let name: String = (*op.knoblist0.as_ref().unwrap()).clone();
+    let mut dict: Vec<Symbol> = vec![Symbol::String(String::from("knoblist"))];
+
+    // Iterating through symbol table
+    for (name, list) in symbols.iter() {
+        // Checking to see if symbol is a knob and adding to it the stored dictionary
+        if (list[0].as_string().unwrap().eq("knob")) {
+            dict.push(Symbol::Dictionary((*name).clone(), *list[1].as_float().unwrap()));
+        }
+    }
+
+    // Updating symbol table
+    symbols.insert(name, dict);
+}
+
 /// Function that performs the 'set' command
 pub fn set(op: &Operation, symbols: &mut HashMap<String, Vec<Symbol>>) {
     // Variable declarations
-    let knob = (*op.knob.as_ref().unwrap()).clone();
-    let val = *(&op.args.as_ref().unwrap()[0]).as_float().unwrap();
+    let knob: String = (*op.knob.as_ref().unwrap()).clone();
+    let val: f32 = *(&op.args.as_ref().unwrap()[0]).as_float().unwrap();
 
     // Error checking symbol table
     match symbols.get_mut(&knob) {
@@ -147,7 +165,7 @@ pub fn set(op: &Operation, symbols: &mut HashMap<String, Vec<Symbol>>) {
 /// Function that performs the 'setknobs' command
 pub fn setknobs(op: &Operation, symbols: &mut HashMap<String, Vec<Symbol>>) {
     // Variable declarations
-    let val = *(&op.args.as_ref().unwrap()[0]).as_float().unwrap();
+    let val: f32 = *(&op.args.as_ref().unwrap()[0]).as_float().unwrap();
 
     // Iterating through symbol table
     for (_, list) in symbols.iter_mut() {
@@ -171,16 +189,77 @@ pub fn screen(op: &Operation, info: &mut ImageInfo) {
     info.height = height;
 }
 
+/// Function that performs the 'tween' command
+pub fn tween(op: &Operation, frames: &mut Vec<HashMap<String, f32>>, symbols: &HashMap<String, Vec<Symbol>>) {
+    // Variable declarations
+    let start: i32 = *(&op.args.as_ref().unwrap()[0]).as_float().unwrap() as i32;
+    let end: i32 = *(&op.args.as_ref().unwrap()[1]).as_float().unwrap() as i32;
+    let name1: String = (*op.knoblist0.as_ref().unwrap()).clone();
+    let name2: String = (*op.knoblist1.as_ref().unwrap()).clone();
+
+    // Error checking the knob lists
+    let knoblist1: Vec<Symbol> = match symbols.get(&name1) {
+        None => {
+            eprintln!("Symbol {} is not found in the symbol table, using default value", name1);
+            Vec::new()
+        }
+        Some(list) => {
+            let typ: String = (*list[0].as_string().unwrap()).clone();
+            if (!typ.eq("knoblist")) {
+                eprintln!("Symbol {} is not a knoblist, using default value", name1);
+                Vec::new()
+            } else {
+                (*list).clone()
+            }
+        }
+    };
+    let knoblist2: Vec<Symbol> = match symbols.get(&name2) {
+        None => {
+            eprintln!("Symbol {} is not found in the symbol table, using default value", name2);
+            Vec::new()
+        }
+        Some(list) => {
+            let typ: String = (*list[0].as_string().unwrap()).clone();
+            if (!typ.eq("knoblist")) {
+                eprintln!("Symbol {} is not a knoblist, using default value", name2);
+                Vec::new()
+            } else {
+                (*list).clone()
+            }
+        }
+    };
+
+    // Iterating through the knoblists and compiling starting and ending values into a list
+    let mut list: Vec<(String, f32, f32)> = Vec::new();
+    for sym1 in knoblist1.iter().skip(1) {
+        for sym2 in knoblist2.iter().skip(1) {
+            // Checking if knobs are the same
+            let knob1: String = (*sym1.as_dictionary().unwrap().0).clone();
+            let knob2: String = (*sym2.as_dictionary().unwrap().0).clone();
+            if (knob1.eq(&knob2)) {
+                // Adding to list
+                list.push((
+                    knob1,
+                    (*sym1.as_dictionary().unwrap().1),
+                    (*sym2.as_dictionary().unwrap().1)
+                ));
+            }
+        }
+    }
+
+    // Adding knob values from compiled list to frames list
+    for val in list.iter() {
+        for frame in 0..end-start+1 {
+            let num: f32 = val.1 + (val.2 - val.1) * (frame as f32) / ((end - start) as f32);
+            frames[frame as usize].insert(val.0.clone(), num);
+        }
+    }
+}
+
 /// Function that performs the 'vary' command
 pub fn vary(op: &Operation, frames: &mut Vec<HashMap<String, f32>>) {
-    // Error checking knob
-    if (op.knob == None) {
-        eprintln!("Knob name is empty, no changes made");
-        return;
-    }
-    let knob = (*op.knob.as_ref().unwrap()).clone();
-
-    // Getting number arguments
+    // Variable declarations
+    let knob: String = (*op.knob.as_ref().unwrap()).clone();
     let mut start_frame: i32 = *(&op.args.as_ref().unwrap()[0]).as_float().unwrap() as i32;
     let mut end_frame: i32 = *(&op.args.as_ref().unwrap()[1]).as_float().unwrap() as i32;
     let start_val: f32 = *(&op.args.as_ref().unwrap()[2]).as_float().unwrap();
@@ -197,8 +276,8 @@ pub fn vary(op: &Operation, frames: &mut Vec<HashMap<String, f32>>) {
     }
 
     // Adding knob values to vector
-    let mut i = 0;
-    let mx = end_frame - start_frame;
+    let mut i: i32 = 0;
+    let mx: i32 = end_frame - start_frame;
     while (i <= mx) {
         // Adding value to vector
         frames[(start_frame + i) as usize].insert(

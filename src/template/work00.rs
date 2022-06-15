@@ -1,6 +1,6 @@
 // Imports
 use crate::prev::ver05::format::{constant, file, image::Image, pixel::Pixel};
-use rand::Rng;
+use rand::{Rng, rngs::ThreadRng};
 use std::{cmp::Ordering, fs};
 
 /// Converts an image into the number spiral gradient
@@ -198,7 +198,7 @@ fn barnsley(img: &mut Image, pix: Pixel, itr: u32, scale: f32) {
     }
 
     // Setting up random generator and array
-    let mut rng = rand::thread_rng();
+    let mut rng: ThreadRng = rand::thread_rng();
     let mut xval: Vec<f32> = vec![0.0; itr as usize];
     let mut yval: Vec<f32> = vec![0.0; itr as usize];
 

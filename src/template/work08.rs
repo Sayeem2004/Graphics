@@ -2,7 +2,7 @@
 use crate::prev::ver08::algorithm::{line, shape};
 use crate::prev::ver08::format::{constant, file, image::Image, matrix::Matrix, pixel::Pixel};
 use crate::prev::ver08::script::parse;
-use rand::Rng;
+use rand::{Rng, rngs::ThreadRng};
 use std::{f32::consts::PI, fs, process::Command};
 
 /// Function that creates the gradient sphere image
@@ -94,7 +94,7 @@ pub fn night_sky() {
     let mut img: Image = Image::new_dimension(750, 750);
     let mut stars: Vec<(i32, i32, f32, i32, bool, Pixel)> = Vec::new();
     let mut names: Vec<String> = Vec::new();
-    let mut rng = rand::thread_rng();
+    let mut rng: ThreadRng = rand::thread_rng();
     let colors: Vec<Pixel> = vec![
         Pixel::new_value(165, 185, 255),
         Pixel::new_value(199, 214, 255),
@@ -155,7 +155,7 @@ pub fn night_sky() {
         }
 
         // Saving image
-        let name = vec![
+        let name: String = vec![
             "temp/night_sky".to_string(),
             format!("{:0>#3}", i),
             ".ppm".to_string(),

@@ -50,7 +50,7 @@ pub fn rotating_slab() {
         }
 
         // Saving image
-        let name = vec![
+        let name: String = vec![
             "temp/rotating_slab".to_string(),
             format!("{:0>#3}", i),
             ".ppm".to_string(),

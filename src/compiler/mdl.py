@@ -19,13 +19,12 @@ tokens = (
     "BOX",
     "LINE",
     "MESH",
-    "TEXTURE",
     "SET",
     "MOVE",
     "SCALE",
     "ROTATE",
     "BASENAME",
-    "SAVE_KNOBS",
+    "SAVEKNOBS",
     "TWEEN",
     "FRAMES",
     "VARY",
@@ -39,7 +38,6 @@ tokens = (
     "FOCAL",
     "DISPLAY",
     "SCREEN",
-    "WEB",
     "CO",
     "CLEAR",
     "CIRCLE",
@@ -64,13 +62,12 @@ reserved = {
     "box" : "BOX",
     "line" : "LINE",
     "mesh" : "MESH",
-    "texture" : "TEXTURE",
     "set" : "SET",
     "move" : "MOVE",
     "scale" : "SCALE",
     "rotate" : "ROTATE",
     "basename" : "BASENAME",
-    "save_knobs" : "SAVE_KNOBS",
+    "saveknobs" : "SAVEKNOBS",
     "tween" : "TWEEN",
     "frames" : "FRAMES",
     "vary" : "VARY",
@@ -87,7 +84,6 @@ reserved = {
     "setknobs" : "SET_KNOBS",
     "focal" : "FOCAL",
     "display" : "DISPLAY",
-    "web" : "WEB",
     "clear" : "CLEAR",
     "circle" : "CIRCLE",
     "bezier" : "BEZIER",
@@ -358,7 +354,25 @@ def p_command_constants(p):
 def p_command_light(p):
     "command : LIGHT SYMBOL NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER"
     symbols[p[2]] = ['light', {'color' : p[3:6], 'location' : p[6:]}]
-    cmd = {'op':p[1], 'args' : None, 'light' : p[2] }
+    cmd = {'op':p[1], 'args' : p[3:], 'light' : p[2]}
+    commands.append(cmd)
+
+def p_command_movelight(p):
+    """command : MOVELIGHT SYMBOL NUMBER NUMBER NUMBER SYMBOL
+               | MOVELIGHT SYMBOL NUMBER NUMBER NUMBER"""
+    cmd = {'op' : p[1], 'args' : p[3:6], 'knob' : None, 'light' : p[2]}
+    if len(p) == 7:
+        cmd['knob'] = p[6]
+        symbols[p[6]] = ['knob', 0]
+    commands.append(cmd)
+
+def p_command_alterlight(p):
+    """command : ALTERLIGHT SYMBOL NUMBER NUMBER NUMBER SYMBOL
+               | ALTERLIGHT SYMBOL NUMBER NUMBER NUMBER"""
+    cmd = {'op' : p[1], 'args' : p[3:6], 'knob' : None, 'light' : p[2]}
+    if len(p) == 7:
+        cmd['knob'] = p[6]
+        symbols[p[6]] = ['knob', 0]
     commands.append(cmd)
 
 def p_command_shading(p):
@@ -370,10 +384,6 @@ def p_command_shading(p):
 def p_command_camera(p):
     "command : CAMERA NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER"
     symbols['camera'] = ['camera', {'eye': p[2:4], 'aim': p[4:]} ]
-    commands.append({'op':p[1], 'args':None})
-
-def p_command_generate_rayfiles(p):
-    "command : GENERATE_RAYFILES"
     commands.append({'op':p[1], 'args':None})
 
 def p_command_mesh(p):
@@ -393,10 +403,10 @@ def p_command_mesh(p):
         cmd['cs0'] = p[4]
     commands.append(cmd)
 
-def p_save_knobs(p):
-    "command : SAVE_KNOBS SYMBOL"
-    cmd = {'op':p[1], 'args':None, 'knob_list':p[2]}
-    symbols[p[2]] = ['knob_list', []]
+def p_saveknobs(p):
+    "command : SAVEKNOBS SYMBOL"
+    cmd = {'op' : p[1], 'args' : None, 'knoblist0' : p[2]}
+    symbols[p[2]] = ['knoblist', []]
     commands.append(cmd)
 
 def p_savecs(p):
@@ -407,20 +417,12 @@ def p_savecs(p):
 
 def p_tween(p):
     "command : TWEEN NUMBER NUMBER SYMBOL SYMBOL"
-    cmd = {'op':p[1], 'args':p[2:4], 'knob_list0':p[4], 'knob_list1':p[5]}
+    cmd = {'op':p[1], 'args':p[2:4], 'knoblist0':p[4], 'knoblist1':p[5]}
     commands.append(cmd)
 
 def p_focal(p):
     "command : FOCAL NUMBER"
     commands.append({'op':p[1], 'args':[p[2]]})
-
-def p_web(p):
-    "command : WEB"
-    commands.append({'op':p[1], 'args':None})
-
-def p_texture(p):
-    "command : TEXTURE SYMBOL NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER"
-    symbols[p[2]] = ['texture', p[3:]]
 
 def p_error(p):
     print('SYNTAX ERROR: ' + str(p))
