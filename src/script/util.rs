@@ -138,6 +138,17 @@ pub fn saveknobs(op: &Operation, symbols: &mut HashMap<String, Vec<Symbol>>) {
     symbols.insert(name, dict);
 }
 
+/// Function that performs the 'screen' operation
+pub fn screen(op: &Operation, info: &mut ImageInfo) {
+    // Getting number arguments
+    let width: i32 = *op.width.as_ref().unwrap() as i32;
+    let height: i32 = *op.height.as_ref().unwrap() as i32;
+
+    // Exiting function
+    info.width = width;
+    info.height = height;
+}
+
 /// Function that performs the 'set' command
 pub fn set(op: &Operation, symbols: &mut HashMap<String, Vec<Symbol>>) {
     // Variable declarations
@@ -179,17 +190,6 @@ pub fn setknobs(op: &Operation, symbols: &mut HashMap<String, Vec<Symbol>>) {
             list[1] = Symbol::Float(val);
         }
     }
-}
-
-/// Function that performs the 'screen' operation
-pub fn screen(op: &Operation, info: &mut ImageInfo) {
-    // Getting number arguments
-    let width: i32 = *op.width.as_ref().unwrap() as i32;
-    let height: i32 = *op.height.as_ref().unwrap() as i32;
-
-    // Exiting function
-    info.width = width;
-    info.height = height;
 }
 
 /// Function that performs the 'tween' command
