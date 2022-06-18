@@ -1,10 +1,10 @@
 # Making and running program
-all: install
+all:
 	cargo build --release
 	cargo run --release
 
 # Running previous assignments
-test: install
+test:
 	cargo test --release
 
 # Converting ppm images to png

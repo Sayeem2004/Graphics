@@ -1,4 +1,4 @@
-# pylint: disable=global-statement, missing-module-docstring, invalid-name, missing-function-docstring, line-too-long, superfluous-parens
+# pylint: disable = C0114, C0116, C0103, W0603, C0301
 from copy import deepcopy
 from ply import lex, yacc
 
@@ -131,12 +131,12 @@ symbols = {}
 def p_input(p):
     """input :
             | command input"""
-    if (p):
+    if p:
         pass
 
 def p_command_comment(p):
     'command : COMMENT'
-    if (p):
+    if p:
         pass
 
 def p_SYMBOL(p):
@@ -344,9 +344,9 @@ def p_command_ambient(p):
 def p_command_constants(p):
     """command : CONSTANTS SYMBOL NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER
                | CONSTANTS SYMBOL NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER"""
-    if (len(p) == 12):
+    if len(p) == 12:
         symbols[p[2]] = ['constants', {'red' : p[3:6], 'green' : p[6:9], 'blue' : p[9:12]}]
-    elif (len(p) == 15):
+    elif len(p) == 15:
         symbols[p[2]] = ['constants', {'red' : p[3:6], 'green' : p[6:9], 'blue' : p[9:12], 'intensity': p[12:15]}]
     cmd = {'op':p[1], 'args' : None, 'constants' : p[2] }
     commands.append(cmd)

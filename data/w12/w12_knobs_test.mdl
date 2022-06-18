@@ -20,5 +20,5 @@ set knob2 2
 saveknobs knoblist2
 
 // Ending stuff
-box shiny_gold 0 0 0 100 100 100
+mesh shiny_gold :w12_teapot.obj
 tween 0 359 knoblist1 knoblist2

@@ -1,5 +1,5 @@
 // Imports
-use crate::algorithm::topo;
+use crate::algorithm::extra;
 use crate::compiler::{Argument, Operation, Symbol};
 use crate::format::{image::Image, matrix::Matrix};
 use std::collections::HashMap;
@@ -226,5 +226,5 @@ pub fn terrain(op: &Operation, img: &mut Image) {
     }
 
     // Running create_random_terrain command
-    topo::create_random_terrain(size, freq, water, img);
+    extra::create_random_terrain(size, freq, water, img);
 }

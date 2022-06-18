@@ -339,6 +339,18 @@ pub fn draw_parse(
                 curr += 1;
             }
 
+            // Mesh command
+            "mesh" => {
+                shape::mesh(
+                    &operations[curr],
+                    symbols,
+                    &stack[stack.len() - 1],
+                    &lights,
+                    &mut img,
+                );
+                curr += 1;
+            }
+
             // Move command
             "move" => {
                 transform::_move(&operations[curr], symbols, &mut stack[sz - 1]);

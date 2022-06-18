@@ -9,7 +9,6 @@ mod script;
 use std::io;
 use std::io::Stdin;
 mod template;
-mod test;
 use std::fs;
 
 // Main function
