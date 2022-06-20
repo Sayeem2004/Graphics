@@ -1,15 +1,13 @@
 // Imports
-#![allow(unused_parens)]
 #![allow(dead_code)]
+#![allow(unused_parens)]
 mod algorithm;
 mod compiler;
 mod format;
-mod prev;
 mod script;
-use std::io;
-use std::io::Stdin;
+use std::{io, io::Stdin, fs};
+#[cfg(test)]
 mod template;
-use std::fs;
 
 // Main function
 fn main() {
@@ -33,7 +31,7 @@ fn main() {
     // template::work09::create_work09_images(0);
     // template::work10::create_work10_images(0);
     // template::work11::create_work11_images(0);
-    template::work12::create_work12_images(0);
+    // template::work12::create_work12_images(0);
 
     // Variable Declarations
     let mut path: String = String::new();

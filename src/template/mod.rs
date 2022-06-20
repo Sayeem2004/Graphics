@@ -1,5 +1,5 @@
 // Module structure
-#[cfg(test)]
+pub mod prev;
 pub mod tests;
 pub mod work00;
 pub mod work01;

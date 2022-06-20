@@ -1,7 +1,34 @@
 // Imports
-use crate::prev::ver05::algorithm::matrix;
-use crate::prev::ver05::format::{constant, file, image::Image, matrix::Matrix};
+use crate::template::prev::ver05::algorithm::matrix;
+use crate::template::prev::ver05::format::{constant, file, image::Image, matrix::Matrix};
 use std::fs;
+
+/// Function that creates a spiral in an edge matrix based on some parameters
+fn spiral(mat: &mut Matrix, ds: f32, da: f32, itr: u32, size: i32) {
+    // Error checking
+    if (size < 0) {
+        eprintln!("Size of spiral can not be negative, no changes made");
+        return;
+    }
+
+    // Variable declarations
+    let mut prev_size: f32 = 0.0;
+    let mut prev_angle: f32 = 0.0;
+
+    // Iterating and adding edges
+    for _i in 0..itr {
+        mat.add_edge(
+            (size / 2) as f32 + f32::cos(prev_angle) * prev_size,
+            (size / 2) as f32 + f32::sin(prev_angle) * prev_size,
+            0.0,
+            (size / 2) as f32 + f32::cos(prev_angle + da) * (prev_size + ds),
+            (size / 2) as f32 + f32::sin(prev_angle + da) * (prev_size + ds),
+            0.0,
+        );
+        prev_size += ds;
+        prev_angle += da;
+    }
+}
 
 /// Function thats out the matrix struct and related functions
 fn test_matrix(mode: i32) {
@@ -70,33 +97,6 @@ fn test_matrix(mode: i32) {
     }
 }
 
-/// Function that creates a spiral in an edge matrix based on some parameters
-fn spiral(mat: &mut Matrix, ds: f32, da: f32, itr: u32, size: i32) {
-    // Error checking
-    if (size < 0) {
-        eprintln!("Size of spiral can not be negative, no changes made");
-        return;
-    }
-
-    // Variable declarations
-    let mut prev_size: f32 = 0.0;
-    let mut prev_angle: f32 = 0.0;
-
-    // Iterating and adding edges
-    for _i in 0..itr {
-        mat.add_edge(
-            (size / 2) as f32 + f32::cos(prev_angle) * prev_size,
-            (size / 2) as f32 + f32::sin(prev_angle) * prev_size,
-            0.0,
-            (size / 2) as f32 + f32::cos(prev_angle + da) * (prev_size + ds),
-            (size / 2) as f32 + f32::sin(prev_angle + da) * (prev_size + ds),
-            0.0,
-        );
-        prev_size += ds;
-        prev_angle += da;
-    }
-}
-
 /// Function that creates all images from work 02
 pub fn create_work02_images(mode: i32) {
     // Variable declarations
@@ -122,7 +122,7 @@ pub fn create_work02_images(mode: i32) {
     }
 
     // Creating rainbow lotus image
-    let mut mat: Matrix = file::read_lines_csv("data/w02/w02_rainbow_lotus.csv");
+    let mut mat: Matrix = file::read_lines_csv("data/csv/w02_rainbow_lotus.csv");
     let mut trans: Matrix = Matrix::new_transformation();
     trans.dilate(0.8, 0.8, 1.0);
     trans.translate(-7.0, 50.0, 0.0);
@@ -163,7 +163,7 @@ pub fn create_work02_images(mode: i32) {
     }
 
     // Creating eru image
-    let mut mat2: Matrix = file::read_lines_csv("data/w02/w02_eru.csv");
+    let mut mat2: Matrix = file::read_lines_csv("data/csv/w02_eru.csv");
     let mut trans2: Matrix = Matrix::new_transformation();
     trans2.dilate(0.7, 0.85, 1.0);
     trans2.translate(10.0, 10.0, 0.0);

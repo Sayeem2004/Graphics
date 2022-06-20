@@ -1,5 +1,5 @@
 // Imports
-use crate::algorithm::{light, line, shape};
+use crate::algorithm::{light, shading, shape, curve};
 use crate::format::{image::Image, pixel::Pixel};
 use serde::{Deserialize, Serialize};
 use std::f32::consts::PI;
@@ -15,15 +15,6 @@ pub struct Matrix {
 
 // Implementing Constructors
 impl Matrix {
-    /// New default matrix of size 4 x 0
-    pub fn new_matrix() -> Matrix {
-        Matrix {
-            row_num: 4,
-            col_num: 0,
-            data: vec![vec![0.00; 4_usize]; 0_usize],
-        }
-    }
-
     /// New matrix of size row_num x col_num
     pub fn new_dimension(row_num: i32, col_num: i32) -> Matrix {
         if (row_num < 0 || col_num < 0) {
@@ -34,6 +25,15 @@ impl Matrix {
             row_num,
             col_num,
             data: vec![vec![0.00; row_num as usize]; col_num as usize],
+        }
+    }
+
+    /// New default matrix of size 4 x 0
+    pub fn new_matrix() -> Matrix {
+        Matrix {
+            row_num: 4,
+            col_num: 0,
+            data: vec![vec![0.00; 4_usize]; 0_usize],
         }
     }
 
@@ -54,69 +54,6 @@ impl Matrix {
 
 // Implementing mutators
 impl Matrix {
-    /// Changing number of rows
-    pub fn update_row_num(&mut self, row_num: i32) {
-        if (row_num < 0) {
-            eprintln!("Matrix row number is out of range, no changes made");
-            return;
-        }
-        self.row_num = row_num;
-        for col in self.data.iter_mut() {
-            col.resize_with(self.row_num as usize, || 0.00);
-        }
-    }
-
-    /// Changing number of columns
-    pub fn update_col_num(&mut self, col_num: i32) {
-        if (col_num < 0) {
-            eprintln!("Matrix column number is out of range, no changes made");
-            return;
-        }
-        self.col_num = col_num;
-        self.data
-            .resize_with(self.col_num as usize, || vec![0.00; self.row_num as usize]);
-    }
-
-    /// Changing a specific row in the matrix
-    pub fn update_row(&mut self, ind: i32, row: &[f32]) {
-        if (ind < 0 || ind >= self.row_num) {
-            eprintln!("Matrix row index is out of range, no changes made");
-            return;
-        }
-        if (row.len() != self.col_num as usize) {
-            eprintln!("Inputted row does not match matrix row size, no changes made");
-            return;
-        }
-        for i in 0..row.len() {
-            self.data[i as usize][ind as usize] = row[i as usize];
-        }
-    }
-
-    /// Changing a specific column in the matrix
-    pub fn update_col(&mut self, ind: i32, col: &[f32]) {
-        if (ind < 0 || ind >= self.col_num) {
-            eprintln!("Matrix column index is out of range, no changes made");
-            return;
-        }
-        if (col.len() != self.row_num as usize) {
-            eprintln!("Inputted column does not match matrix column size, no changes made");
-            return;
-        }
-        self.data[ind as usize] = col.to_vec();
-    }
-
-    /// Adding a row to the matrix
-    pub fn add_row(&mut self, row: &[f32]) {
-        if (row.len() != self.col_num as usize) {
-            eprintln!("Inputted row does not match matrix row size, no changes made");
-            return;
-        }
-        self.row_num += 1;
-        for i in 0..row.len() {
-            self.data[i as usize].push(row[i as usize]);
-        }
-    }
-
     /// Adding a column to the matrix
     pub fn add_col(&mut self, col: &[f32]) {
         if (col.len() != self.row_num as usize) {
@@ -154,20 +91,6 @@ impl fmt::Display for Matrix {
 
 // Implementing utility functions for the struct
 impl Matrix {
-    /// Function clears all edges from a matrix
-    pub fn clear(&mut self) {
-        self.data.resize_with(0_usize, || vec![0.0, 0.0, 0.0, 0.0]);
-        self.col_num = 0;
-    }
-
-    /// Function that copies all edges from another matrix to the current one
-    pub fn copy(&mut self, mat: &Matrix) {
-        self.clear();
-        for col in &mat.data {
-            self.add_col(col);
-        }
-    }
-
     /// Function that appends all edges from another matrix to the current one
     pub fn append(&mut self, mat: &Matrix) {
         for col in &mat.data {
@@ -215,16 +138,16 @@ impl Matrix {
         mat
     }
 
-    /// Function for making a translation matrix
-    pub fn translate(dx: f32, dy: f32, dz: f32) -> Matrix {
-        // Making new transformation matrix
-        let mut mat: Matrix = Matrix::new_transformation();
-        mat.data[3][0] = dx;
-        mat.data[3][1] = dy;
-        mat.data[3][2] = dz;
+    /// Implments the left transformation of a matrix given the original matrix and a transformation matrix
+    pub fn left_transform(&mut self, trans: &Matrix) {
+        // Making sure current matrix is a transformation matrix
+        if (trans.row_num != 4 || trans.col_num != 4) {
+            eprintln!("Transformation amtrix given is not the right size, no changes made");
+            return;
+        }
 
-        // Returning transformation matrix
-        mat
+        // Multiplying and copying things over
+        *self = Matrix::multiply_matrices(trans, self);
     }
 
     /// Function for creating a rotation matrix in radians
@@ -283,16 +206,16 @@ impl Matrix {
         *self = Matrix::multiply_matrices(self, trans);
     }
 
-    /// Implments the left transformation of a matrix given the original matrix and a transformation matrix
-    pub fn left_transform(&mut self, trans: &Matrix) {
-        // Making sure current matrix is a transformation matrix
-        if (trans.row_num != 4 || trans.col_num != 4) {
-            eprintln!("Transformation amtrix given is not the right size, no changes made");
-            return;
-        }
+    /// Function for making a translation matrix
+    pub fn translate(dx: f32, dy: f32, dz: f32) -> Matrix {
+        // Making new transformation matrix
+        let mut mat: Matrix = Matrix::new_transformation();
+        mat.data[3][0] = dx;
+        mat.data[3][1] = dy;
+        mat.data[3][2] = dz;
 
-        // Multiplying and copying things over
-        *self = Matrix::multiply_matrices(trans, self);
+        // Returning transformation matrix
+        mat
     }
 }
 
@@ -317,6 +240,17 @@ impl Matrix {
         self.add_point(p1);
     }
 
+    /// Function for adding a triangle to a matrix
+    pub fn add_triangle(&mut self, p0: (f32, f32, f32), p1: (f32, f32, f32), p2: (f32, f32, f32)) {
+        if (self.row_num != 4) {
+            eprintln!("Matrix row number does not equal four, no changes made");
+            return;
+        }
+        self.add_point(p0);
+        self.add_point(p1);
+        self.add_point(p2);
+    }
+
     /// Function for drawing the edges found in a matrix on an image using xy orientation
     pub fn draw_lines_xy(&mut self, img: &mut Image, pix: Pixel) {
         if (self.row_num != 4) {
@@ -325,7 +259,7 @@ impl Matrix {
         }
         for i in 0..self.col_num {
             if (i % 2 == 1) {
-                line::draw_line(
+                curve::draw_line(
                     (
                         self.data[(i - 1) as usize][0] as i32,
                         self.data[(i - 1) as usize][1] as i32,
@@ -341,43 +275,6 @@ impl Matrix {
                 )
             }
         }
-    }
-
-    /// Function for drawing the edges found in a matrix on an image using rc orientation
-    pub fn draw_lines_rc(&mut self, img: &mut Image, pix: Pixel) {
-        if (self.row_num != 4) {
-            eprintln!("Matrix row number does not equal four, no changes made");
-            return;
-        }
-        for i in 0..self.col_num {
-            if (i % 2 == 1) {
-                line::draw_line(
-                    (
-                        self.data[(i - 1) as usize][0] as i32,
-                        img.height - self.data[(i - 1) as usize][1] as i32,
-                        self.data[(i - 1) as usize][2],
-                    ),
-                    (
-                        self.data[i as usize][0] as i32,
-                        img.height - self.data[i as usize][1] as i32,
-                        self.data[i as usize][2],
-                    ),
-                    img,
-                    pix,
-                )
-            }
-        }
-    }
-
-    /// Function for adding a triangle to a matrix
-    pub fn add_triangle(&mut self, p0: (f32, f32, f32), p1: (f32, f32, f32), p2: (f32, f32, f32)) {
-        if (self.row_num != 4) {
-            eprintln!("Matrix row number does not equal four, no changes made");
-            return;
-        }
-        self.add_point(p0);
-        self.add_point(p1);
-        self.add_point(p2);
     }
 
     /// Function for drawing the triangles found in a matrix on an image using xy orientation
@@ -413,7 +310,7 @@ impl Matrix {
                 let color: Pixel = light::calculate(amb, pnts, surf, view, normal, div);
 
                 // Drawing polygon with color
-                line::scanline(self, i, img, color);
+                shading::scanline(self, i, img, color);
             }
         }
     }

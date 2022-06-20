@@ -181,4 +181,5 @@ fn test_work12() {
     assert!(util::file_exists("image/gif/w12_lighting_test.gif"));
     assert!(util::file_exists("image/gif/w12_knobs_test.gif"));
     assert!(util::file_exists("image/script/w12_terrain.png"));
+    assert!(!crate::format::util::file_exists("temp"));
 }

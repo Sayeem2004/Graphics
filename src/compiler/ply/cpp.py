@@ -1,3 +1,5 @@
+# pylint: disable = C0114, E0602, W0621, R0205, R0903, W0123, R0902, R0201, R1724, R0916, R1702, R0912, W0703, R0914, R0915, W0201, W0631, W0612, W0622, W0102, W0404, R1732, C0103, C0301, C0321, C0413, C0116, C0115, C0200, C0412
+
 # -----------------------------------------------------------------------------
 # cpp.py
 #
@@ -13,7 +15,7 @@ import sys
 
 # Some Python 3 compatibility shims
 if sys.version_info.major < 3:
-    STRING_TYPES = (str, unicode)
+    STRING_TYPES = (str, unicode) # type: ignore
 else:
     STRING_TYPES = str
     xrange = range
@@ -24,7 +26,7 @@ else:
 # -----------------------------------------------------------------------------
 
 tokens = (
-   'CPP_ID','CPP_INTEGER', 'CPP_FLOAT', 'CPP_STRING', 'CPP_CHAR', 'CPP_WS', 'CPP_COMMENT1', 'CPP_COMMENT2', 'CPP_POUND','CPP_DPOUND'
+    'CPP_ID','CPP_INTEGER', 'CPP_FLOAT', 'CPP_STRING', 'CPP_CHAR', 'CPP_WS', 'CPP_COMMENT1', 'CPP_COMMENT2', 'CPP_POUND','CPP_DPOUND'
 )
 
 literals = "+-*/%|&~^<>=!?()[]{}.,;:\\\'\""

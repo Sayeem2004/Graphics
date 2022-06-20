@@ -1,10 +1,13 @@
 # pylint: disable = C0114, C0116, C0103
+
+# Imports
 import os
 import sys
 import json
 import random
 import mdl
 
+# Function that parses a script file and saves the output to a json file
 def main():
     # Getting filename from command line input
     filename = sys.argv[1]
@@ -35,4 +38,6 @@ def main():
     print(os.path.abspath(name1))
     print(os.path.abspath(name2))
 
-main()
+# Running stuff from this file
+if __name__ == "__main__":
+    main()

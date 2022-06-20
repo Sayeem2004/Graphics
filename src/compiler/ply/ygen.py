@@ -1,3 +1,5 @@
+# pylint: disable = C0114, W0631, C0116, C0103
+
 # ply: ygen.py
 #
 # This is a support program that auto-generates different versions of the YACC parsing

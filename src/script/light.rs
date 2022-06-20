@@ -81,11 +81,23 @@ pub fn alterlight(op: &Operation, symbols: &mut HashMap<String, Vec<Symbol>>) {
 }
 
 /// Function that checks the 'ambient' command
-pub fn ambient(symbols: &mut HashMap<String, Vec<Symbol>>) {
-    // Checking if it is inside the symbol table
-    if (!symbols.contains_key("ambient")) {
-        eprintln!("Ambient light not found in the symbol table");
-    }
+pub fn ambient(op: &Operation, symbols: &mut HashMap<String, Vec<Symbol>>) {
+    // Variable declarations
+    let name: String = String::from("ambient");
+    let r: f32 = *op.args.as_ref().unwrap()[0].as_float().unwrap();
+    let g: f32 = *op.args.as_ref().unwrap()[1].as_float().unwrap();
+    let b: f32 = *op.args.as_ref().unwrap()[2].as_float().unwrap();
+
+    // Adding to symbol table
+    symbols.insert(
+        name,
+        vec![
+            Symbol::String(String::from("ambient")),
+            Symbol::Float(r),
+            Symbol::Float(g),
+            Symbol::Float(b),
+        ],
+    );
 }
 
 /// Function that checks the 'constants' command

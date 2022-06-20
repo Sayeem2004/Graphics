@@ -1,7 +1,188 @@
 // Imports
-use crate::prev::ver05::algorithm::line;
-use crate::prev::ver05::format::{constant, file, image::Image, pixel::Pixel};
+use crate::template::prev::ver05::algorithm::line;
+use crate::template::prev::ver05::format::{constant, file, image::Image, pixel::Pixel};
 use std::fs;
+
+/// Function that draws a binary tree fractal on an image
+fn bintree(
+    img: &mut Image,
+    pix: Pixel,
+    s: (i32, i32),
+    e: (i32, i32),
+    n: i32,
+    angle: f32,
+    scale: f32,
+) {
+    // Error checking
+    if (n < 0) {
+        eprintln!("Recursive iteration for bintree can not be negative, no changes made");
+        return;
+    }
+    if (scale < 0.0) {
+        eprintln!("Scale factor for bintree can not be negative, no changes made");
+        return;
+    }
+
+    // Base case
+    if (n == 0) {
+        return;
+    }
+
+    // Drawing line
+    line::draw_line(s.0, s.1, e.0, e.1, img, pix);
+
+    // Left recursion
+    let mut l1: (i32, i32, i32, i32) = (e.0, e.1, e.0 + (e.0 - s.0), e.1 + (e.1 - s.1));
+    l1 = line::rotate_degree((l1.0, l1.1), (l1.2, l1.3), angle);
+    l1 = line::dilate((l1.0, l1.1), (l1.2, l1.3), scale);
+    bintree(img, pix, (l1.0, l1.1), (l1.2, l1.3), n - 1, angle, scale);
+
+    // Right recursion
+    let mut l2: (i32, i32, i32, i32) = (e.0, e.1, e.0 + (e.0 - s.0), e.1 + (e.1 - s.1));
+    l2 = line::rotate_degree((l2.0, l2.1), (l2.2, l2.3), -angle);
+    l2 = line::dilate((l2.0, l2.1), (l2.2, l2.3), scale);
+    bintree(img, pix, (l2.0, l2.1), (l2.2, l2.3), n - 1, angle, scale);
+}
+
+/// Function that draws the heighway dragon on an image
+fn heighway(
+    img: &mut Image,
+    pix: Pixel,
+    s: (i32, i32),
+    e: (i32, i32),
+    n: i32,
+    angle: f32,
+    scale: f32,
+) {
+    // Error checking
+    if (n < 0) {
+        eprintln!("Recursive iteration for heighway can not be negative, no changes made");
+        return;
+    }
+    if (scale < 0.0) {
+        eprintln!("Scale factor for heighway can not be negative, no changes made");
+        return;
+    }
+
+    // Base case
+    if (n == 0) {
+        line::draw_line(s.0, s.1, e.0, e.1, img, pix);
+        return;
+    }
+
+    // Creating line copies
+    let mut l1: (i32, i32, i32, i32) = (s.0, s.1, e.0, e.1);
+    let mut l2: (i32, i32, i32, i32) = (e.0, e.1, s.0, s.1);
+
+    // Rotating lines
+    l1 = line::rotate_degree((l1.0, l1.1), (l1.2, l1.3), angle);
+    l2 = line::rotate_degree((l2.0, l2.1), (l2.2, l2.3), -angle);
+
+    // Scaling lines
+    l1 = line::dilate((l1.0, l1.1), (l1.2, l1.3), scale);
+    l2 = line::dilate((l2.0, l2.1), (l2.2, l2.3), scale);
+
+    // Recursive step
+    heighway(img, pix, (l1.0, l1.1), (l1.2, l1.3), n - 1, angle, scale);
+    heighway(img, pix, (l2.0, l2.1), (l2.2, l2.3), n - 1, angle, scale);
+}
+
+/// Function that draws a reflected koch snowflake on an image
+fn koch(img: &mut Image, pix: Pixel, s: (i32, i32), e: (i32, i32), n: i32, angle: f32) {
+    // Error checking
+    if (n < 0) {
+        eprintln!("Recursive iteration for koch can not be negative, no changes made");
+        return;
+    }
+
+    // Base case
+    if (n == 0) {
+        line::draw_line(s.0, s.1, e.0, e.1, img, pix);
+        return;
+    }
+
+    // First straight line recursion
+    let l1: (i32, i32, i32, i32) = (s.0, s.1, s.0 + e.0 / 3 - s.0 / 3, s.1 + e.1 / 3 - s.1 / 3);
+    koch(img, pix, (l1.0, l1.1), (l1.2, l1.3), n - 1, angle);
+
+    // Outward triangle
+    let mut l2: (i32, i32, i32, i32) = (
+        s.0 + e.0 / 3 - s.0 / 3,
+        s.1 + e.1 / 3 - s.1 / 3,
+        e.0 - e.0 / 3 + s.0 / 3,
+        e.1 - e.1 / 3 + s.1 / 3,
+    );
+    l2 = line::rotate_degree((l2.0, l2.1), (l2.2, l2.3), angle);
+    koch(img, pix, (l2.0, l2.1), (l2.2, l2.3), n - 1, angle);
+    l2 = line::rotate_degree((l2.2, l2.3), (l2.0, l2.1), angle);
+    koch(img, pix, (l2.0, l2.1), (l2.2, l2.3), n - 1, angle);
+
+    // Inward triangle
+    let mut l3: (i32, i32, i32, i32) = (
+        s.0 + e.0 / 3 - s.0 / 3,
+        s.1 + e.1 / 3 - s.1 / 3,
+        e.0 - e.0 / 3 + s.0 / 3,
+        e.1 - e.1 / 3 + s.1 / 3,
+    );
+    l3 = line::rotate_degree((l3.0, l3.1), (l3.2, l3.3), -angle);
+    koch(img, pix, (l3.0, l3.1), (l3.2, l3.3), n - 1, angle);
+    l3 = line::rotate_degree((l3.2, l3.3), (l3.0, l3.1), -angle);
+    koch(img, pix, (l3.0, l3.1), (l3.2, l3.3), n - 1, angle);
+
+    // Second straight line recursion
+    let l4: (i32, i32, i32, i32) = (e.0 - e.0 / 3 + s.0 / 3, e.1 - e.1 / 3 + s.1 / 3, e.0, e.1);
+    koch(img, pix, (l4.0, l4.1), (l4.2, l4.3), n - 1, angle);
+}
+
+/// Function that draws sierpinski's triangle on an image
+fn sierpinski(img: &mut Image, pix: Pixel, s: (i32, i32), e: (i32, i32), n: i32) {
+    // Error checking
+    if (n < 0) {
+        eprintln!("Recursive iteration for sierpinski can not be negative, no changes made");
+        return;
+    }
+
+    // Base case
+    if (n == 0) {
+        return;
+    }
+
+    // Drawing triangle
+    line::draw_line(s.0, s.1, e.0, e.1, img, pix);
+    line::draw_line(
+        s.0,
+        s.1,
+        s.0 + (e.0 - s.0) / 2,
+        s.1 + ((((e.0 - s.0) / 2) as f32) * f32::sqrt(3.0)) as i32,
+        img,
+        pix,
+    );
+    line::draw_line(
+        e.0,
+        e.1,
+        s.0 + (e.0 - s.0) / 2,
+        s.1 + ((((e.0 - s.0) / 2) as f32) * f32::sqrt(3.0)) as i32,
+        img,
+        pix,
+    );
+
+    // Updating bounds and doing recursion
+    sierpinski(img, pix, s, (((s.0 + e.0) / 2) as i32, e.1), n - 1);
+    sierpinski(img, pix, (((s.0 + e.0) / 2) as i32, s.1), e, n - 1);
+    sierpinski(
+        img,
+        pix,
+        (
+            s.0 + (e.0 - s.0) / 4,
+            s.1 + (((((e.0 - s.0) / 2) as f32) * f32::sqrt(3.0)) as i32) / 2,
+        ),
+        (
+            e.0 - (e.0 - s.0) / 4,
+            s.1 + (((((e.0 - s.0) / 2) as f32) * f32::sqrt(3.0)) as i32) / 2,
+        ),
+        n - 1,
+    );
+}
 
 /// Function that tests lines in all octants
 fn test_lines(img: &mut Image) {
@@ -78,187 +259,6 @@ fn test_lines(img: &mut Image) {
         img,
         pix,
     );
-}
-
-/// Function that draws sierpinski's triangle on an image
-fn sierpinski(img: &mut Image, pix: Pixel, s: (i32, i32), e: (i32, i32), n: i32) {
-    // Error checking
-    if (n < 0) {
-        eprintln!("Recursive iteration for sierpinski can not be negative, no changes made");
-        return;
-    }
-
-    // Base case
-    if (n == 0) {
-        return;
-    }
-
-    // Drawing triangle
-    line::draw_line(s.0, s.1, e.0, e.1, img, pix);
-    line::draw_line(
-        s.0,
-        s.1,
-        s.0 + (e.0 - s.0) / 2,
-        s.1 + ((((e.0 - s.0) / 2) as f32) * f32::sqrt(3.0)) as i32,
-        img,
-        pix,
-    );
-    line::draw_line(
-        e.0,
-        e.1,
-        s.0 + (e.0 - s.0) / 2,
-        s.1 + ((((e.0 - s.0) / 2) as f32) * f32::sqrt(3.0)) as i32,
-        img,
-        pix,
-    );
-
-    // Updating bounds and doing recursion
-    sierpinski(img, pix, s, (((s.0 + e.0) / 2) as i32, e.1), n - 1);
-    sierpinski(img, pix, (((s.0 + e.0) / 2) as i32, s.1), e, n - 1);
-    sierpinski(
-        img,
-        pix,
-        (
-            s.0 + (e.0 - s.0) / 4,
-            s.1 + (((((e.0 - s.0) / 2) as f32) * f32::sqrt(3.0)) as i32) / 2,
-        ),
-        (
-            e.0 - (e.0 - s.0) / 4,
-            s.1 + (((((e.0 - s.0) / 2) as f32) * f32::sqrt(3.0)) as i32) / 2,
-        ),
-        n - 1,
-    );
-}
-
-/// Function that draws the heighway dragon on an image
-fn heighway(
-    img: &mut Image,
-    pix: Pixel,
-    s: (i32, i32),
-    e: (i32, i32),
-    n: i32,
-    angle: f32,
-    scale: f32,
-) {
-    // Error checking
-    if (n < 0) {
-        eprintln!("Recursive iteration for heighway can not be negative, no changes made");
-        return;
-    }
-    if (scale < 0.0) {
-        eprintln!("Scale factor for heighway can not be negative, no changes made");
-        return;
-    }
-
-    // Base case
-    if (n == 0) {
-        line::draw_line(s.0, s.1, e.0, e.1, img, pix);
-        return;
-    }
-
-    // Creating line copies
-    let mut l1: (i32, i32, i32, i32) = (s.0, s.1, e.0, e.1);
-    let mut l2: (i32, i32, i32, i32) = (e.0, e.1, s.0, s.1);
-
-    // Rotating lines
-    l1 = line::rotate_degree((l1.0, l1.1), (l1.2, l1.3), angle);
-    l2 = line::rotate_degree((l2.0, l2.1), (l2.2, l2.3), -angle);
-
-    // Scaling lines
-    l1 = line::dilate((l1.0, l1.1), (l1.2, l1.3), scale);
-    l2 = line::dilate((l2.0, l2.1), (l2.2, l2.3), scale);
-
-    // Recursive step
-    heighway(img, pix, (l1.0, l1.1), (l1.2, l1.3), n - 1, angle, scale);
-    heighway(img, pix, (l2.0, l2.1), (l2.2, l2.3), n - 1, angle, scale);
-}
-
-/// Function that draws a binary tree fractal on an image
-fn bintree(
-    img: &mut Image,
-    pix: Pixel,
-    s: (i32, i32),
-    e: (i32, i32),
-    n: i32,
-    angle: f32,
-    scale: f32,
-) {
-    // Error checking
-    if (n < 0) {
-        eprintln!("Recursive iteration for bintree can not be negative, no changes made");
-        return;
-    }
-    if (scale < 0.0) {
-        eprintln!("Scale factor for bintree can not be negative, no changes made");
-        return;
-    }
-
-    // Base case
-    if (n == 0) {
-        return;
-    }
-
-    // Drawing line
-    line::draw_line(s.0, s.1, e.0, e.1, img, pix);
-
-    // Left recursion
-    let mut l1: (i32, i32, i32, i32) = (e.0, e.1, e.0 + (e.0 - s.0), e.1 + (e.1 - s.1));
-    l1 = line::rotate_degree((l1.0, l1.1), (l1.2, l1.3), angle);
-    l1 = line::dilate((l1.0, l1.1), (l1.2, l1.3), scale);
-    bintree(img, pix, (l1.0, l1.1), (l1.2, l1.3), n - 1, angle, scale);
-
-    // Right recursion
-    let mut l2: (i32, i32, i32, i32) = (e.0, e.1, e.0 + (e.0 - s.0), e.1 + (e.1 - s.1));
-    l2 = line::rotate_degree((l2.0, l2.1), (l2.2, l2.3), -angle);
-    l2 = line::dilate((l2.0, l2.1), (l2.2, l2.3), scale);
-    bintree(img, pix, (l2.0, l2.1), (l2.2, l2.3), n - 1, angle, scale);
-}
-
-/// Function that draws a reflected koch snowflake on an image
-fn koch(img: &mut Image, pix: Pixel, s: (i32, i32), e: (i32, i32), n: i32, angle: f32) {
-    // Error checking
-    if (n < 0) {
-        eprintln!("Recursive iteration for koch can not be negative, no changes made");
-        return;
-    }
-
-    // Base case
-    if (n == 0) {
-        line::draw_line(s.0, s.1, e.0, e.1, img, pix);
-        return;
-    }
-
-    // First straight line recursion
-    let l1: (i32, i32, i32, i32) = (s.0, s.1, s.0 + e.0 / 3 - s.0 / 3, s.1 + e.1 / 3 - s.1 / 3);
-    koch(img, pix, (l1.0, l1.1), (l1.2, l1.3), n - 1, angle);
-
-    // Outward triangle
-    let mut l2: (i32, i32, i32, i32) = (
-        s.0 + e.0 / 3 - s.0 / 3,
-        s.1 + e.1 / 3 - s.1 / 3,
-        e.0 - e.0 / 3 + s.0 / 3,
-        e.1 - e.1 / 3 + s.1 / 3,
-    );
-    l2 = line::rotate_degree((l2.0, l2.1), (l2.2, l2.3), angle);
-    koch(img, pix, (l2.0, l2.1), (l2.2, l2.3), n - 1, angle);
-    l2 = line::rotate_degree((l2.2, l2.3), (l2.0, l2.1), angle);
-    koch(img, pix, (l2.0, l2.1), (l2.2, l2.3), n - 1, angle);
-
-    // Inward triangle
-    let mut l3: (i32, i32, i32, i32) = (
-        s.0 + e.0 / 3 - s.0 / 3,
-        s.1 + e.1 / 3 - s.1 / 3,
-        e.0 - e.0 / 3 + s.0 / 3,
-        e.1 - e.1 / 3 + s.1 / 3,
-    );
-    l3 = line::rotate_degree((l3.0, l3.1), (l3.2, l3.3), -angle);
-    koch(img, pix, (l3.0, l3.1), (l3.2, l3.3), n - 1, angle);
-    l3 = line::rotate_degree((l3.2, l3.3), (l3.0, l3.1), -angle);
-    koch(img, pix, (l3.0, l3.1), (l3.2, l3.3), n - 1, angle);
-
-    // Second straight line recursion
-    let l4: (i32, i32, i32, i32) = (e.0 - e.0 / 3 + s.0 / 3, e.1 - e.1 / 3 + s.1 / 3, e.0, e.1);
-    koch(img, pix, (l4.0, l4.1), (l4.2, l4.3), n - 1, angle);
 }
 
 /// Function that runs all the above pattern functions

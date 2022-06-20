@@ -1,45 +1,9 @@
 // Imports
-use crate::prev::ver08::algorithm::{line, shape};
-use crate::prev::ver08::format::{constant, file, image::Image, matrix::Matrix, pixel::Pixel};
-use crate::prev::ver08::script::parse;
+use crate::template::prev::ver08::algorithm::{line, shape};
+use crate::template::prev::ver08::format::{constant, file, image::Image, matrix::Matrix, pixel::Pixel};
+use crate::template::prev::ver08::script::parse;
 use rand::{rngs::ThreadRng, Rng};
 use std::{f32::consts::PI, fs, process::Command};
-
-/// Function that creates the gradient sphere image
-pub fn gradient_sphere(mode: i32) {
-    // Variable declarations
-    let mut img: Image = Image::new_dimension(750, 750);
-    let mut poly: Matrix = Matrix::new_matrix();
-    let mut cord: Matrix = Matrix::new_transformation();
-    let trans: Matrix = Matrix::translate(375.0, 375.0, 0.0);
-
-    // Creating sphere and translating
-    cord.right_transform(&trans);
-    shape::add_sphere(&mut poly, (0.0, 0.0, 0.0), 300.0, 100);
-    poly.left_transform(&cord);
-
-    // Drawing sphere with gradient
-    for i in 0..poly.data.len() {
-        if (i % 3 == 2) {
-            line::scanline(
-                &poly,
-                i as i32,
-                &mut img,
-                Pixel::new_value(
-                    ((poly.data[i][0] + poly.data[i][1]) / 1200_f32 * 256_f32) as u8,
-                    0,
-                    0,
-                ),
-            )
-        }
-    }
-
-    // Saving image
-    file::create_ppm_ascii("image/ppm/w08_gradient.ppm", &img, 0);
-    if (mode == 0) {
-        file::open_image("image/ppm/w08_gradient.ppm");
-    }
-}
 
 /// Function that adds a star to an image with a given color and size
 pub fn add_star(img: &mut Image, p: (i32, i32, f32), sz: i32, pix: Pixel) {
@@ -85,6 +49,107 @@ pub fn add_star(img: &mut Image, p: (i32, i32, f32), sz: i32, pix: Pixel) {
             // Updating pixel
             img.update_pixel_xy(x, y, p.2, grad(x, y));
         }
+    }
+}
+
+/// Function that creates a color wheel image
+pub fn color_wheel(mode: i32) {
+    // Variable declarations
+    let mut img: Image = Image::new_dimension(750, 750);
+    let mut poly: Matrix = Matrix::new_matrix();
+    let mut cord: Matrix = Matrix::new_transformation();
+    let trans: Matrix = Matrix::translate(375.0, 375.0, 0.0);
+
+    // Creating sphere and translating
+    cord.right_transform(&trans);
+    shape::add_sphere(&mut poly, (0.0, 0.0, 0.0), 300.0, 2000);
+    poly.left_transform(&cord);
+
+    // Drawing sphere with gradient
+    for i in 0..poly.data.len() {
+        if (i % 3 == 2) {
+            // Getting angle
+            let dx: f32 = poly.data[i][0] - 375.0;
+            let dy: f32 = poly.data[i][1] - 375.0;
+            let angle: f32 = (dy / dx).atan();
+
+            // Getting pixel value from angle
+            let pix: Pixel;
+            if (dx < 0.0 && angle <= -PI / 6.0) {
+                pix = Pixel::new_value(
+                    255,
+                    0,
+                    (255.0 * (1.0 - ((angle * -1.0) - (PI / 6.0)) / (PI / 3.0))) as u8,
+                );
+            } else if (dx < 0.0 && angle <= PI / 6.0) {
+                pix = Pixel::new_value(
+                    (255.0 * (1.0 - (angle + PI / 6.0) / (PI / 3.0))) as u8,
+                    0,
+                    255,
+                );
+            } else if (dx < 0.0) {
+                pix = Pixel::new_value(0, (255.0 * ((angle - PI / 6.0) / (PI / 3.0))) as u8, 255);
+            } else if (dx >= 0.0 && angle <= -PI / 6.0) {
+                pix = Pixel::new_value(
+                    0,
+                    255,
+                    (255.0 * (((angle * -1.0) - (PI / 6.0)) / (PI / 3.0))) as u8,
+                );
+            } else if (dx >= 0.0 && angle <= PI / 6.0) {
+                pix = Pixel::new_value((255.0 * ((angle + PI / 6.0) / (PI / 3.0))) as u8, 255, 0);
+            } else {
+                pix = Pixel::new_value(
+                    255,
+                    (255.0 * (1.0 - (angle - PI / 6.0) / (PI / 3.0))) as u8,
+                    0,
+                );
+            }
+
+            // Performing scanline
+            line::scanline(&poly, i as i32, &mut img, pix)
+        }
+    }
+
+    // Saving image
+    file::create_ppm_ascii("image/ppm/w08_color_wheel.ppm", &img, 0);
+    if (mode == 0) {
+        file::open_image("image/ppm/w08_color_wheel.ppm");
+    }
+}
+
+/// Function that creates the gradient sphere image
+pub fn gradient_sphere(mode: i32) {
+    // Variable declarations
+    let mut img: Image = Image::new_dimension(750, 750);
+    let mut poly: Matrix = Matrix::new_matrix();
+    let mut cord: Matrix = Matrix::new_transformation();
+    let trans: Matrix = Matrix::translate(375.0, 375.0, 0.0);
+
+    // Creating sphere and translating
+    cord.right_transform(&trans);
+    shape::add_sphere(&mut poly, (0.0, 0.0, 0.0), 300.0, 100);
+    poly.left_transform(&cord);
+
+    // Drawing sphere with gradient
+    for i in 0..poly.data.len() {
+        if (i % 3 == 2) {
+            line::scanline(
+                &poly,
+                i as i32,
+                &mut img,
+                Pixel::new_value(
+                    ((poly.data[i][0] + poly.data[i][1]) / 1200_f32 * 256_f32) as u8,
+                    0,
+                    0,
+                ),
+            )
+        }
+    }
+
+    // Saving image
+    file::create_ppm_ascii("image/ppm/w08_gradient.ppm", &img, 0);
+    if (mode == 0) {
+        file::open_image("image/ppm/w08_gradient.ppm");
     }
 }
 
@@ -188,78 +253,13 @@ pub fn night_sky() {
     }
 }
 
-/// Function that creates a color wheel image
-pub fn color_wheel(mode: i32) {
-    // Variable declarations
-    let mut img: Image = Image::new_dimension(750, 750);
-    let mut poly: Matrix = Matrix::new_matrix();
-    let mut cord: Matrix = Matrix::new_transformation();
-    let trans: Matrix = Matrix::translate(375.0, 375.0, 0.0);
-
-    // Creating sphere and translating
-    cord.right_transform(&trans);
-    shape::add_sphere(&mut poly, (0.0, 0.0, 0.0), 300.0, 2000);
-    poly.left_transform(&cord);
-
-    // Drawing sphere with gradient
-    for i in 0..poly.data.len() {
-        if (i % 3 == 2) {
-            // Getting angle
-            let dx: f32 = poly.data[i][0] - 375.0;
-            let dy: f32 = poly.data[i][1] - 375.0;
-            let angle: f32 = (dy / dx).atan();
-
-            // Getting pixel value from angle
-            let pix: Pixel;
-            if (dx < 0.0 && angle <= -PI / 6.0) {
-                pix = Pixel::new_value(
-                    255,
-                    0,
-                    (255.0 * (1.0 - ((angle * -1.0) - (PI / 6.0)) / (PI / 3.0))) as u8,
-                );
-            } else if (dx < 0.0 && angle <= PI / 6.0) {
-                pix = Pixel::new_value(
-                    (255.0 * (1.0 - (angle + PI / 6.0) / (PI / 3.0))) as u8,
-                    0,
-                    255,
-                );
-            } else if (dx < 0.0) {
-                pix = Pixel::new_value(0, (255.0 * ((angle - PI / 6.0) / (PI / 3.0))) as u8, 255);
-            } else if (dx >= 0.0 && angle <= -PI / 6.0) {
-                pix = Pixel::new_value(
-                    0,
-                    255,
-                    (255.0 * (((angle * -1.0) - (PI / 6.0)) / (PI / 3.0))) as u8,
-                );
-            } else if (dx >= 0.0 && angle <= PI / 6.0) {
-                pix = Pixel::new_value((255.0 * ((angle + PI / 6.0) / (PI / 3.0))) as u8, 255, 0);
-            } else {
-                pix = Pixel::new_value(
-                    255,
-                    (255.0 * (1.0 - (angle - PI / 6.0) / (PI / 3.0))) as u8,
-                    0,
-                );
-            }
-
-            // Performing scanline
-            line::scanline(&poly, i as i32, &mut img, pix)
-        }
-    }
-
-    // Saving image
-    file::create_ppm_ascii("image/ppm/w08_color_wheel.ppm", &img, 0);
-    if (mode == 0) {
-        file::open_image("image/ppm/w08_color_wheel.ppm");
-    }
-}
-
 /// Function that creates all images from work 08
 pub fn create_work08_images(mode: i32) {
     // Attempting to create image directory
     fs::create_dir_all("image/ppm").expect("Unable to create image/ppm directory");
 
     // Creating shapes image test
-    parse::parse("data/w08/w08_script", 750, mode);
+    parse::parse("data/mdl/w08_script.mdl", 750, mode);
 
     // Creating gradient sphere image
     gradient_sphere(mode);

@@ -1,3 +1,5 @@
+# pylint: disable = C0114
+
 # PLY package
 # Author: David Beazley (dave@dabeaz.com)
 

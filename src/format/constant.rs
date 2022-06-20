@@ -25,18 +25,6 @@ pub const DX: [i32; 4] = [-1, 0, 1, 0];
 pub const DY: [i32; 4] = [0, 1, 0, -1];
 
 lazy_static! {
-    /// Hermite matrix
-    pub static ref HERMITE: Matrix = Matrix {
-        row_num: 4,
-        col_num: 4,
-        data: vec![
-            vec![2.00, -3.00, 0.00, 1.00],
-            vec![-2.00, 3.00, 0.00, 0.00],
-            vec![1.00, -2.00, 1.00, 0.00],
-            vec![1.00, -1.00, 0.00, 0.00]
-        ]
-    };
-
     /// Bezier matrix
     pub static ref BEZIER: Matrix = Matrix {
         row_num: 4,
@@ -48,24 +36,32 @@ lazy_static! {
             vec![1.00, 0.00, 0.00, 0.00]
         ]
     };
+
+    /// Hermite matrix
+    pub static ref HERMITE: Matrix = Matrix {
+        row_num: 4,
+        col_num: 4,
+        data: vec![
+            vec![2.00, -3.00, 0.00, 1.00],
+            vec![-2.00, 3.00, 0.00, 0.00],
+            vec![1.00, -2.00, 1.00, 0.00],
+            vec![1.00, -1.00, 0.00, 0.00]
+        ]
+    };
 }
 
-/// View vectors
+/// View vector
 pub const ZVIEW: (f32, f32, f32) = (0.0, 0.0, 1.0);
-pub const YVIEW: (f32, f32, f32) = (0.0, 1.0, 0.0);
-pub const XVIEW: (f32, f32, f32) = (1.0, 0.0, 0.0);
 
-/// Common lighting divisions
+/// Common lighting divisions and specular lighting cosine power
 pub const AMBDIV: (f32, f32, f32, f32, f32, f32, f32, f32, f32) =
     (1.00, 1.00, 1.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00);
 pub const DIFDIV: (f32, f32, f32, f32, f32, f32, f32, f32, f32) =
     (0.00, 0.00, 0.00, 1.00, 1.00, 1.00, 0.00, 0.00, 0.00);
-pub const SPCDIV: (f32, f32, f32, f32, f32, f32, f32, f32, f32) =
-    (0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 1.00, 1.00);
 pub const EQVDIV: (f32, f32, f32, f32, f32, f32, f32, f32, f32) =
     (0.33, 0.33, 0.33, 0.33, 0.33, 0.33, 0.33, 0.33, 0.33);
-
-// Specular lighting cosine power
+pub const SPCDIV: (f32, f32, f32, f32, f32, f32, f32, f32, f32) =
+    (0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 1.00, 1.00);
 pub const EXP: f32 = 3_f32;
 
 lazy_static! {
@@ -80,18 +76,16 @@ lazy_static! {
 }
 
 /// List of all possible script commands
-pub const CMDS: [&str; 33] = [
+pub const CMDS: [&str; 31] = [
     "alterlight",
     "ambient",
     "basename",
     "bezier",
     "box",
-    "camera",
     "circle",
     "clear",
     "constants",
     "display",
-    "focal",
     "frames",
     "hermite",
     "light",

@@ -86,38 +86,6 @@ pub fn add_sphere(poly: &mut Matrix, c: (f32, f32, f32), r: f32, itr: u32) {
     }
 }
 
-/// Function that generates the points in a sphere
-pub fn gen_sphere(c: (f32, f32, f32), r: f32, itr: u32) -> Matrix {
-    // Error checking
-    if (r < 0.0) {
-        eprintln!("Radius of sphere can not be negative, returning default value");
-        return Matrix::new_matrix();
-    }
-
-    // Variable declaration
-    let mut ret: Matrix = Matrix::new_matrix();
-
-    // Getting points on the surface
-    for i in 0..itr {
-        for q in 0..=itr {
-            // Angle variables
-            let phi: f32 = 2.0 * PI * (i as f32) / (itr as f32);
-            let theta: f32 = PI * (q as f32) / (itr as f32);
-
-            // Point coordinates
-            let nx: f32 = r * f32::cos(theta) + c.0;
-            let ny: f32 = r * f32::sin(theta) * f32::cos(phi) + c.1;
-            let nz: f32 = r * f32::sin(theta) * f32::sin(phi) + c.2;
-
-            // Saving points
-            ret.add_col(&[nx, ny, nz, 1.0]);
-        }
-    }
-
-    // Exiting function
-    ret
-}
-
 /// Function that adds triangles representing a torus to a matrix of triangles
 pub fn add_torus(poly: &mut Matrix, c: (f32, f32, f32), r1: f32, r2: f32, itr: u32) {
     // Error checking
@@ -165,36 +133,36 @@ pub fn add_torus(poly: &mut Matrix, c: (f32, f32, f32), r1: f32, r2: f32, itr: u
     }
 }
 
-/// Function that returns the surface normal vector of a triangle at a certain position in the triangle matrix
-pub fn normal(poly: &Matrix, ind: usize) -> (f32, f32, f32) {
+/// Function that generates the points in a sphere
+pub fn gen_sphere(c: (f32, f32, f32), r: f32, itr: u32) -> Matrix {
     // Error checking
-    if (ind >= poly.col_num as usize) {
-        eprintln!("Index is out of range, returning default values");
-        return (0.0, 0.0, 0.0);
-    }
-    if (poly.row_num != 4) {
-        eprintln!("Matrix is not of size Nx4, returning default values");
-        return (0.0, 0.0, 0.0);
+    if (r < 0.0) {
+        eprintln!("Radius of sphere can not be negative, returning default value");
+        return Matrix::new_matrix();
     }
 
-    // Getting vector components from vertices
-    let v1: (f32, f32, f32) = (
-        poly.data[ind - 1][0] - poly.data[ind - 2][0],
-        poly.data[ind - 1][1] - poly.data[ind - 2][1],
-        poly.data[ind - 1][2] - poly.data[ind - 2][2],
-    );
-    let v2: (f32, f32, f32) = (
-        poly.data[ind][0] - poly.data[ind - 2][0],
-        poly.data[ind][1] - poly.data[ind - 2][1],
-        poly.data[ind][2] - poly.data[ind - 2][2],
-    );
+    // Variable declaration
+    let mut ret: Matrix = Matrix::new_matrix();
 
-    // Returning the cross product
-    (
-        (v1.1 * v2.2) - (v1.2 * v2.1),
-        (v1.2 * v2.0) - (v1.0 * v2.2),
-        (v1.0 * v2.1) - (v1.1 * v2.0),
-    )
+    // Getting points on the surface
+    for i in 0..itr {
+        for q in 0..=itr {
+            // Angle variables
+            let phi: f32 = 2.0 * PI * (i as f32) / (itr as f32);
+            let theta: f32 = PI * (q as f32) / (itr as f32);
+
+            // Point coordinates
+            let nx: f32 = r * f32::cos(theta) + c.0;
+            let ny: f32 = r * f32::sin(theta) * f32::cos(phi) + c.1;
+            let nz: f32 = r * f32::sin(theta) * f32::sin(phi) + c.2;
+
+            // Saving points
+            ret.add_col(&[nx, ny, nz, 1.0]);
+        }
+    }
+
+    // Exiting function
+    ret
 }
 
 /// Function that generates the points in a torus
@@ -227,4 +195,36 @@ pub fn gen_torus(c: (f32, f32, f32), r1: f32, r2: f32, itr: u32) -> Matrix {
 
     // Exiting function
     ret
+}
+
+/// Function that returns the surface normal vector of a triangle at a certain position in the triangle matrix
+pub fn normal(poly: &Matrix, ind: usize) -> (f32, f32, f32) {
+    // Error checking
+    if (ind >= poly.col_num as usize) {
+        eprintln!("Index is out of range, returning default values");
+        return (0.0, 0.0, 0.0);
+    }
+    if (poly.row_num != 4) {
+        eprintln!("Matrix is not of size Nx4, returning default values");
+        return (0.0, 0.0, 0.0);
+    }
+
+    // Getting vector components from vertices
+    let v1: (f32, f32, f32) = (
+        poly.data[ind - 1][0] - poly.data[ind - 2][0],
+        poly.data[ind - 1][1] - poly.data[ind - 2][1],
+        poly.data[ind - 1][2] - poly.data[ind - 2][2],
+    );
+    let v2: (f32, f32, f32) = (
+        poly.data[ind][0] - poly.data[ind - 2][0],
+        poly.data[ind][1] - poly.data[ind - 2][1],
+        poly.data[ind][2] - poly.data[ind - 2][2],
+    );
+
+    // Returning the cross product
+    (
+        (v1.1 * v2.2) - (v1.2 * v2.1),
+        (v1.2 * v2.0) - (v1.0 * v2.2),
+        (v1.0 * v2.1) - (v1.1 * v2.0),
+    )
 }

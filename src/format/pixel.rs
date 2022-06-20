@@ -12,11 +12,6 @@ impl Pixel {
         Pixel(0, 0, 0)
     }
 
-    /// New pixel with values
-    pub const fn new_value(r: u8, g: u8, b: u8) -> Pixel {
-        Pixel(r, g, b)
-    }
-
     /// New pixel based on scale
     pub fn new_scale(scale: f32) -> Pixel {
         Pixel(
@@ -25,6 +20,12 @@ impl Pixel {
             (255_f32 * scale) as u8,
         )
     }
+
+    /// New pixel with values
+    pub const fn new_value(r: u8, g: u8, b: u8) -> Pixel {
+        Pixel(r, g, b)
+    }
+
 }
 
 // Implementing mutators
@@ -47,6 +48,7 @@ impl fmt::Display for Pixel {
 
 // Implementing comparison for the struct
 impl PartialEq<Pixel> for Pixel {
+    // Function for equivalence
     fn eq(&self, other: &Pixel) -> bool {
         (self.0 == other.0) && (self.1 == other.1) && (self.2 == other.2)
     }

@@ -336,7 +336,7 @@ pub fn sphere(
             *args[2].as_float().unwrap(),
         ),
         *args[3].as_float().unwrap(),
-        ((*args[3].as_float().unwrap() / 2.0) as u32)
+        ((*args[3].as_float().unwrap() / 3.0) as u32)
             .min(250)
             .max(20),
     );
@@ -459,7 +459,7 @@ pub fn torus(
         ),
         *args[3].as_float().unwrap(),
         *args[4].as_float().unwrap(),
-        ((*args[3].as_float().unwrap() / 2.0) as u32)
+        ((*args[3].as_float().unwrap() / 3.0) as u32)
             .min(250)
             .max(20),
     );

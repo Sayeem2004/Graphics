@@ -1,4 +1,5 @@
 # pylint: disable = C0114, C0103, C0116, C0301, E0401
+
 # Imports
 import os
 import sys
@@ -6,6 +7,7 @@ import random
 from opensimplex import OpenSimplex
 import numpy as np
 
+# Function that takes in certain parameters and creates an csv file with altitude data
 def create_random_terrain(size, freq, water):
     # Fixing parameters
     size = int(size)

@@ -18,6 +18,15 @@ pub enum Argument {
     String(String),
 }
 
+/// Struct to store lighting constants
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct Lighting {
+    pub red: Vec<f32>,
+    pub blue: Vec<f32>,
+    pub green: Vec<f32>,
+    pub intensity: Option<Vec<f32>>,
+}
+
 /// Struct to store operations
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Operation {
@@ -34,22 +43,6 @@ pub struct Operation {
     pub knoblist1: Option<String>,
 }
 
-/// Struct to store camera constants
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct Camera {
-    pub eye: Vec<f32>,
-    pub aim: Vec<f32>,
-}
-
-/// Struct to store lighting constants
-#[derive(Serialize, Deserialize, Debug, Clone)]
-pub struct Lighting {
-    pub red: Vec<f32>,
-    pub blue: Vec<f32>,
-    pub green: Vec<f32>,
-    pub intensity: Option<Vec<f32>>,
-}
-
 /// Struct to store light source
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Source {
@@ -61,7 +54,6 @@ pub struct Source {
 #[derive(Serialize, Deserialize, Debug, EnumAsInner, Clone)]
 #[serde(untagged)]
 pub enum Symbol {
-    Camera(Camera),
     Matrix(Matrix),
     Float(f32),
     Int(i32),

@@ -1,3 +1,5 @@
+# pylint: disable = E0602, W0613, C0103, C0116, C0115, R0205, R1705, W0621, W0603, R0201, R0902, W0201, R0913, R0914, R1702, R0915, W0622, R1710, R0912, R1724, C0301, E1101, W0123, R1720, W0212, W0122, W0706, W0612, R1714, R1732, W0231, W0707, W0601, W0703, C0114, C0415, C0302, C0325, C0113
+
 # -----------------------------------------------------------------------------
 # ply: yacc.py
 #
@@ -75,8 +77,7 @@ __tabversion__ = '3.10'
 # Change these to modify the default behavior of yacc (if you wish)
 #-----------------------------------------------------------------------------
 
-yaccdebug   = True             # Debugging mode.  If set, yacc generates a
-                               # a 'parser.out' file in the current directory
+yaccdebug   = True             # Debugging mode.  If set, yacc generates a 'parser.out' file in the current directory
 
 debug_file  = 'parse.out'     # Default name of the debugging file
 tab_module  = 'parse'       # Default name of the table module
@@ -84,8 +85,7 @@ default_lr  = 'LALR'           # Default LR table generation method
 
 error_count = 3                # Number of symbols that must be shifted to leave recovery mode
 
-yaccdevel   = False            # Set to True if developing yacc.  This turns off optimized
-                               # implementations of certain functions.
+yaccdevel   = False            # Set to True if developing yacc.  This turns off optimized implementations of certain functions.
 
 resultlimit = 40               # Size limit of results when running in debug mode.
 
@@ -468,11 +468,11 @@ class LRParser:
                     #--! DEBUG
                     if plen:
                         debug.info('Action : Reduce rule [%s] with %s and goto state %d', p.str,
-                                   '['+','.join([format_stack_entry(_v.value) for _v in symstack[-plen:]])+']',
-                                   goto[statestack[-1-plen]][pname])
+                                    '['+','.join([format_stack_entry(_v.value) for _v in symstack[-plen:]])+']',
+                                    goto[statestack[-1-plen]][pname])
                     else:
                         debug.info('Action : Reduce rule [%s] with %s and goto state %d', p.str, [],
-                                   goto[statestack[-1]][pname])
+                                    goto[statestack[-1]][pname])
 
                     #--! DEBUG
 
@@ -1565,8 +1565,7 @@ class Grammar(object):
                 try:
                     c = eval(s)
                     if (len(c) > 1):
-                        raise GrammarError('%s:%d: Literal token %s in rule %r may only be a single character' %
-                                           (file, line, s, prodname))
+                        raise GrammarError('%s:%d: Literal token %s in rule %r may only be a single character' % (file, line, s, prodname))
                     if c not in self.Terminals:
                         self.Terminals[c] = []
                     syms[n] = c
@@ -1581,8 +1580,7 @@ class Grammar(object):
             if syms[-1] == '%prec':
                 raise GrammarError('%s:%d: Syntax error. Nothing follows %%prec' % (file, line))
             if syms[-2] != '%prec':
-                raise GrammarError('%s:%d: Syntax error. %%prec can only appear at the end of a grammar rule' %
-                                   (file, line))
+                raise GrammarError('%s:%d: Syntax error. %%prec can only appear at the end of a grammar rule' % (file, line))
             precname = syms[-1]
             prodprec = self.Precedence.get(precname)
             if not prodprec:
@@ -2001,7 +1999,7 @@ class LRTable(object):
 
     def read_pickle(self, filename):
         try:
-            import cPickle as pickle
+            import cPickle as pickle # type: ignore
         except ImportError:
             import pickle
 
@@ -2624,8 +2622,7 @@ class LRGeneratedTable(LRTable):
                                     else:
                                         chosenp, rejectp = oldp, pp
                                     self.rr_conflicts.append((st, chosenp, rejectp))
-                                    log.info('  ! reduce/reduce conflict for %s resolved using rule %d (%s)',
-                                             a, st_actionp[a].number, st_actionp[a])
+                                    log.info('  ! reduce/reduce conflict for %s resolved using rule %d (%s)', a, st_actionp[a].number, st_actionp[a])
                                 else:
                                     raise LALRError('Unknown conflict in state %d' % st)
                             else:
@@ -2777,9 +2774,9 @@ _lr_signature = %r
                 f.write('''
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
-   for _x,_y in zip(_v[0],_v[1]):
-      if not _x in _lr_action:  _lr_action[_x] = {}
-      _lr_action[_x][_k] = _y
+    for _x,_y in zip(_v[0],_v[1]):
+        if not _x in _lr_action:  _lr_action[_x] = {}
+        _lr_action[_x][_k] = _y
 del _lr_action_items
 ''')
 
@@ -2817,9 +2814,9 @@ del _lr_action_items
                 f.write('''
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
-   for _x, _y in zip(_v[0], _v[1]):
-       if not _x in _lr_goto: _lr_goto[_x] = {}
-       _lr_goto[_x][_k] = _y
+    for _x, _y in zip(_v[0], _v[1]):
+        if not _x in _lr_goto: _lr_goto[_x] = {}
+        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 ''')
             else:
@@ -2832,8 +2829,7 @@ del _lr_goto_items
             f.write('_lr_productions = [\n')
             for p in self.lr_productions:
                 if p.func:
-                    f.write('  (%r,%r,%d,%r,%r,%d),\n' % (p.str, p.name, p.len,
-                                                          p.func, os.path.basename(p.file), p.line))
+                    f.write('  (%r,%r,%d,%r,%r,%d),\n' % (p.str, p.name, p.len, p.func, os.path.basename(p.file), p.line))
                 else:
                     f.write('  (%r,%r,%d,None,None,None),\n' % (str(p), p.name, p.len))
             f.write(']\n')
@@ -2852,7 +2848,7 @@ del _lr_goto_items
 
     def pickle_table(self, filename, signature=''):
         try:
-            import cPickle as pickle
+            import cPickle as pickle # type: ignore
         except ImportError:
             import pickle
         with open(filename, 'wb') as outf:
@@ -3172,8 +3168,7 @@ class ParserReflect(object):
                 self.log.error('%s:%d: Rule %r requires an argument', file, line, func.__name__)
                 self.error = True
             elif not func.__doc__:
-                self.log.warning('%s:%d: No documentation string specified in function %r (ignored)',
-                                 file, line, func.__name__)
+                self.log.warning('%s:%d: No documentation string specified in function %r (ignored)', file, line, func.__name__)
             else:
                 try:
                     parsed_g = parse_grammar(doc, file, line)
@@ -3215,9 +3210,7 @@ class ParserReflect(object):
 # Build a parser
 # -----------------------------------------------------------------------------
 
-def yacc(method='LALR', debug=yaccdebug, module=None, tabmodule=tab_module, start=None,
-         check_recursion=True, optimize=False, write_tables=True, debugfile=debug_file,
-         outputdir=None, debuglog=None, errorlog=None, picklefile=None):
+def yacc(method='LALR', debug=yaccdebug, module=None, tabmodule=tab_module, start=None, check_recursion=True, optimize=False, write_tables=True, debugfile=debug_file, outputdir=None, debuglog=None, errorlog=None, picklefile=None):
 
     if tabmodule is None:
         tabmodule = tab_module

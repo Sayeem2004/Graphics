@@ -167,22 +167,6 @@ pub fn parse_mesh(path: &String) -> Matrix {
     poly
 }
 
-/// Function that parses a vertex, vertex texture, or a vertex normal line
-pub fn parse_three_float(line: &str) -> (f32, f32, f32) {
-    // Variable declarations
-    let mut temp: Vec<f32> = Vec::new();
-
-    // Iterating through split line
-    for (i, str) in (0_i32..).zip(line.split(' ')) {
-        if (i > 0 && !str.is_empty()) {
-            temp.push(str.parse::<f32>().unwrap_or(0.0));
-        }
-    }
-
-    // Exiting function
-    (temp[0_usize], temp[1_usize], temp[2_usize])
-}
-
 /// Function that parses a face line
 pub fn parse_face(line: &str, vertex: &[(f32, f32, f32)]) -> Matrix {
     // Variable declarations
@@ -212,4 +196,20 @@ pub fn parse_face(line: &str, vertex: &[(f32, f32, f32)]) -> Matrix {
 
     // Exiting function
     poly
+}
+
+/// Function that parses a vertex, vertex texture, or a vertex normal line
+pub fn parse_three_float(line: &str) -> (f32, f32, f32) {
+    // Variable declarations
+    let mut temp: Vec<f32> = Vec::new();
+
+    // Iterating through split line
+    for (i, str) in (0_i32..).zip(line.split(' ')) {
+        if (i > 0 && !str.is_empty()) {
+            temp.push(str.parse::<f32>().unwrap_or(0.0));
+        }
+    }
+
+    // Exiting function
+    (temp[0_usize], temp[1_usize], temp[2_usize])
 }

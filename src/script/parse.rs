@@ -42,7 +42,7 @@ pub fn initial_parse(
         match operations[curr].op.as_ref().unwrap().as_str() {
             // Ambient command
             "ambient" => {
-                light::ambient(symbols);
+                light::ambient(&operations[curr], symbols);
                 curr += 1;
             }
 

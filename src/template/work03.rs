@@ -1,5 +1,5 @@
 // Imports
-use crate::prev::ver05::format::{constant, file, image::Image, matrix::Matrix, parse};
+use crate::template::prev::ver05::format::{constant, file, image::Image, matrix::Matrix, parse};
 use std::fs;
 
 /// Function that creates a tesseract given a side length
@@ -61,7 +61,7 @@ pub fn create_work03_images(mode: i32) {
     fs::create_dir_all("image/ppm").expect("Unable to create image/ppm directory");
 
     // Creating test image
-    parse::parse("data/w03/w03_script", 750, mode);
+    parse::parse("data/mdl/w03_script.mdl", 750, mode);
 
     // Creating tesseract image
     tesseract(250.0);
@@ -70,8 +70,8 @@ pub fn create_work03_images(mode: i32) {
     }
 
     // Creating impossible triangle
-    parse::parse("data/w03/w03_triangle", 750, mode);
+    parse::parse("data/mdl/w03_triangle.mdl", 750, mode);
 
     // Creating dragon image
-    parse::parse("data/w03/w03_dragon", 750, mode);
+    parse::parse("data/mdl/w03_dragon.mdl", 750, mode);
 }

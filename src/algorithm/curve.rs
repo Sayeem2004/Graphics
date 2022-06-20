@@ -1,34 +1,6 @@
 // Imports
-use crate::format::{constant, matrix::Matrix};
+use crate::format::{constant, image::Image, matrix::Matrix, pixel::Pixel};
 use std::f32::consts::PI;
-
-/// Function that adds edges representing a circle to a matrix of edges
-pub fn add_circle(edge: &mut Matrix, c: (f32, f32, f32), r: f32, itr: u32) {
-    // Error checking
-    if (r < 0.0) {
-        eprintln!("Circle can not have negative radius, no changes made");
-        return;
-    }
-
-    // Getting initial values
-    let mut px: f32 = c.0 + r;
-    let mut py: f32 = c.1;
-
-    // Iterating through t values
-    for i in 1..itr + 1 {
-        // Getting new coordinates
-        let t: f32 = (i as f32) / (itr as f32);
-        let nx: f32 = c.0 + r * f32::cos(2.0 * PI * t);
-        let ny: f32 = c.1 + r * f32::sin(2.0 * PI * t);
-
-        // Adding to matrix
-        edge.add_edge((px, py, c.2), (nx, ny, c.2));
-
-        // Preparing for next loop
-        px = nx;
-        py = ny;
-    }
-}
 
 /// Function that adds edges representing a bezier curve to a matrix of edges
 pub fn add_bezier(
@@ -74,6 +46,34 @@ pub fn add_bezier(
 
         // Adding to matrix
         edge.add_edge((px, py, 0.0), (nx, ny, 0.0));
+
+        // Preparing for next loop
+        px = nx;
+        py = ny;
+    }
+}
+
+/// Function that adds edges representing a circle to a matrix of edges
+pub fn add_circle(edge: &mut Matrix, c: (f32, f32, f32), r: f32, itr: u32) {
+    // Error checking
+    if (r < 0.0) {
+        eprintln!("Circle can not have negative radius, no changes made");
+        return;
+    }
+
+    // Getting initial values
+    let mut px: f32 = c.0 + r;
+    let mut py: f32 = c.1;
+
+    // Iterating through t values
+    for i in 1..itr + 1 {
+        // Getting new coordinates
+        let t: f32 = (i as f32) / (itr as f32);
+        let nx: f32 = c.0 + r * f32::cos(2.0 * PI * t);
+        let ny: f32 = c.1 + r * f32::sin(2.0 * PI * t);
+
+        // Adding to matrix
+        edge.add_edge((px, py, c.2), (nx, ny, c.2));
 
         // Preparing for next loop
         px = nx;
@@ -129,5 +129,172 @@ pub fn add_hermite(
         // Preparing for next loop
         px = nx;
         py = ny;
+    }
+}
+
+/// Function that draws an arbitrary line by using the 4 octants above
+pub fn draw_line(s: (i32, i32, f32), e: (i32, i32, f32), img: &mut Image, pix: Pixel) {
+    // Quadrant 1, 2, 7, 8 cases
+    if (e.0 >= s.0) {
+        // Quadrant 1, 2
+        if (e.1 >= s.1) {
+            // Quadrant 2
+            if (e.1 - s.1 > e.0 - s.0) {
+                draw_oct2(img, pix, s, e);
+            }
+            // Quadrant 1
+            else {
+                draw_oct1(img, pix, s, e);
+            }
+        } else {
+            // Quadrant 7, 8
+            // Quadrant 7
+            if (s.1 - e.1 > e.0 - s.0) {
+                draw_oct7(img, pix, s, e);
+            }
+            // Quadrant 8
+            else {
+                draw_oct8(img, pix, s, e);
+            }
+        }
+    } else {
+        // Quadrant 3, 4, 5, 6 cases
+        // Quadrant 3, 4
+        if (e.1 >= s.1) {
+            // Quadrant 3
+            if (e.1 - s.1 > s.0 - e.0) {
+                draw_oct7(img, pix, e, s);
+            }
+            // Quadrant 4
+            else {
+                draw_oct8(img, pix, e, s);
+            }
+        } else {
+            // Quadrant 5, 6
+            // Quadrant 6
+            if (s.1 - e.1 > s.0 - e.0) {
+                draw_oct2(img, pix, e, s);
+            }
+            // Quadrant 5
+            else {
+                draw_oct1(img, pix, e, s);
+            }
+        }
+    }
+}
+
+/// Drawing a line in octant I
+fn draw_oct1(img: &mut Image, pix: Pixel, s: (i32, i32, f32), e: (i32, i32, f32)) {
+    // Variable declarations
+    let (mut x, mut y, mut z): (i32, i32, f32) = (s.0, s.1, s.2);
+    let a: i32 = 2 * (e.1 - s.1);
+    let b: i32 = 2 * (s.0 - e.0);
+    let dz: f32 = (e.2 - s.2) / (e.0 - s.0 + 1).abs() as f32;
+    let mut d: i32 = a + b / 2;
+
+    // Looping through range
+    while (x <= e.0) {
+        // Changing pixel
+        img.update_pixel_xy(x, y, z, pix);
+
+        // Updating y value if necessary
+        if (d > 0) {
+            y += 1;
+            d += b;
+        }
+
+        // Necessary updates
+        z += dz;
+        x += 1;
+        d += a;
+    }
+}
+
+/// Drawing a line in octant II
+fn draw_oct2(img: &mut Image, pix: Pixel, s: (i32, i32, f32), e: (i32, i32, f32)) {
+    // Variable declarations
+    let (mut x, mut y, mut z): (i32, i32, f32) = (s.0, s.1, s.2);
+    let a: i32 = 2 * (e.1 - s.1);
+    let b: i32 = 2 * (s.0 - e.0);
+    let dz: f32 = (e.2 - s.2) / (e.1 - s.1 + 1).abs() as f32;
+    let mut d: i32 = a / 2 + b;
+
+    // Looping through range
+    while (y <= e.1) {
+        // Changing pixel
+        img.update_pixel_xy(x, y, z, pix);
+
+        // Updating y value if necessary
+        if (d < 0) {
+            x += 1;
+            d += a;
+        }
+
+        // Necessary updates
+        z += dz;
+        y += 1;
+        d += b;
+    }
+}
+
+/// Drawing a line in octant VII
+fn draw_oct7(img: &mut Image, pix: Pixel, s: (i32, i32, f32), e: (i32, i32, f32)) {
+    // Variable declarations
+    let (mut x, mut y, mut z): (i32, i32, f32) = (s.0, s.1, s.2);
+    let a: i32 = 2 * (s.1 - e.1);
+    let b: i32 = 2 * (s.0 - e.0);
+    let dz: f32 = (e.2 - s.2) / (e.1 - s.1 + 1).abs() as f32;
+    let mut d: i32 = a / 2 + b;
+
+    // Looping through range
+    while (y >= e.1) {
+        // Changing pixel
+        img.update_pixel_xy(x, y, z, pix);
+
+        // Updating x value if necessary
+        if (d < 0) {
+            x += 1;
+            d += a;
+        }
+
+        // Necessary updates
+        z += dz;
+        if (y > 0) {
+            y -= 1;
+        } else {
+            break;
+        }
+        d += b;
+    }
+}
+
+/// Drawing a line in octant VIII
+fn draw_oct8(img: &mut Image, pix: Pixel, s: (i32, i32, f32), e: (i32, i32, f32)) {
+    // Variable declarations
+    let (mut x, mut y, mut z): (i32, i32, f32) = (s.0, s.1, s.2);
+    let a: i32 = 2 * (s.1 - e.1);
+    let b: i32 = 2 * (s.0 - e.0);
+    let dz: f32 = (e.2 - s.2) / (e.0 - s.0 + 1).abs() as f32;
+    let mut d: i32 = a + b / 2;
+
+    // Looping through range
+    while (x <= e.0) {
+        // Changing pixel
+        img.update_pixel_xy(x, y, z, pix);
+
+        // Updating y value if necessary
+        if (d > 0) {
+            if (y > 0) {
+                y -= 1;
+            } else {
+                break;
+            }
+            d += b;
+        }
+
+        // Necessary updates
+        z += dz;
+        x += 1;
+        d += a;
     }
 }

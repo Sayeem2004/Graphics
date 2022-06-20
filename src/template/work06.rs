@@ -1,7 +1,7 @@
 // Imports
-use crate::prev::ver06::algorithm::shape;
-use crate::prev::ver06::format::{constant, file, image::Image, matrix::Matrix, pixel::Pixel};
-use crate::prev::ver06::script::parse;
+use crate::template::prev::ver06::algorithm::shape;
+use crate::template::prev::ver06::format::{constant, file, image::Image, matrix::Matrix, pixel::Pixel};
+use crate::template::prev::ver06::script::parse;
 use std::{fs, process::Command};
 
 /// Function that adds a gojo character to an image
@@ -291,11 +291,62 @@ fn gojo(edge: &mut Matrix, curr: &mut Image) {
     );
 }
 
+/// Function that makes a changing perspective gif
+fn perspectives() {
+    // Variable declarations
+    let mut names: Vec<String> = Vec::new();
+    let mut curr: Image = Image::new_dimension(750, 750);
+    let mut sphere: Matrix = Matrix::new_matrix();
+    shape::add_sphere(&mut sphere, (375.0, 375.0, 0.0), 300.0, 100);
+
+    // Attempting to create image directory
+    fs::create_dir_all("temp").expect("Unable to create temp directory");
+    fs::create_dir_all("image/gif").expect("Unable to create image/gif directory");
+
+    // Iterating through perspectives
+    for i in 0..=100 {
+        // Drawing sphere
+        sphere.draw_triangles_xy(
+            &mut curr,
+            constant::WHITE_PIXEL,
+            &[100.0 - 2.0 * (i as f32), 0.0, -1.0],
+        );
+
+        // Saving image
+        let name: String = vec![
+            "temp/perspective".to_string(),
+            format!("{:0>#3}", i as i32),
+            ".ppm".to_string(),
+        ]
+        .join("");
+        file::create_ppm_ascii(&name, &curr, 0);
+        names.push(name);
+    }
+
+    // Performing image magick convert command
+    println!("Converting perspective images to w06_perspectives.gif...");
+    Command::new("convert")
+        .arg("-delay")
+        .arg("1.7")
+        .arg("-loop")
+        .arg("0")
+        .arg("temp/perspective*.ppm")
+        .arg("image/gif/w06_perspectives.gif")
+        .status()
+        .expect("Convert command failed to run");
+    println!("Image file is named image/gif/w06_perspectives.gif");
+
+    // Removing temporary files
+    for file in names.iter() {
+        fs::remove_file(&file).expect("Unable to delete temporary gif file");
+    }
+}
+
 /// Function that creates the purple hollow image
 fn purple_hollow() {
     // Variable declarations
     let mut curr: Image = Image::new_dimension(700, 400);
-    let mut edge: Matrix = file::read_lines_csv("data/w06/w06_gojo.csv");
+    let mut edge: Matrix = file::read_lines_csv("data/csv/w06_gojo.csv");
     let mut red: Matrix = Matrix::new_matrix();
     let mut blue: Matrix = Matrix::new_matrix();
     let mut trans: Matrix = Matrix::new_transformation();
@@ -410,64 +461,13 @@ fn purple_hollow() {
     }
 }
 
-/// Function that makes a changing perspective gif
-fn perspectives() {
-    // Variable declarations
-    let mut names: Vec<String> = Vec::new();
-    let mut curr: Image = Image::new_dimension(750, 750);
-    let mut sphere: Matrix = Matrix::new_matrix();
-    shape::add_sphere(&mut sphere, (375.0, 375.0, 0.0), 300.0, 100);
-
-    // Attempting to create image directory
-    fs::create_dir_all("temp").expect("Unable to create temp directory");
-    fs::create_dir_all("image/gif").expect("Unable to create image/gif directory");
-
-    // Iterating through perspectives
-    for i in 0..=100 {
-        // Drawing sphere
-        sphere.draw_triangles_xy(
-            &mut curr,
-            constant::WHITE_PIXEL,
-            &[100.0 - 2.0 * (i as f32), 0.0, -1.0],
-        );
-
-        // Saving image
-        let name: String = vec![
-            "temp/perspective".to_string(),
-            format!("{:0>#3}", i as i32),
-            ".ppm".to_string(),
-        ]
-        .join("");
-        file::create_ppm_ascii(&name, &curr, 0);
-        names.push(name);
-    }
-
-    // Performing image magick convert command
-    println!("Converting perspective images to w06_perspectives.gif...");
-    Command::new("convert")
-        .arg("-delay")
-        .arg("1.7")
-        .arg("-loop")
-        .arg("0")
-        .arg("temp/perspective*.ppm")
-        .arg("image/gif/w06_perspectives.gif")
-        .status()
-        .expect("Convert command failed to run");
-    println!("Image file is named image/gif/w06_perspectives.gif");
-
-    // Removing temporary files
-    for file in names.iter() {
-        fs::remove_file(&file).expect("Unable to delete temporary gif file");
-    }
-}
-
 /// Function that creates all images from work 06
 pub fn create_work06_images(mode: i32) {
     // Creating shapes image test
-    parse::parse("data/w06/w06_script", 750, mode);
+    parse::parse("data/mdl/w06_script.mdl", 750, mode);
 
     // Creating face image
-    parse::parse("data/w06/w06_face", 750, mode);
+    parse::parse("data/mdl/w06_face.mdl", 750, mode);
 
     // Creating purple hollow image
     purple_hollow();
@@ -476,5 +476,5 @@ pub fn create_work06_images(mode: i32) {
     perspectives();
 
     // Creating sphere of spheres image
-    parse::parse("data/w06/w06_spheres", 750, mode);
+    parse::parse("data/mdl/w06_spheres.mdl", 750, mode);
 }

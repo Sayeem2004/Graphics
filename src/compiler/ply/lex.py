@@ -1,3 +1,5 @@
+# pylint: disable = W0231, R0205, W0613, R0902, W0622, W0631, R0914, W0122, W0612, W0212, W0201, R0912, R0915, R1705, W0703, R1714, R0903, E0012, R0913, W0601, W0621, R1732, C0302, C0114, C0115, C0116, C0103, C0301, C0325
+
 # -----------------------------------------------------------------------------
 # ply: lex.py
 #
@@ -114,10 +116,7 @@ class NullLogger(object):
 
 class Lexer:
     def __init__(self):
-        self.lexre = None             # Master regular expression. This is a list of
-                                      # tuples (re, findex) where re is a compiled
-                                      # regular expression and findex is a list
-                                      # mapping regex group numbers to rules
+        self.lexre = None             # Master regular expression. This is a list of tuples (re, findex) where re is a compiled regular expression and findex is a list mapping regex group numbers to rules
         self.lexretext = None         # Current regular expression strings
         self.lexstatere = {}          # Dictionary mapping lexer states to master regexs
         self.lexstateretext = {}      # Dictionary mapping lexer states to regex strings

@@ -41,41 +41,10 @@ impl Image {
             buff: vec![vec![f32::NEG_INFINITY; width as usize]; height as usize],
         }
     }
-
-    /// New formatted image
-    pub fn new_format(image_type: &str, width: i32, height: i32, max_color: u8) -> Image {
-        if (width < 0 || height < 0) {
-            eprintln!("Image dimensions are out of range, using default image");
-            return Image::new();
-        }
-        Image {
-            image_type: image_type.to_string(),
-            width,
-            height,
-            max_color,
-            pixels: vec![vec![Pixel::new(); width as usize]; height as usize],
-            buff: vec![vec![f32::NEG_INFINITY; width as usize]; height as usize],
-        }
-    }
 }
 
 // Implementing mutators
 impl Image {
-    /// Updating a certain pixel with another pixel
-    pub fn update_pixel_rc(&mut self, row: i32, col: i32, z: f32, pix: Pixel) {
-        // Within size range
-        if (row >= 0 && row < self.height && col >= 0 && col < self.width) {
-            // Within color range
-            if (pix.0 <= self.max_color && pix.1 <= self.max_color && pix.2 <= self.max_color) {
-                // Updating pixel
-                if (self.buff[row as usize][col as usize] < z) {
-                    self.pixels[row as usize][col as usize].update(pix.0, pix.1, pix.2);
-                    self.buff[row as usize][col as usize] = z;
-                }
-            }
-        }
-    }
-
     /// Updating a certain pixel with another pixel
     pub fn update_pixel_xy(&mut self, x: i32, y: i32, z: f32, pix: Pixel) {
         // Within size range
@@ -95,21 +64,6 @@ impl Image {
 
 // Implementing accessors
 impl Image {
-    /// Getting a certain pixel
-    pub fn get_pixel_rc(&mut self, row: i32, col: i32) -> Pixel {
-        // Within size range
-        if (row >= 0 && row < self.height && col >= 0 && col < self.width) {
-            // Getting pixel
-            return self.pixels[row as usize][col as usize];
-        }
-
-        // Error message
-        eprintln!("Unable to get pixel at row {} and col {}", row, col);
-
-        // Ending function
-        Pixel::new()
-    }
-
     /// Getting a certain pixel
     pub fn get_pixel_xy(&mut self, x: i32, y: i32) -> Pixel {
         // Within size range
@@ -211,65 +165,6 @@ impl Image {
         eprintln!("Unable to flood pixel at x = {} and y = {}", x, y);
     }
 
-    /// Function to fill a certain section of the image with a certain color
-    pub fn flood_rc(&mut self, row: i32, col: i32, bdr: Pixel, pix: Pixel) {
-        // Within size range
-        if (row >= 0 && row < self.height && col >= 0 && col < self.width) {
-            // Making visited vector
-            let mut vis: Vec<Vec<i32>> = vec![vec![0; self.width as usize]; self.height as usize];
-
-            // Creating queue and adding first element
-            let mut queue: VecDeque<(i32, i32)> = VecDeque::<(i32, i32)>::new();
-            vis[row as usize][col as usize] = 1;
-            queue.push_back((row, col));
-
-            // Doing bfs
-            while (!queue.is_empty()) {
-                // Getting point
-                let point: (i32, i32) = queue.pop_front().unwrap();
-                self.update_pixel_rc(point.0, point.1, 0.0, pix);
-
-                for i in 0..4 {
-                    // New points
-                    let nrow: i32 = (point.0) + constant::DX[i as usize];
-                    let ncol: i32 = (point.1) + constant::DY[i as usize];
-
-                    // Within bounds
-                    if (ncol >= 0
-                        && ncol < self.width
-                        && nrow >= 0
-                        && nrow < self.height
-                        && vis[nrow as usize][ncol as usize] == 0
-                        && self.get_pixel_rc(nrow, ncol) != bdr
-                        && self.get_pixel_rc(nrow, ncol) != pix)
-                    {
-                        // Adding to queue and visited
-                        vis[nrow as usize][ncol as usize] = 1;
-                        queue.push_back((nrow, ncol));
-                    }
-                }
-            }
-
-            return;
-        }
-
-        // Error message
-        eprintln!("Unable to flood pixel at row = {} and col = {}", row, col);
-    }
-
-    /// Function that replaces all pixels of a certain type with another
-    pub fn replace(&mut self, old: Pixel, new: Pixel) {
-        // Iterating through image
-        for i in 0..self.pixels.len() {
-            for q in 0..self.pixels[0].len() {
-                // Replacing pixels
-                if (self.pixels[i][q] == old) {
-                    self.pixels[i][q] = new;
-                }
-            }
-        }
-    }
-
     /// Function that resets the zbuffer
     pub fn reset_buff(&mut self) {
         // Iterating through image
@@ -277,17 +172,6 @@ impl Image {
             for q in 0..self.width {
                 // Resetting zbuffer
                 self.buff[i as usize][q as usize] = f32::NEG_INFINITY;
-            }
-        }
-    }
-
-    /// Function that implements a gradient on an image given a gradient function
-    pub fn gradient<F: Fn(i32, i32) -> Pixel>(&mut self, grad: F, z: f32) {
-        // Iterating through pixels
-        for y in 0..self.height {
-            for x in 0..self.width {
-                // Updating pixel
-                self.update_pixel_xy(x, y, z, grad(x, y));
             }
         }
     }

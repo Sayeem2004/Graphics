@@ -12,19 +12,13 @@ pub fn calculate(
 ) -> Pixel {
     // Variable declarations
     let (mut fr, mut fg, mut fb): (u32, u32, u32) = (0, 0, 0);
-    let (kra, kga, kba, krd, kgd, kbd, krs, kgs, kbs): (
-        f32,
-        f32,
-        f32,
-        f32,
-        f32,
-        f32,
-        f32,
-        f32,
-        f32,
-    ) = div;
+    let (kra, kga, kba): (f32, f32, f32) = (div.0, div.1, div.2);
+    let (krd, kgd, kbd): (f32, f32, f32) = (div.3, div.4, div.5);
+    let (krs, kgs, kbs): (f32, f32, f32) = (div.6, div.7, div.8);
     let hnorm: (f32, f32, f32) = normalize(normal);
     let hview: (f32, f32, f32) = normalize(view);
+
+    // Separating the point light sources
     let mut cpnt: Vec<Pixel> = vec![Pixel::new(); pnts.len()];
     let mut hpnt: Vec<(f32, f32, f32)> = vec![(0.0, 0.0, 0.0); pnts.len()];
     for i in 0..pnts.len() {
@@ -70,12 +64,13 @@ pub fn calculate(
 
 /// Function that returns the difference vector between two vectors
 pub fn diff(vec1: (f32, f32, f32), vec2: (f32, f32, f32)) -> (f32, f32, f32) {
+    // Returning difference vector
     (vec1.0 - vec2.0, vec1.1 - vec2.1, vec1.2 - vec2.2)
 }
 
 /// Function that returns the dot product of two vectors
 pub fn dot(v1: (f32, f32, f32), v2: (f32, f32, f32)) -> f32 {
-    // Returning sum
+    // Returning dot product
     (v1.0 * v2.0) + (v1.1 * v2.1) + (v1.2 * v2.2)
 }
 
@@ -91,5 +86,6 @@ pub fn normalize(vec: (f32, f32, f32)) -> (f32, f32, f32) {
 
 /// Function that scales a vector by a value
 pub fn scale3(vec: (f32, f32, f32), scale: f32) -> (f32, f32, f32) {
+    // Returning scaled vector
     (vec.0 * scale, vec.1 * scale, vec.2 * scale)
 }

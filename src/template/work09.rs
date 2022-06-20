@@ -1,8 +1,123 @@
 // Imports
-use crate::prev::ver09::algorithm::shape;
-use crate::prev::ver09::format::{constant, file, image::Image, matrix::Matrix, pixel::Pixel};
-use crate::prev::ver09::script::parse;
+use crate::template::prev::ver09::algorithm::shape;
+use crate::template::prev::ver09::format::{constant, file, image::Image, matrix::Matrix, pixel::Pixel};
+use crate::template::prev::ver09::script::parse;
 use std::{fs, process::Command};
+
+/// Function that creates the bright sphere image
+pub fn bright_sphere(mode: i32) {
+    // Variable declarations
+    let itr: u32 = 100;
+    let sz: i32 = 750;
+    let mut img: Image = Image::new_dimension(sz, sz);
+
+    // Creating point light sources
+    let pnts: Vec<(Pixel, f32, f32, f32)> = vec![(
+        Pixel::new_value(200, 200, 224),
+        (sz / 2) as f32,
+        (sz / 2) as f32,
+        0.0,
+    )];
+
+    // Adding rings around light
+    for i in 0..36 {
+        // Creating transformations and torus
+        let mut poly: Matrix = Matrix::new_matrix();
+        shape::add_torus(&mut poly, (0.0, 0.0, 0.0), 5.0, (sz / 3) as f32, itr);
+        let rotx: Matrix = Matrix::rotate_degree((i * 10) as f32, "x");
+        let roty: Matrix = Matrix::rotate_degree(-30_f32, "y");
+        let rotz: Matrix = Matrix::rotate_degree(60_f32, "z");
+        let trans: Matrix = Matrix::translate((sz / 2) as f32, (sz / 2) as f32, 0.0);
+
+        // Transformations
+        poly.left_transform(&rotx);
+        poly.left_transform(&roty);
+        poly.left_transform(&rotz);
+        poly.left_transform(&trans);
+
+        // Modifying image
+        poly.draw_triangles_xy(
+            &mut img,
+            Pixel::new_value(200, 200, 255),
+            &pnts,
+            constant::ZVIEW,
+            constant::EQV,
+        );
+    }
+
+    // Saving image and displaying
+    file::create_ppm_ascii("image/ppm/w09_bright_sphere.ppm", &img, 0);
+    if (mode == 0) {
+        file::open_image("image/ppm/w09_bright_sphere.ppm");
+    }
+}
+
+/// Function that creates the colorful sphere image
+pub fn colorful_marble(mode: i32) {
+    // Variable declarations
+    let itr: i32 = 500;
+    let sz: i32 = 750;
+    let mut img: Image = Image::new_dimension(sz, sz);
+    let mut poly: Matrix = Matrix::new_matrix();
+    shape::add_sphere(
+        &mut poly,
+        ((sz / 2) as f32, (sz / 2) as f32, (sz / 2) as f32),
+        sz as f32 / 3.0,
+        itr as u32,
+    );
+
+    // Creating point light sources
+    let pnts: Vec<(Pixel, f32, f32, f32)> = vec![
+        (Pixel::new_value(255, 255, 255), 0_f32, 0_f32, 1000_f32),
+        (
+            Pixel::new_value(255, 255, 0),
+            0_f32,
+            (sz / 2) as f32,
+            1000_f32,
+        ),
+        (Pixel::new_value(255, 0, 255), 0_f32, sz as f32, 1000_f32),
+        (
+            Pixel::new_value(0, 255, 255),
+            (sz / 2) as f32,
+            0_f32,
+            1000_f32,
+        ),
+        (Pixel::new_value(0, 0, 255), sz as f32, 0_f32, 1000_f32),
+        (
+            Pixel::new_value(0, 255, 0),
+            sz as f32,
+            (sz / 2) as f32,
+            1000_f32,
+        ),
+        (
+            Pixel::new_value(255, 0, 0),
+            (sz / 2) as f32,
+            sz as f32,
+            1000_f32,
+        ),
+        (
+            Pixel::new_value(255, 255, 255),
+            (sz + 1) as f32,
+            (sz + 1) as f32,
+            1000_f32,
+        ),
+    ];
+
+    // Modifying image
+    poly.draw_triangles_xy(
+        &mut img,
+        Pixel::new_value(0, 0, 192),
+        &pnts,
+        constant::ZVIEW,
+        constant::EQV,
+    );
+
+    // Saving image and displaying
+    file::create_ppm_ascii("image/ppm/w09_marble.ppm", &img, 0);
+    if (mode == 0) {
+        file::open_image("image/ppm/w09_marble.ppm");
+    }
+}
 
 /// Function that creates the rotating slab gif
 pub fn rotating_slab() {
@@ -83,134 +198,19 @@ pub fn rotating_slab() {
     }
 }
 
-/// Function that creates the colorful sphere image
-pub fn colorful_marble(mode: i32) {
-    // Variable declarations
-    let itr: i32 = 500;
-    let sz: i32 = 750;
-    let mut img: Image = Image::new_dimension(sz, sz);
-    let mut poly: Matrix = Matrix::new_matrix();
-    shape::add_sphere(
-        &mut poly,
-        ((sz / 2) as f32, (sz / 2) as f32, (sz / 2) as f32),
-        sz as f32 / 3.0,
-        itr as u32,
-    );
-
-    // Creating point light sources
-    let pnts: Vec<(Pixel, f32, f32, f32)> = vec![
-        (Pixel::new_value(255, 255, 255), 0_f32, 0_f32, 1000_f32),
-        (
-            Pixel::new_value(255, 255, 0),
-            0_f32,
-            (sz / 2) as f32,
-            1000_f32,
-        ),
-        (Pixel::new_value(255, 0, 255), 0_f32, sz as f32, 1000_f32),
-        (
-            Pixel::new_value(0, 255, 255),
-            (sz / 2) as f32,
-            0_f32,
-            1000_f32,
-        ),
-        (Pixel::new_value(0, 0, 255), sz as f32, 0_f32, 1000_f32),
-        (
-            Pixel::new_value(0, 255, 0),
-            sz as f32,
-            (sz / 2) as f32,
-            1000_f32,
-        ),
-        (
-            Pixel::new_value(255, 0, 0),
-            (sz / 2) as f32,
-            sz as f32,
-            1000_f32,
-        ),
-        (
-            Pixel::new_value(255, 255, 255),
-            (sz + 1) as f32,
-            (sz + 1) as f32,
-            1000_f32,
-        ),
-    ];
-
-    // Modifying image
-    poly.draw_triangles_xy(
-        &mut img,
-        Pixel::new_value(0, 0, 192),
-        &pnts,
-        constant::ZVIEW,
-        constant::EQV,
-    );
-
-    // Saving image and displaying
-    file::create_ppm_ascii("image/ppm/w09_marble.ppm", &img, 0);
-    if (mode == 0) {
-        file::open_image("image/ppm/w09_marble.ppm");
-    }
-}
-
-/// Function that creates the bright sphere image
-pub fn bright_sphere(mode: i32) {
-    // Variable declarations
-    let itr: u32 = 100;
-    let sz: i32 = 750;
-    let mut img: Image = Image::new_dimension(sz, sz);
-
-    // Creating point light sources
-    let pnts: Vec<(Pixel, f32, f32, f32)> = vec![(
-        Pixel::new_value(200, 200, 224),
-        (sz / 2) as f32,
-        (sz / 2) as f32,
-        0.0,
-    )];
-
-    // Adding rings around light
-    for i in 0..36 {
-        // Creating transformations and torus
-        let mut poly: Matrix = Matrix::new_matrix();
-        shape::add_torus(&mut poly, (0.0, 0.0, 0.0), 5.0, (sz / 3) as f32, itr);
-        let rotx: Matrix = Matrix::rotate_degree((i * 10) as f32, "x");
-        let roty: Matrix = Matrix::rotate_degree(-30_f32, "y");
-        let rotz: Matrix = Matrix::rotate_degree(60_f32, "z");
-        let trans: Matrix = Matrix::translate((sz / 2) as f32, (sz / 2) as f32, 0.0);
-
-        // Transformations
-        poly.left_transform(&rotx);
-        poly.left_transform(&roty);
-        poly.left_transform(&rotz);
-        poly.left_transform(&trans);
-
-        // Modifying image
-        poly.draw_triangles_xy(
-            &mut img,
-            Pixel::new_value(200, 200, 255),
-            &pnts,
-            constant::ZVIEW,
-            constant::EQV,
-        );
-    }
-
-    // Saving image and displaying
-    file::create_ppm_ascii("image/ppm/w09_bright_sphere.ppm", &img, 0);
-    if (mode == 0) {
-        file::open_image("image/ppm/w09_bright_sphere.ppm");
-    }
-}
-
 /// Function that creates all images from work 09
 pub fn create_work09_images(mode: i32) {
     // Attempting to create image directory
     fs::create_dir_all("image/ppm").expect("Unable to create image/ppm directory");
 
     // Creating face image test
-    parse::parse("data/w09/w09_face", 750, mode);
+    parse::parse("data/mdl/w09_face.mdl", 750, mode);
 
     // Creating robot image test
-    parse::parse("data/w09/w09_robot", 750, mode);
+    parse::parse("data/mdl/w09_robot.mdl", 750, mode);
 
     // Creating shapes image test
-    parse::parse("data/w09/w09_shapes", 750, mode);
+    parse::parse("data/mdl/w09_shapes.mdl", 750, mode);
 
     // Creating rotating slab gif
     rotating_slab();

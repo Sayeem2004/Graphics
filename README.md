@@ -1,4 +1,4 @@
-# Graphics Final Project
+# Graphics Engine
 
 ## Name: Mohammad Khan
 
