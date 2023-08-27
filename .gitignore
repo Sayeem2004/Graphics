@@ -4,6 +4,5 @@
 *.ppm
 *.png
 .DS_Store
-Cargo.lock
 __pycache__
 MDL.spec
